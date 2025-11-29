@@ -1,0 +1,48 @@
+{
+  "name": "gooch-feeder",
+  "version": "1.0.0",
+  "description": "TypeScript background service for data feeding",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "watch": "tsc --watch",
+    "clean": "rm -rf dist",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "service:start": "./service.sh start",
+    "service:stop": "./service.sh stop",
+    "service:restart": "./service.sh restart",
+    "service:status": "./service.sh status",
+    "service:logs": "./service.sh logs",
+    "pm2:start": "pm2 start ecosystem.config.js",
+    "pm2:stop": "pm2 stop gooch-feeder",
+    "pm2:restart": "pm2 restart gooch-feeder",
+    "pm2:delete": "pm2 delete gooch-feeder",
+    "pm2:logs": "pm2 logs gooch-feeder",
+    "pm2:status": "pm2 status"
+  },
+  "keywords": [
+    "typescript",
+    "background-service",
+    "data-feeder"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@algorandfoundation/algokit-utils": "^6.2.1",
+    "algosdk": "^2.9.0",
+    "bignumber.js": "^9.3.1",
+    "dotenv": "^16.0.0",
+    "ulujs": "^0.12.16"
+  }
+}

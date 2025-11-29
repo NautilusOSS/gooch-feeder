@@ -1,0 +1,24 @@
+{
+  "networks": {
+    "voi-mainnet": {
+      "name": "VOI Mainnet",
+      "chainId": 0,
+      "rpcUrl": "https://mainnet-api.voi.nodely.dev",
+      "wsUrl": "wss://mainnet-api.voi.nodely.dev",
+      "explorerUrl": "https://voi.observer",
+      "enabled": true,
+      "timeout": 30000,
+      "retries": 3
+    }
+  },
+  "defaultNetwork": "voi-mainnet",
+  "fallbackNetworks": [],
+  "globalSettings": {
+    "maxConcurrentRequests": 10,
+    "requestDelay": 1000,
+    "healthCheckInterval": 60000,
+    "circuitBreakerThreshold": 5,
+    "circuitBreakerTimeout": 300000
+  },
+  "detailedNetworksDir": "config/networks"
+}

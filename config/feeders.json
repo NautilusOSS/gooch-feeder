@@ -1,0 +1,113 @@
+{
+  "feeders": {
+    "voi-mainnet-47139778-VOI": {
+      "id": "voi-mainnet-47139778-VOI",
+      "method": "fetch-and-post",
+      "networkId": "voi-mainnet",
+      "poolId": "47139778",
+      "marketId": "41877720",
+      "assetSymbol": "VOI",
+      "enabled": true,
+      "interval": 120000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://voirewards.com/api/markets",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {
+          "token": "VOI"
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "47138069",
+        "marketId": "41877720",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              { "name": "tokenId", "type": "uint64" },
+              { "name": "price", "type": "uint256" }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.0001,
+        "maxPrice": 10,
+        "maxPriceChange": 50,
+        "requiredFields": ["price", "timestamp"]
+      }
+    },
+    "voi-mainnet-47139778-UNIT": {
+      "id": "voi-mainnet-47139778-UNIT",
+      "method": "fetch-and-post",
+      "networkId": "voi-mainnet",
+      "poolId": "47139778",
+      "marketId": "420069",
+      "assetSymbol": "UNIT",
+      "enabled": true,
+      "interval": 120000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://humble-api.voi.nautilus.sh/tokens/420069/stats",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {}
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "47138069",
+        "marketId": "420069",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              { "name": "tokenId", "type": "uint64" },
+              { "name": "price", "type": "uint256" }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.0001,
+        "maxPrice": 10,
+        "maxPriceChange": 50,
+        "requiredFields": ["price", "timestamp"]
+      }
+    }
+  },
+  "globalSettings": {
+    "maxConcurrentFeeders": 5,
+    "defaultInterval": 30000,
+    "defaultTimeout": 10000,
+    "defaultRetries": 3,
+    "circuitBreakerThreshold": 5,
+    "circuitBreakerTimeout": 300000,
+    "healthCheckInterval": 60000,
+    "metricsRetentionDays": 30
+  },
+  "networks": {
+    "voi-mainnet": {
+      "enabled": true,
+      "priceOracleContract": "47138069",
+      "rpcUrl": "https://mainnet-api.voi.nodely.dev",
+      "gasLimit": 1000000,
+      "gasPrice": 1000
+    }
+  }
+}

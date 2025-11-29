@@ -1,0 +1,69 @@
+{
+  "metadata": {
+    "network": "voi-mainnet",
+    "exportDate": "2025-10-22T02:37:22.370Z",
+    "contractId": "47138069",
+    "isDeployed": true,
+    "hasPriceOracleRole": false
+  },
+  "networkConfig": {
+    "networkId": "voi-mainnet",
+    "walletNetworkId": "voimain",
+    "name": "VOI Mainnet",
+    "networkType": "avm",
+    "rpcUrl": "https://mainnet-api.voi.nodely.dev",
+    "rpcPort": 443,
+    "rpcToken": "",
+    "indexerUrl": "https://mainnet-idx.voi.nodely.dev",
+    "explorerUrl": "https://voi.observer",
+    "faucetUrl": "https://faucet.voirewards.com/",
+    "contracts": {
+      "lendingPools": ["47139778"],
+      "priceOracle": "47138069",
+      "marketController": "47138067",
+      "sToken": "47138068"
+    },
+    "tokens": {
+      "VOI": {
+        "assetId": "0",
+        "poolId": "47139778",
+        "contractId": "41877720",
+        "nTokenId": "47139789",
+        "migration": {
+          "poolId": "41760711",
+          "contractId": "41877720",
+          "nTokenId": "42125195"
+        },
+        "decimals": 6,
+        "name": "VOI",
+        "symbol": "VOI",
+        "logoPath": "/lovable-uploads/VOI.png",
+        "tokenStandard": "network",
+        "marketOverride": {
+          "displayName": "Voi",
+          "displaySymbol": "Voi",
+          "isSmartContract": true
+        }
+      },
+      "UNIT": {
+        "contractId": "420069",
+        "poolId": "47139778",
+        "nTokenId": "47148525",
+        "migration": {
+          "contractId": "420069",
+          "poolId": "41760711",
+          "nTokenId": "42638644"
+        },
+        "decimals": 8,
+        "name": "UNIT",
+        "symbol": "UNIT",
+        "logoPath": "/lovable-uploads/UNIT.png",
+        "tokenStandard": "arc200"
+      }
+    }
+  },
+  "supportedAssets": [],
+  "contractState": {},
+  "assetPrices": {},
+  "priceFeedStatus": {}
+}
