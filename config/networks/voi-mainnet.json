@@ -59,6 +59,17 @@
         "symbol": "UNIT",
         "logoPath": "/lovable-uploads/UNIT.png",
         "tokenStandard": "arc200"
+      },
+      "POW": {
+        "assetId": "40152679",
+        "contractId": "40153155",
+        "poolId": "47139778",
+        "nTokenId": "47410637",
+        "decimals": 6,
+        "name": "POW",
+        "symbol": "POW",
+        "logoPath": "/lovable-uploads/POW.png",
+        "tokenStandard": "asa"
       }
     }
   },

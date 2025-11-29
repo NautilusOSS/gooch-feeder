@@ -233,12 +233,14 @@ export class PriceLookupService {
         return this.extractPriceFromHumbleAPI(data, config);
       }
       
+      // Handle Pera Wallet asset API format
+      if (config.source.url?.includes('perawallet.app')) {
+        return this.extractPriceFromPeraAPI(data, config);
+      }
+      
       // Handle CoinGecko API format
-      if (data && typeof data === 'object') {
-        const assetId = this.getAssetIdForCoinGecko(config.assetSymbol);
-        if (data[assetId] && data[assetId].usd) {
-          return data[assetId].usd;
-        }
+      if (config.source.url?.includes('coingecko.com')) {
+        return this.extractPriceFromCoinGeckoAPI(data, config);
       }
       
       throw new Error('Unable to extract price from API response');
@@ -271,6 +273,153 @@ export class PriceLookupService {
       throw new Error('No USD price found in Humble API response');
     } catch (error) {
       this.logger.error('Failed to extract price from Humble API:', error instanceof Error ? error : String(error));
+      throw error;
+    }
+  }
+
+  private extractPriceFromPeraAPI(data: any, config: PriceFeederConfig): number {
+    try {
+      const results = Array.isArray(data?.results) ? data.results : [];
+      
+      if (results.length === 0) {
+        throw new Error('Invalid Pera API response format: no results found');
+      }
+
+      const assetIdParam = config.source.params?.asset_ids || config.source.params?.asset_id;
+      const targetAssetId = assetIdParam
+        ? String(assetIdParam).split(',')[0].trim()
+        : null;
+      
+      const assetEntry = targetAssetId
+        ? results.find((asset: any) => String(asset.asset_id) === targetAssetId)
+        : results[0];
+
+      if (!assetEntry) {
+        throw new Error(
+          targetAssetId
+            ? `Asset ID ${targetAssetId} not found in Pera API response`
+            : 'No asset entries found in Pera API response'
+        );
+      }
+
+      const rawUsdValue =
+        assetEntry.usd_value ??
+        assetEntry.usd_price ??
+        assetEntry.price_usd ??
+        assetEntry.price;
+
+      if (rawUsdValue === undefined || rawUsdValue === null) {
+        throw new Error('USD price not found in Pera API response');
+      }
+
+      const price =
+        typeof rawUsdValue === 'string'
+          ? parseFloat(rawUsdValue)
+          : Number(rawUsdValue);
+
+      if (isNaN(price) || price <= 0) {
+        throw new Error(`Invalid USD price value from Pera API: ${rawUsdValue}`);
+      }
+
+      this.logger.debug(`Extracted USD price from Pera API: $${price}`);
+      return price;
+    } catch (error) {
+      this.logger.error(
+        'Failed to extract price from Pera API:',
+        error instanceof Error ? error : String(error)
+      );
+      throw error;
+    }
+  }
+
+  private extractPriceFromCoinGeckoAPI(data: any, config: PriceFeederConfig): number {
+    try {
+      if (!data || typeof data !== 'object') {
+        throw new Error('Invalid CoinGecko API response format: response is not an object');
+      }
+
+      // Determine the coin ID to use
+      // Priority: 1) params.ids if specified, 2) getAssetIdForCoinGecko mapping
+      let coinId: string | null = null;
+      
+      if (config.source.params?.ids) {
+        // Use the ID from params (supports comma-separated list, take first)
+        const ids = String(config.source.params.ids).split(',')[0].trim();
+        coinId = ids;
+        this.logger.debug(`Using CoinGecko coin ID from params: ${coinId}`);
+      } else {
+        // Fallback to symbol mapping
+        coinId = this.getAssetIdForCoinGecko(config.assetSymbol);
+        this.logger.debug(`Using CoinGecko coin ID from symbol mapping: ${coinId}`);
+      }
+
+      if (!coinId) {
+        throw new Error(`Unable to determine CoinGecko coin ID for ${config.assetSymbol}`);
+      }
+
+      // Handle CoinGecko simple/price endpoint format: { "algorand": { "usd": 0.123 } }
+      if (data[coinId]) {
+        const coinData = data[coinId];
+        
+        // Check for USD price (most common)
+        if (coinData.usd !== undefined && coinData.usd !== null) {
+          const price = typeof coinData.usd === 'string' 
+            ? parseFloat(coinData.usd) 
+            : Number(coinData.usd);
+          
+          if (isNaN(price) || price <= 0) {
+            throw new Error(`Invalid USD price value from CoinGecko: ${coinData.usd}`);
+          }
+
+          this.logger.debug(`Extracted USD price from CoinGecko API: $${price} for ${coinId}`);
+          return price;
+        }
+
+        // Check for other currency if USD not available (but log warning)
+        const currencies = Object.keys(coinData).filter(key => 
+          typeof coinData[key] === 'number' || 
+          (typeof coinData[key] === 'string' && !isNaN(parseFloat(coinData[key])))
+        );
+        
+        if (currencies.length > 0) {
+          this.logger.warn(`USD price not found for ${coinId}, available currencies: ${currencies.join(', ')}`);
+          throw new Error(`USD price not available for ${coinId} on CoinGecko`);
+        }
+      }
+
+      // Handle CoinGecko coins/markets endpoint format (array of coin objects)
+      if (Array.isArray(data) && data.length > 0) {
+        const coin = data.find((item: any) => 
+          item.id === coinId || 
+          item.symbol?.toLowerCase() === coinId.toLowerCase() ||
+          item.symbol?.toLowerCase() === config.assetSymbol.toLowerCase()
+        );
+
+        if (coin && coin.current_price) {
+          const price = typeof coin.current_price === 'string' 
+            ? parseFloat(coin.current_price) 
+            : Number(coin.current_price);
+          
+          if (isNaN(price) || price <= 0) {
+            throw new Error(`Invalid current_price value from CoinGecko: ${coin.current_price}`);
+          }
+
+          this.logger.debug(`Extracted current_price from CoinGecko markets API: $${price} for ${coinId}`);
+          return price;
+        }
+      }
+
+      // If we get here, the coin ID wasn't found in the response
+      const availableIds = Object.keys(data).filter(key => 
+        typeof data[key] === 'object' && data[key] !== null
+      );
+      
+      throw new Error(
+        `Coin ID "${coinId}" not found in CoinGecko response. ` +
+        `Available IDs: ${availableIds.length > 0 ? availableIds.join(', ') : 'none'}`
+      );
+    } catch (error) {
+      this.logger.error('Failed to extract price from CoinGecko API:', error instanceof Error ? error : String(error));
       throw error;
     }
   }

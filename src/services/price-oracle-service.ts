@@ -83,22 +83,47 @@ export class PriceOracleService {
     config: PriceFeederConfig,
     priceData: PriceData
   ): Promise<PriceFeedResult> {
-    if (
-      !config.destination.contractAddress ||
-      !config.destination.functionName
-    ) {
-      throw new Error(
-        "Contract address and function name are required for price oracle destination"
-      );
-    }
-
-    // Get network configuration
+    // Get network configuration first to check for fallback contract address
     const networkConfig = this.networkConfigLoader.getDetailedNetworkConfig(
       config.networkId
     );
     if (!networkConfig) {
       throw new Error(
-        `Network configuration not found for ${config.networkId}`
+        `Network configuration not found for ${config.networkId}. ` +
+        `Feeder ID: ${config.id}, Asset: ${config.assetSymbol}`
+      );
+    }
+
+    // Check for missing required fields and provide detailed error
+    const missingFields: string[] = [];
+    if (!config.destination.contractAddress) {
+      missingFields.push('contractAddress');
+    }
+    if (!config.destination.functionName) {
+      missingFields.push('functionName');
+    }
+
+    if (missingFields.length > 0) {
+      // Check if network config has a fallback contract address
+      const networkContractAddress = networkConfig.networkConfig.contracts.priceOracle;
+      const contractAddressSource = config.destination.contractAddress 
+        ? `feeder config: "${config.destination.contractAddress}"`
+        : networkContractAddress 
+          ? `network config: "${networkContractAddress}"`
+          : 'not found in feeder or network config';
+
+      const errorDetails = [
+        `Feeder ID: ${config.id}`,
+        `Asset: ${config.assetSymbol}`,
+        `Network: ${config.networkId}`,
+        `Missing fields: ${missingFields.join(', ')}`,
+        `Contract address: ${contractAddressSource}`,
+        `Function name: ${config.destination.functionName || 'not specified'}`,
+        `Market ID: ${config.destination.marketId || config.marketId || 'not specified'}`
+      ].join('; ');
+
+      throw new Error(
+        `Contract address and function name are required for price oracle destination. ${errorDetails}`
       );
     }
 
@@ -110,8 +135,15 @@ export class PriceOracleService {
     this.logger.debug("contractAddress", contractAddress);
 
     if (!contractAddress) {
+      const errorDetails = [
+        `Feeder ID: ${config.id}`,
+        `Asset: ${config.assetSymbol}`,
+        `Network: ${config.networkId}`,
+        `Contract address not found in feeder config (${config.destination.contractAddress || 'empty'}) or network config (${networkConfig.networkConfig.contracts.priceOracle || 'empty'})`
+      ].join('; ');
+
       throw new Error(
-        `Price oracle contract address not found for network ${config.networkId}`
+        `Price oracle contract address not found for network ${config.networkId}. ${errorDetails}`
       );
     }
 
@@ -136,24 +168,27 @@ export class PriceOracleService {
       throw new Error("Account service not properly initialized");
     }
 
+    // At this point, we know functionName is defined (checked earlier)
+    const functionName = config.destination.functionName!;
+
     const ci = new CONTRACT(
-      Number(config.destination.contractAddress),
+      Number(contractAddress),
       algod,
       undefined,
       { ...PriceOracleAppSpec.contract, events: [] },
       { addr: address, sk: secretKey }
     );
 
-    if (!ci[config.destination.functionName]) {
+    if (!ci[functionName]) {
       throw new Error(
-        `Function ${config.destination.functionName} not found in contract ${config.destination.contractAddress}`
+        `Function ${functionName} not found in contract ${contractAddress}`
       );
     }
 
     // Use destination.marketId if available, otherwise fall back to config.marketId
     const marketId = Number(config.destination.marketId || config.marketId);
     const price = BigInt(formattedPrice);
-    const post_priceR = await ci[config.destination.functionName](
+    const post_priceR = await ci[functionName](
       marketId,
       price
     );
@@ -625,9 +660,19 @@ export class PriceOracleService {
       return result;
     } catch (error) {
       lastError = error instanceof Error ? error.message : "Unknown error";
+      const errorContext = {
+        feederId: config.id,
+        assetSymbol: priceData.symbol,
+        networkId: config.networkId,
+        marketId: config.destination.marketId || config.marketId,
+        contractAddress: config.destination.contractAddress || 'not specified',
+        functionName: config.destination.functionName || 'not specified',
+        error: lastError
+      };
       this.logger.warn(
-        `Initial price post failed for ${priceData.symbol}, will retry up to ${maxRetries} times using midpoint strategy`,
-        lastError
+        `Initial price post failed for ${priceData.symbol} (Feeder: ${config.id}, Network: ${config.networkId}), will retry up to ${maxRetries} times using midpoint strategy`,
+        lastError,
+        errorContext
       );
     }
 

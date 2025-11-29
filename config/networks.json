@@ -9,6 +9,16 @@
       "enabled": true,
       "timeout": 30000,
       "retries": 3
+    },
+    "algorand-mainnet": {
+      "name": "Algorand Mainnet",
+      "chainId": 416001,
+      "rpcUrl": "https://mainnet-api.algonode.cloud",
+      "wsUrl": "wss://mainnet-api.algonode.cloud",
+      "explorerUrl": "https://allo.info",
+      "enabled": true,
+      "timeout": 30000,
+      "retries": 3
     }
   },
   "defaultNetwork": "voi-mainnet",

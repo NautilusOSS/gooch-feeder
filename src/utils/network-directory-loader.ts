@@ -126,12 +126,22 @@ export class NetworkDirectoryLoader {
 
     // Validate required contract addresses
     const contracts = config.networkConfig.contracts;
-    if (!contracts.priceOracle) {
-      throw new Error(`Network ${networkId}: priceOracle contract address is required`);
+    
+    // priceOracle can be empty string (not deployed yet), but the field must exist
+    if (contracts.priceOracle === undefined || contracts.priceOracle === null) {
+      throw new Error(`Network ${networkId}: priceOracle contract address field is required (can be empty string if not deployed)`);
     }
 
     if (!contracts.lendingPools || !Array.isArray(contracts.lendingPools)) {
       throw new Error(`Network ${networkId}: lendingPools array is required`);
+    }
+    
+    // Log warning if priceOracle is empty (but don't fail validation)
+    if (contracts.priceOracle === '') {
+      this.logger.warn(
+        `Network ${networkId}: priceOracle contract address is empty. ` +
+        `Price feeds will not work until a contract address is configured.`
+      );
     }
   }
 

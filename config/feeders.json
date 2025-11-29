@@ -89,6 +89,189 @@
         "maxPriceChange": 50,
         "requiredFields": ["price", "timestamp"]
       }
+    },
+    "voi-mainnet-47139778-POW": {
+      "id": "voi-mainnet-47139778-POW",
+      "method": "fetch-and-post",
+      "networkId": "voi-mainnet",
+      "poolId": "47139778",
+      "marketId": "40153155",
+      "assetSymbol": "POW",
+      "enabled": true,
+      "interval": 120000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://humble-api.voi.nautilus.sh/tokens/40153155/stats",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {}
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "47138069",
+        "marketId": "40153155",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              { "name": "tokenId", "type": "uint64" },
+              { "name": "price", "type": "uint256" }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.0001,
+        "maxPrice": 10,
+        "maxPriceChange": 50,
+        "requiredFields": ["price", "timestamp"]
+      }
+    },
+    "algorand-mainnet-3333688282-ALGO": {
+      "id": "algorand-mainnet-3333688282-ALGO",
+      "method": "fetch-and-post",
+      "networkId": "algorand-mainnet",
+      "poolId": "3333688282",
+      "marketId": "3207744109",
+      "assetSymbol": "ALGO",
+      "enabled": true,
+      "interval": 120000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://api.coingecko.com/api/v3/simple/price",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {
+          "ids": "algorand",
+          "vs_currencies": "usd"
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "3333688500",
+        "marketId": "3207744109",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              { "name": "tokenId", "type": "uint64" },
+              { "name": "price", "type": "uint256" }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.01,
+        "maxPrice": 10,
+        "maxPriceChange": 50,
+        "requiredFields": ["price", "timestamp"]
+      }
+    },
+    "algorand-mainnet-3333688282-UNIT": {
+      "id": "algorand-mainnet-3333688282-UNIT",
+      "method": "fetch-and-post",
+      "networkId": "algorand-mainnet",
+      "poolId": "3333688282",
+      "marketId": "3220125024",
+      "assetSymbol": "UNIT",
+      "enabled": true,
+      "interval": 120000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://mainnet.api.perawallet.app/v1/assets/",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {
+          "asset_ids": "3121954282"
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "3333688500",
+        "marketId": "3220125024",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              { "name": "tokenId", "type": "uint64" },
+              { "name": "price", "type": "uint256" }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.01,
+        "maxPrice": 10,
+        "maxPriceChange": 50,
+        "requiredFields": ["price", "timestamp"]
+      }
+    },
+    "algorand-mainnet-3333688282-POW": {
+      "id": "algorand-mainnet-3333688282-POW",
+      "method": "fetch-and-post",
+      "networkId": "algorand-mainnet",
+      "poolId": "3333688282",
+      "marketId": "3080081069",
+      "assetSymbol": "POW",
+      "enabled": true,
+      "interval": 120000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://mainnet.api.perawallet.app/v1/assets/",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {
+          "asset_ids": "2994233666"
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "3333688500",
+        "marketId": "3080081069",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              { "name": "tokenId", "type": "uint64" },
+              { "name": "price", "type": "uint256" }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.001,
+        "maxPrice": 10,
+        "maxPriceChange": 50,
+        "requiredFields": ["price", "timestamp"]
+      }
     }
   },
   "globalSettings": {
@@ -106,6 +289,13 @@
       "enabled": true,
       "priceOracleContract": "47138069",
       "rpcUrl": "https://mainnet-api.voi.nodely.dev",
+      "gasLimit": 1000000,
+      "gasPrice": 1000
+    },
+    "algorand-mainnet": {
+      "enabled": true,
+      "priceOracleContract": "3333688500",
+      "rpcUrl": "https://mainnet-api.algonode.cloud",
       "gasLimit": 1000000,
       "gasPrice": 1000
     }
