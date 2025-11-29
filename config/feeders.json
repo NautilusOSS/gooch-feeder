@@ -272,6 +272,98 @@
         "maxPriceChange": 50,
         "requiredFields": ["price", "timestamp"]
       }
+    },
+    "algorand-mainnet-3333688282-BTC": {
+      "id": "algorand-mainnet-3333688282-BTC",
+      "method": "fetch-and-post",
+      "networkId": "algorand-mainnet",
+      "poolId": "3333688282",
+      "marketId": "3211820549",
+      "assetSymbol": "goBTC",
+      "enabled": true,
+      "interval": 120000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://mainnet.api.perawallet.app/v1/assets/",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {
+          "asset_ids": "386192725"
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "3333688500",
+        "marketId": "3211820549",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              { "name": "tokenId", "type": "uint64" },
+              { "name": "price", "type": "uint256" }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 10000,
+        "maxPrice": 200000,
+        "maxPriceChange": 50,
+        "requiredFields": ["price", "timestamp"]
+      }
+    },
+    "algorand-mainnet-3345940978-FINITE": {
+      "id": "algorand-mainnet-3345940978-FINITE",
+      "method": "fetch-and-post",
+      "networkId": "algorand-mainnet",
+      "poolId": "3345940978",
+      "marketId": "3211805086",
+      "assetSymbol": "FINITE",
+      "enabled": true,
+      "interval": 120000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://mainnet.api.perawallet.app/v1/assets/",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {
+          "asset_ids": "400593267"
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "3333688500",
+        "marketId": "3211805086",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              { "name": "tokenId", "type": "uint64" },
+              { "name": "price", "type": "uint256" }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.001,
+        "maxPrice": 10,
+        "maxPriceChange": 50,
+        "requiredFields": ["price", "timestamp"]
+      }
     }
   },
   "globalSettings": {

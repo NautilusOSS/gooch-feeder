@@ -76,6 +76,38 @@
         "symbol": "POW",
         "logoPath": "/lovable-uploads/POW.png",
         "tokenStandard": "asa"
+      },
+      "goBTC": {
+        "assetId": "386192725",
+        "poolId": "3333688282",
+        "contractId": "3211820549",
+        "nTokenId": "",
+        "migration": {
+          "poolId": "",
+          "contractId": "",
+          "nTokenId": ""
+        },
+        "decimals": 8,
+        "name": "goBTC",
+        "symbol": "goBTC",
+        "logoPath": "/lovable-uploads/goBTC.webp",
+        "tokenStandard": "asa"
+      },
+      "FINITE": {
+        "assetId": "400593267",
+        "poolId": "3345940978",
+        "contractId": "3211805086",
+        "nTokenId": "3346001205",
+        "migration": {
+          "poolId": "3207735602",
+          "contractId": "3211805086",
+          "nTokenId": "3211898346"
+        },
+        "decimals": 8,
+        "name": "FINITE",
+        "symbol": "FINITE",
+        "logoPath": "/lovable-uploads/FINITE.webp",
+        "tokenStandard": "asa"
       }
     },
     "gasStation": {},
