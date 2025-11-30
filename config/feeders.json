@@ -364,6 +364,52 @@
         "maxPriceChange": 50,
         "requiredFields": ["price", "timestamp"]
       }
+    },
+    "algorand-mainnet-3345940978-FOLKS": {
+      "id": "algorand-mainnet-3345940978-FOLKS",
+      "method": "fetch-and-post",
+      "networkId": "algorand-mainnet",
+      "poolId": "3345940978",
+      "marketId": "3346185062",
+      "assetSymbol": "FOLKS",
+      "enabled": true,
+      "interval": 120000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://mainnet.api.perawallet.app/v1/assets/",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {
+          "asset_ids": "3203964481"
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "3333688500",
+        "marketId": "3346185062",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              { "name": "tokenId", "type": "uint64" },
+              { "name": "price", "type": "uint256" }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.01,
+        "maxPrice": 1000,
+        "maxPriceChange": 50,
+        "requiredFields": ["price", "timestamp"]
+      }
     }
   },
   "globalSettings": {

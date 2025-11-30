@@ -108,6 +108,17 @@
         "symbol": "FINITE",
         "logoPath": "/lovable-uploads/FINITE.webp",
         "tokenStandard": "asa"
+      },
+      "FOLKS": {
+        "assetId": "3203964481",
+        "poolId": "3345940978",
+        "contractId": "3346185062",
+        "nTokenId": "3346216929",
+        "decimals": 6,
+        "name": "FOLKS",
+        "symbol": "FOLKS",
+        "logoPath": "/lovable-uploads/FOLKS.png",
+        "tokenStandard": "asa"
       }
     },
     "gasStation": {},
