@@ -119,6 +119,22 @@
         "symbol": "FOLKS",
         "logoPath": "/lovable-uploads/FOLKS.png",
         "tokenStandard": "asa"
+      },
+      "COOP": {
+        "assetId": "796425061",
+        "poolId": "3345940978",
+        "contractId": "3212524778",
+        "nTokenId": "3346359997",
+        "migration": {
+          "poolId": "3212536201",
+          "contractId": "3212524778",
+          "nTokenId": "3212561970"
+        },
+        "decimals": 6,
+        "name": "COOP",
+        "symbol": "COOP",
+        "logoPath": "/lovable-uploads/COOP.webp",
+        "tokenStandard": "asa"
       }
     },
     "gasStation": {},
