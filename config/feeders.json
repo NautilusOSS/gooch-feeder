@@ -456,6 +456,742 @@
         "maxPriceChange": 50,
         "requiredFields": ["price", "timestamp"]
       }
+    },
+    "algorand-mainnet-3345940978-HOG": {
+      "id": "algorand-mainnet-3345940978-HOG",
+      "method": "fetch-and-post",
+      "networkId": "algorand-mainnet",
+      "poolId": "3345940978",
+      "marketId": "3212773584",
+      "assetSymbol": "HOG",
+      "enabled": true,
+      "interval": 120000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://mainnet.api.perawallet.app/v1/assets/",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {
+          "asset_ids": "3178895177"
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "3333688500",
+        "marketId": "3212773584",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              { "name": "tokenId", "type": "uint64" },
+              { "name": "price", "type": "uint256" }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.0001,
+        "maxPrice": 10,
+        "maxPriceChange": 50,
+        "requiredFields": ["price", "timestamp"]
+      }
+    },
+    "algorand-mainnet-3345940978-USDt": {
+      "id": "algorand-mainnet-3345940978-USDt",
+      "method": "fetch-and-post",
+      "networkId": "algorand-mainnet",
+      "poolId": "3345940978",
+      "marketId": "3346408431",
+      "assetSymbol": "USDt",
+      "enabled": true,
+      "interval": 120000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://mainnet.api.perawallet.app/v1/assets/",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {
+          "asset_ids": "312769"
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "3333688500",
+        "marketId": "3346408431",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              { "name": "tokenId", "type": "uint64" },
+              { "name": "price", "type": "uint256" }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.01,
+        "maxPrice": 2.0,
+        "maxPriceChange": 50,
+        "requiredFields": ["price", "timestamp"]
+      }
+    },
+    "algorand-mainnet-3345940978-xUSD": {
+      "id": "algorand-mainnet-3345940978-xUSD",
+      "method": "fetch-and-post",
+      "networkId": "algorand-mainnet",
+      "poolId": "3345940978",
+      "marketId": "3346881192",
+      "assetSymbol": "xUSD",
+      "enabled": true,
+      "interval": 120000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://mainnet.api.perawallet.app/v1/assets/",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {
+          "asset_ids": "760037151"
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "3333688500",
+        "marketId": "3346881192",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              { "name": "tokenId", "type": "uint64" },
+              { "name": "price", "type": "uint256" }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.01,
+        "maxPrice": 2.0,
+        "maxPriceChange": 50,
+        "requiredFields": ["price", "timestamp"]
+      }
+    },
+    "algorand-mainnet-3345940978-HAY": {
+      "id": "algorand-mainnet-3345940978-HAY",
+      "method": "fetch-and-post",
+      "networkId": "algorand-mainnet",
+      "poolId": "3345940978",
+      "marketId": "3211890928",
+      "assetSymbol": "HAY",
+      "enabled": true,
+      "interval": 120000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://mainnet.api.perawallet.app/v1/assets/",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {
+          "asset_ids": "3160000000"
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "3333688500",
+        "marketId": "3211890928",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              { "name": "tokenId", "type": "uint64" },
+              { "name": "price", "type": "uint256" }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.01,
+        "maxPrice": 2.0,
+        "maxPriceChange": 50,
+        "requiredFields": ["price", "timestamp"]
+      }
+    },
+    "algorand-mainnet-3345940978-BRO": {
+      "id": "algorand-mainnet-3345940978-BRO",
+      "method": "fetch-and-post",
+      "networkId": "algorand-mainnet",
+      "poolId": "3345940978",
+      "marketId": "3212768756",
+      "assetSymbol": "BRO",
+      "enabled": true,
+      "interval": 120000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://mainnet.api.perawallet.app/v1/assets/",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {
+          "asset_ids": "2637100337"
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "3333688500",
+        "marketId": "3212768756",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              { "name": "tokenId", "type": "uint64" },
+              { "name": "price", "type": "uint256" }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.00001,
+        "maxPrice": 1,
+        "maxPriceChange": 50,
+        "requiredFields": ["price", "timestamp"]
+      }
+    },
+    "algorand-mainnet-3333688282-aVOI": {
+      "id": "algorand-mainnet-3333688282-aVOI",
+      "method": "fetch-and-post",
+      "networkId": "algorand-mainnet",
+      "poolId": "3333688282",
+      "marketId": "3210709899",
+      "assetSymbol": "aVOI",
+      "enabled": true,
+      "interval": 120000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://mainnet.api.perawallet.app/v1/assets/",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {
+          "asset_ids": "2320775407"
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "3333688500",
+        "marketId": "3210709899",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              { "name": "tokenId", "type": "uint64" },
+              { "name": "price", "type": "uint256" }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.0001,
+        "maxPrice": 10,
+        "maxPriceChange": 50,
+        "requiredFields": ["price", "timestamp"]
+      }
+    },
+    "algorand-mainnet-3345940978-ALPHA": {
+      "id": "algorand-mainnet-3345940978-ALPHA",
+      "method": "fetch-and-post",
+      "networkId": "algorand-mainnet",
+      "poolId": "3345940978",
+      "marketId": "3212531816",
+      "assetSymbol": "ALPHA",
+      "enabled": true,
+      "interval": 120000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://mainnet.api.perawallet.app/v1/assets/",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {
+          "asset_ids": "2726252423"
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "3333688500",
+        "marketId": "3212531816",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              { "name": "tokenId", "type": "uint64" },
+              { "name": "price", "type": "uint256" }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.0001,
+        "maxPrice": 10,
+        "maxPriceChange": 50,
+        "requiredFields": ["price", "timestamp"]
+      }
+    },
+    "algorand-mainnet-3345940978-COMPX": {
+      "id": "algorand-mainnet-3345940978-COMPX",
+      "method": "fetch-and-post",
+      "networkId": "algorand-mainnet",
+      "poolId": "3345940978",
+      "marketId": "3211800950",
+      "assetSymbol": "COMPX",
+      "enabled": true,
+      "interval": 120000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://mainnet.api.perawallet.app/v1/assets/",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {
+          "asset_ids": "1732165149"
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "3333688500",
+        "marketId": "3211800950",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              { "name": "tokenId", "type": "uint64" },
+              { "name": "price", "type": "uint256" }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.0001,
+        "maxPrice": 10,
+        "maxPriceChange": 50,
+        "requiredFields": ["price", "timestamp"]
+      }
+    },
+    "algorand-mainnet-3345940978-AKTA": {
+      "id": "algorand-mainnet-3345940978-AKTA",
+      "method": "fetch-and-post",
+      "networkId": "algorand-mainnet",
+      "poolId": "3345940978",
+      "marketId": "3212534634",
+      "assetSymbol": "AKTA",
+      "enabled": true,
+      "interval": 120000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://mainnet.api.perawallet.app/v1/assets/",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {
+          "asset_ids": "523683256"
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "3333688500",
+        "marketId": "3212534634",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              { "name": "tokenId", "type": "uint64" },
+              { "name": "price", "type": "uint256" }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.0001,
+        "maxPrice": 10,
+        "maxPriceChange": 50,
+        "requiredFields": ["price", "timestamp"]
+      }
+    },
+    "algorand-mainnet-3345940978-PEPE": {
+      "id": "algorand-mainnet-3345940978-PEPE",
+      "method": "fetch-and-post",
+      "networkId": "algorand-mainnet",
+      "poolId": "3345940978",
+      "marketId": "3212771255",
+      "assetSymbol": "PEPE",
+      "enabled": true,
+      "interval": 120000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://mainnet.api.perawallet.app/v1/assets/",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {
+          "asset_ids": "1096015467"
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "3333688500",
+        "marketId": "3212771255",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              { "name": "tokenId", "type": "uint64" },
+              { "name": "price", "type": "uint256" }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.000001,
+        "maxPrice": 10,
+        "maxPriceChange": 50,
+        "requiredFields": ["price", "timestamp"]
+      }
+    },
+    "algorand-mainnet-3345940978-GOLD$": {
+      "id": "algorand-mainnet-3345940978-GOLD$",
+      "method": "fetch-and-post",
+      "networkId": "algorand-mainnet",
+      "poolId": "3345940978",
+      "marketId": "3220347315",
+      "assetSymbol": "GOLD$",
+      "enabled": true,
+      "interval": 120000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://mainnet.api.perawallet.app/v1/assets/",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {
+          "asset_ids": "246516580"
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "3333688500",
+        "marketId": "3220347315",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              { "name": "tokenId", "type": "uint64" },
+              { "name": "price", "type": "uint256" }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 1,
+        "maxPrice": 1000,
+        "maxPriceChange": 50,
+        "requiredFields": ["price", "timestamp"]
+      }
+    },
+    "algorand-mainnet-3333688282-wBTC": {
+      "id": "algorand-mainnet-3333688282-wBTC",
+      "method": "fetch-and-post",
+      "networkId": "algorand-mainnet",
+      "poolId": "3333688282",
+      "marketId": "3211827406",
+      "assetSymbol": "wBTC",
+      "enabled": true,
+      "interval": 120000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://mainnet.api.perawallet.app/v1/assets/",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {
+          "asset_ids": "1058926737"
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "3333688500",
+        "marketId": "3211827406",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              { "name": "tokenId", "type": "uint64" },
+              { "name": "price", "type": "uint256" }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 100,
+        "maxPrice": 200000,
+        "maxPriceChange": 50,
+        "requiredFields": ["price", "timestamp"]
+      }
+    },
+    "algorand-mainnet-3333688282-goETH": {
+      "id": "algorand-mainnet-3333688282-goETH",
+      "method": "fetch-and-post",
+      "networkId": "algorand-mainnet",
+      "poolId": "3333688282",
+      "marketId": "3211806149",
+      "assetSymbol": "goETH",
+      "enabled": true,
+      "interval": 120000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://mainnet.api.perawallet.app/v1/assets/",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {
+          "asset_ids": "386195940"
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "3333688500",
+        "marketId": "3211806149",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              { "name": "tokenId", "type": "uint64" },
+              { "name": "price", "type": "uint256" }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 100,
+        "maxPrice": 10000,
+        "maxPriceChange": 50,
+        "requiredFields": ["price", "timestamp"]
+      }
+    },
+    "algorand-mainnet-3333688282-wETH": {
+      "id": "algorand-mainnet-3333688282-wETH",
+      "method": "fetch-and-post",
+      "networkId": "algorand-mainnet",
+      "poolId": "3333688282",
+      "marketId": "3211811648",
+      "assetSymbol": "wETH",
+      "enabled": true,
+      "interval": 120000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://mainnet.api.perawallet.app/v1/assets/",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {
+          "asset_ids": "887406851"
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "3333688500",
+        "marketId": "3211811648",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              { "name": "tokenId", "type": "uint64" },
+              { "name": "price", "type": "uint256" }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 100,
+        "maxPrice": 10000,
+        "maxPriceChange": 50,
+        "requiredFields": ["price", "timestamp"]
+      }
+    },
+    "algorand-mainnet-3333688282-LINK": {
+      "id": "algorand-mainnet-3333688282-LINK",
+      "method": "fetch-and-post",
+      "networkId": "algorand-mainnet",
+      "poolId": "3333688282",
+      "marketId": "3211838479",
+      "assetSymbol": "LINK",
+      "enabled": true,
+      "interval": 120000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://mainnet.api.perawallet.app/v1/assets/",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {
+          "asset_ids": "1200094857"
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "3333688500",
+        "marketId": "3211838479",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              { "name": "tokenId", "type": "uint64" },
+              { "name": "price", "type": "uint256" }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.01,
+        "maxPrice": 100,
+        "maxPriceChange": 50,
+        "requiredFields": ["price", "timestamp"]
+      }
+    },
+    "algorand-mainnet-3333688282-SOL": {
+      "id": "algorand-mainnet-3333688282-SOL",
+      "method": "fetch-and-post",
+      "networkId": "algorand-mainnet",
+      "poolId": "3333688282",
+      "marketId": "3211883276",
+      "assetSymbol": "SOL",
+      "enabled": true,
+      "interval": 120000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://mainnet.api.perawallet.app/v1/assets/",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {
+          "asset_ids": "887648583"
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "3333688500",
+        "marketId": "3211883276",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              { "name": "tokenId", "type": "uint64" },
+              { "name": "price", "type": "uint256" }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 1,
+        "maxPrice": 1000,
+        "maxPriceChange": 50,
+        "requiredFields": ["price", "timestamp"]
+      }
     }
   },
   "globalSettings": {
