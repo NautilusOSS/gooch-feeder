@@ -1192,6 +1192,230 @@
         "maxPriceChange": 50,
         "requiredFields": ["price", "timestamp"]
       }
+    },
+    "algorand-mainnet-3333688282-AVAX": {
+      "id": "algorand-mainnet-3333688282-AVAX",
+      "method": "fetch-and-post",
+      "networkId": "algorand-mainnet",
+      "poolId": "3333688282",
+      "marketId": "3211885849",
+      "assetSymbol": "AVAX",
+      "enabled": true,
+      "interval": 120000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://mainnet.api.perawallet.app/v1/assets/",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {
+          "asset_ids": "893309613"
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "3333688500",
+        "marketId": "3211885849",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              { "name": "tokenId", "type": "uint64" },
+              { "name": "price", "type": "uint256" }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 1,
+        "maxPrice": 100,
+        "maxPriceChange": 50,
+        "requiredFields": ["price", "timestamp"]
+      }
+    },
+    "voi-mainnet-47139781-GM": {
+      "id": "voi-mainnet-47139781-GM",
+      "method": "fetch-and-post",
+      "networkId": "voi-mainnet",
+      "poolId": "47139781",
+      "marketId": "300279",
+      "assetSymbol": "GM",
+      "enabled": true,
+      "interval": 120000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://humble-api.voi.nautilus.sh/tokens/300279/stats",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {}
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "47138069",
+        "marketId": "300279",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              { "name": "tokenId", "type": "uint64" },
+              { "name": "price", "type": "uint256" }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.000001,
+        "maxPrice": 1,
+        "maxPriceChange": 50,
+        "requiredFields": ["price", "timestamp"]
+      }
+    },
+    "voi-mainnet-47139781-CORN": {
+      "id": "voi-mainnet-47139781-CORN",
+      "method": "fetch-and-post",
+      "networkId": "voi-mainnet",
+      "poolId": "47139781",
+      "marketId": "412682",
+      "assetSymbol": "CORN",
+      "enabled": true,
+      "interval": 120000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://humble-api.voi.nautilus.sh/tokens/412682/stats",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {}
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "47138069",
+        "marketId": "412682",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              { "name": "tokenId", "type": "uint64" },
+              { "name": "price", "type": "uint256" }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.000001,
+        "maxPrice": 1,
+        "maxPriceChange": 50,
+        "requiredFields": ["price", "timestamp"]
+      }
+    },
+    "voi-mainnet-47139778-aALGO": {
+      "id": "voi-mainnet-47139778-aALGO",
+      "method": "fetch-and-post",
+      "networkId": "voi-mainnet",
+      "poolId": "47139778",
+      "marketId": "413153",
+      "assetSymbol": "aALGO",
+      "enabled": true,
+      "interval": 120000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://humble-api.voi.nautilus.sh/tokens/413153/stats",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {}
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "47138069",
+        "marketId": "413153",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              { "name": "tokenId", "type": "uint64" },
+              { "name": "price", "type": "uint256" }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.000001,
+        "maxPrice": 1,
+        "maxPriceChange": 50,
+        "requiredFields": ["price", "timestamp"]
+      }
+    },
+    "voi-mainnet-47139778-aETH": {
+      "id": "voi-mainnet-47139778-aETH",
+      "method": "fetch-and-post",
+      "networkId": "voi-mainnet",
+      "poolId": "47139778",
+      "marketId": "40153308",
+      "assetSymbol": "aETH",
+      "enabled": true,
+      "interval": 120000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://mainnet.api.perawallet.app/v1/assets/",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {
+          "asset_ids": "386195940"
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "47138069",
+        "marketId": "40153308",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              { "name": "tokenId", "type": "uint64" },
+              { "name": "price", "type": "uint256" }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 1000,
+        "maxPrice": 10000,
+        "maxPriceChange": 50,
+        "requiredFields": ["price", "timestamp"]
+      }
     }
   },
   "globalSettings": {

@@ -280,15 +280,96 @@ export class FeederManagerService implements Service {
     }
 
     this.logger.info(`Running feeder once: ${feederId}`);
-    await this.runFeeder(config);
     
-    // Return the latest result (this would need to be tracked)
-    return {
-      success: true,
-      timestamp: new Date(),
-      duration: 0,
-      retryCount: 0
-    };
+    // Initialize metrics if not already initialized
+    if (!this.feederMetrics.has(feederId)) {
+      this.feederMetrics.set(feederId, {
+        feederId,
+        totalRuns: 0,
+        successfulRuns: 0,
+        failedRuns: 0,
+        averageResponseTime: 0,
+        consecutiveFailures: 0,
+        uptime: 100
+      });
+    }
+
+    const startTime = Date.now();
+    let result: PriceFeedResult;
+
+    try {
+      this.logger.debug(`Running feeder: ${feederId}`);
+      
+      switch (config.method) {
+        case 'fetch':
+          result = await this.priceLookupService.fetchWithRetry(config);
+          break;
+        case 'post':
+          // For post-only method, we'd need existing price data
+          result = {
+            success: false,
+            error: 'Post-only method not yet implemented',
+            timestamp: new Date(),
+            duration: Date.now() - startTime,
+            retryCount: 0
+          };
+          break;
+        case 'fetch-and-post':
+          result = await this.priceOracleService.fetchAndPost(config, this.priceLookupService);
+          break;
+        default:
+          throw new Error(`Unsupported feeder method: ${config.method}`);
+      }
+
+      const duration = Date.now() - startTime;
+      result.duration = duration;
+
+      // Update metrics
+      const metrics = this.feederMetrics.get(feederId)!;
+      metrics.totalRuns++;
+      metrics.averageResponseTime = (metrics.averageResponseTime * (metrics.totalRuns - 1) + duration) / metrics.totalRuns;
+      
+      if (result.success) {
+        metrics.successfulRuns++;
+        metrics.consecutiveFailures = 0;
+        metrics.lastSuccess = new Date();
+        metrics.uptime = (metrics.successfulRuns / metrics.totalRuns) * 100;
+        
+        this.logger.info(`Feeder ${feederId} completed successfully in ${duration}ms`);
+      } else {
+        metrics.failedRuns++;
+        metrics.consecutiveFailures++;
+        metrics.lastFailure = new Date();
+        metrics.uptime = (metrics.successfulRuns / metrics.totalRuns) * 100;
+        
+        this.logger.warn(`Feeder ${feederId} failed: ${result.error}`);
+      }
+
+      return result;
+
+    } catch (error) {
+      const duration = Date.now() - startTime;
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      
+      const metrics = this.feederMetrics.get(feederId)!;
+      metrics.totalRuns++;
+      metrics.failedRuns++;
+      metrics.consecutiveFailures++;
+      metrics.lastFailure = new Date();
+      metrics.uptime = (metrics.successfulRuns / metrics.totalRuns) * 100;
+      
+      this.logger.error(`Feeder ${feederId} threw error:`, errorMessage);
+      
+      result = {
+        success: false,
+        error: errorMessage,
+        timestamp: new Date(),
+        duration,
+        retryCount: 0
+      };
+
+      return result;
+    }
   }
 
   public stopFeeder(feederId: string): void {
