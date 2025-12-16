@@ -316,6 +316,41 @@ export class NetworkConfigLoader {
     if (!networkConfig) {
       throw new Error(`Network config not found for networkId: ${networkId}`);
     }
+
+    // Convert networkId to environment variable prefix (e.g., "algorand-mainnet" -> "ALGORAND_MAINNET")
+    const envPrefix = networkId.toUpperCase().replace(/-/g, "_");
+
+    // Check environment variables first (highest priority)
+    const envUrl = process.env[`${envPrefix}_ALGOD_URL`];
+    const envPort = process.env[`${envPrefix}_ALGOD_PORT`];
+    const envToken = process.env[`${envPrefix}_ALGOD_TOKEN`];
+
+    if (envUrl) {
+      const token = envToken || "";
+      const port = envPort ? parseInt(envPort, 10) : 443;
+      this.logger.debug(
+        `Using environment variable override for ${networkId} algod: ${envUrl}:${port}`
+      );
+      return new Algodv2(token, envUrl, port);
+    }
+
+    // Check for explicit algod override in network config
+    if (networkConfig.algod?.url) {
+      const token = networkConfig.algod.token || "";
+      const port = networkConfig.algod.port || 443;
+      return new Algodv2(token, networkConfig.algod.url, port);
+    }
+
+    // Check detailed network config for rpcUrl and rpcToken
+    const detailedConfig = this.getDetailedNetworkConfig(networkId);
+    if (detailedConfig?.networkConfig) {
+      const token = detailedConfig.networkConfig.rpcToken || "";
+      const port = detailedConfig.networkConfig.rpcPort || 443;
+      const url = detailedConfig.networkConfig.rpcUrl || networkConfig.rpcUrl;
+      return new Algodv2(token, url, port);
+    }
+
+    // Fall back to basic network config
     return new Algodv2("", networkConfig.rpcUrl, 443);
   }
 

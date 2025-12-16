@@ -115,6 +115,12 @@ export interface NetworkConfig {
   enabled: boolean;
   timeout: number;
   retries: number;
+  // Optional overrides for algod configuration
+  algod?: {
+    url?: string; // Override rpcUrl for algod client
+    port?: number; // Override default port (default: 443)
+    token?: string; // API token for algod (if required)
+  };
 }
 
 // Enhanced Network Configuration Types for detailed network configs

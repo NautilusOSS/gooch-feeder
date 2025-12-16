@@ -18,7 +18,12 @@
       "explorerUrl": "https://allo.info",
       "enabled": true,
       "timeout": 30000,
-      "retries": 3
+      "retries": 3,
+      "algod": {
+        "url": "https://mainnet-api.algonode.cloud",
+        "port": 443,
+        "token": ""
+      }
     }
   },
   "defaultNetwork": "voi-mainnet",

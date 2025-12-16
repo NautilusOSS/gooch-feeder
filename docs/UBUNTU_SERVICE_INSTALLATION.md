@@ -2,6 +2,23 @@
 
 This guide will walk you through installing Gooch Feeder as a systemd service on Ubuntu, allowing it to run automatically on boot and be managed using standard system service commands.
 
+## Quick Reference
+
+**Create system user:**
+```bash
+sudo useradd -r -s /bin/false -d /opt/gooch-feeder gooch-feeder
+sudo chown -R gooch-feeder:gooch-feeder /opt/gooch-feeder
+```
+
+**Service management:**
+```bash
+sudo systemctl start gooch-feeder.service    # Start service
+sudo systemctl stop gooch-feeder.service     # Stop service
+sudo systemctl restart gooch-feeder.service  # Restart service
+sudo systemctl status gooch-feeder.service   # Check status
+sudo journalctl -u gooch-feeder.service -f   # View logs
+```
+
 ## Prerequisites
 
 - Ubuntu 18.04 or later
@@ -32,14 +49,38 @@ sudo apt install -y nodejs npm
 
 ## Step 2: Install and Configure Gooch Feeder
 
-1. **Clone or copy the repository** to your desired location (e.g., `/opt/gooch-feeder` or `/home/username/gooch-feeder`):
+1. **Copy the repository** to your desired location (e.g., `/opt/gooch-feeder`):
 
+**Option A: Using rsync from local machine to remote server:**
 ```bash
-# Example: Install to /opt/gooch-feeder
+# From your local machine, copy to remote Ubuntu server
+rsync -avz --exclude 'node_modules' --exclude '.git' --exclude 'dist' \
+  /path/to/local/gooch-feeder/ user@your-server:/opt/gooch-feeder/
+
+# Or if copying to a temporary location first
+rsync -avz --exclude 'node_modules' --exclude '.git' --exclude 'dist' \
+  /path/to/local/gooch-feeder/ user@your-server:/tmp/gooch-feeder/
+```
+
+**Option B: Using rsync on the same server:**
+```bash
+# Create the directory
+sudo mkdir -p /opt/gooch-feeder
+sudo chown $USER:$USER /opt/gooch-feeder
+
+# Copy files (adjust source path as needed)
+rsync -avz --exclude 'node_modules' --exclude '.git' --exclude 'dist' \
+  . /opt/gooch-feeder/
+```
+
+**Option C: Using git clone (if repository is in git):**
+```bash
 sudo mkdir -p /opt
 sudo chown $USER:$USER /opt/gooch-feeder
-# Then clone/copy your repository to /opt/gooch-feeder
+git clone <repository-url> /opt/gooch-feeder
 ```
+
+**Note:** The `rsync` command excludes `node_modules`, `.git`, and `dist` directories to speed up transfer. These will be regenerated during installation.
 
 2. **Install dependencies**:
 
@@ -78,9 +119,24 @@ Edit the configuration files as needed:
 For security, it's recommended to run the service as a dedicated non-root user:
 
 ```bash
+# Create the system user
 sudo useradd -r -s /bin/false -d /opt/gooch-feeder gooch-feeder
+
+# Verify the user was created
+id gooch-feeder
+
+# Set ownership of the application directory
 sudo chown -R gooch-feeder:gooch-feeder /opt/gooch-feeder
+
+# Protect the .env file (set permissions after creating it)
+sudo chmod 600 /opt/gooch-feeder/.env
+sudo chown gooch-feeder:gooch-feeder /opt/gooch-feeder/.env
 ```
+
+**What this does:**
+- `-r`: Creates a system user (lower UID, no login shell)
+- `-s /bin/false`: Prevents shell access for security
+- `-d /opt/gooch-feeder`: Sets the home directory
 
 If you prefer to run as your own user, skip this step.
 
@@ -386,14 +442,33 @@ When updating the application:
 sudo systemctl stop gooch-feeder.service
 ```
 
-2. **Update the code** (pull from git, etc.):
+2. **Update the code**:
+
+**Option A: Using rsync from local machine to remote server:**
+```bash
+# From your local machine
+rsync -avz --exclude 'node_modules' --exclude '.git' --exclude 'dist' \
+  --exclude '.env' --exclude 'logs' \
+  /path/to/local/gooch-feeder/ user@your-server:/opt/gooch-feeder/
+```
+
+**Option B: Using rsync on the same server:**
 ```bash
 cd /opt/gooch-feeder
-git pull  # or copy new files
+rsync -avz --exclude 'node_modules' --exclude '.git' --exclude 'dist' \
+  --exclude '.env' --exclude 'logs' \
+  /path/to/source/gooch-feeder/ /opt/gooch-feeder/
+```
+
+**Option C: Using git (if repository is in git):**
+```bash
+cd /opt/gooch-feeder
+git pull
 ```
 
 3. **Install new dependencies** (if needed):
 ```bash
+cd /opt/gooch-feeder
 npm install
 ```
 
@@ -402,10 +477,17 @@ npm install
 npm run build
 ```
 
-5. **Start the service**:
+5. **Set proper ownership** (if using dedicated user):
+```bash
+sudo chown -R gooch-feeder:gooch-feeder /opt/gooch-feeder
+```
+
+6. **Start the service**:
 ```bash
 sudo systemctl start gooch-feeder.service
 ```
+
+**Note:** The rsync commands exclude `node_modules`, `.git`, `dist`, `.env`, and `logs` to preserve local configurations and avoid unnecessary transfers.
 
 ## Monitoring
 
