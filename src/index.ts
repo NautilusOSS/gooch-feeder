@@ -1,4 +1,5 @@
 import { config } from 'dotenv';
+import * as path from 'path';
 import { Logger } from './utils/logger';
 import { ServiceManager } from './services/service-manager';
 import { NetworkConfigLoader } from './utils/network-config-loader';
@@ -8,7 +9,43 @@ import { FeederManagerService } from './services/feeder-manager-service';
 import { AccountService } from './services/account-service';
 
 // Load environment variables
-config();
+// Try multiple paths to handle both development (ts-node) and production (compiled) scenarios
+let envLoaded = false;
+const possibleEnvPaths = [
+  path.resolve(process.cwd(), '.env'),           // From current working directory
+  path.resolve(__dirname, '..', '.env'),        // From dist/ or src/ directory
+  path.resolve(__dirname, '..', '..', '.env'),  // Fallback for nested structures
+];
+
+for (const envPath of possibleEnvPaths) {
+  const result = config({ path: envPath });
+  if (!result.error) {
+    envLoaded = true;
+    if (process.env.NODE_ENV === 'development' || process.env.LOG_LEVEL === 'debug') {
+      console.log(`Loaded .env file from: ${envPath}`);
+    }
+    break;
+  }
+}
+
+// Also try default dotenv behavior (loads from process.cwd())
+if (!envLoaded) {
+  const defaultResult = config();
+  if (!defaultResult.error) {
+    envLoaded = true;
+    if (process.env.NODE_ENV === 'development' || process.env.LOG_LEVEL === 'debug') {
+      console.log(`Loaded .env file using default dotenv behavior`);
+    }
+  }
+}
+
+if (!envLoaded && (process.env.NODE_ENV === 'development' || process.env.LOG_LEVEL === 'debug')) {
+  console.warn(`Warning: Could not load .env file from any of the attempted paths.`);
+  console.warn(`Tried paths: ${possibleEnvPaths.join(', ')}`);
+  console.warn(`Current working directory: ${process.cwd()}`);
+  console.warn(`__dirname: ${__dirname}`);
+  console.warn(`Environment variables may need to be set externally.`);
+}
 
 class GoochFeederService {
   private logger: Logger;
@@ -139,11 +176,29 @@ class GoochFeederService {
       this.logger.info('Loading network configurations...');
       const configs = await this.networkConfigLoader.loadConfigs();
       
-      // Log loaded networks
+      // Debug: Log algod environment variable configuration
+      if (process.env.LOG_LEVEL === 'debug' || process.env.NODE_ENV === 'development') {
+        this.networkConfigLoader.logAlgodEnvVars();
+      }
+      
+      // Log loaded networks and verify algod client configuration
       const enabledNetworks = this.networkConfigLoader.getEnabledNetworks();
       this.logger.info(`Loaded ${enabledNetworks.length} enabled networks:`);
       enabledNetworks.forEach(network => {
         this.logger.info(`  - ${network.name} (Chain ID: ${network.chainId})`);
+        
+        // Verify algod client can be created (this will log which config is used)
+        try {
+          const networkId = Object.keys(configs.networks).find(
+            id => configs.networks[id].name === network.name
+          );
+          if (networkId) {
+            // This will trigger the logging in getAlgodClient
+            this.networkConfigLoader.getAlgodClient(networkId);
+          }
+        } catch (error) {
+          this.logger.warn(`Failed to create algod client for ${network.name}:`, error);
+        }
       });
       
       // Log detailed network configurations

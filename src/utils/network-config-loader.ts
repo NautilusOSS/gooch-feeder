@@ -319,17 +319,25 @@ export class NetworkConfigLoader {
 
     // Convert networkId to environment variable prefix (e.g., "algorand-mainnet" -> "ALGORAND_MAINNET")
     const envPrefix = networkId.toUpperCase().replace(/-/g, "_");
+    const envUrlKey = `${envPrefix}_ALGOD_URL`;
+    const envPortKey = `${envPrefix}_ALGOD_PORT`;
+    const envTokenKey = `${envPrefix}_ALGOD_TOKEN`;
 
     // Check environment variables first (highest priority)
-    const envUrl = process.env[`${envPrefix}_ALGOD_URL`];
-    const envPort = process.env[`${envPrefix}_ALGOD_PORT`];
-    const envToken = process.env[`${envPrefix}_ALGOD_TOKEN`];
+    const envUrl = process.env[envUrlKey];
+    const envPort = process.env[envPortKey];
+    const envToken = process.env[envTokenKey];
+
+    // Log what we're checking (helpful for debugging)
+    this.logger.debug(
+      `Checking env vars for ${networkId}: ${envUrlKey}=${envUrl ? 'set' : 'undefined'}, ${envPortKey}=${envPort || 'undefined'}, ${envTokenKey}=${envToken ? 'set' : 'undefined'}`
+    );
 
     if (envUrl) {
       const token = envToken || "";
       const port = envPort ? parseInt(envPort, 10) : 443;
-      this.logger.debug(
-        `Using environment variable override for ${networkId} algod: ${envUrl}:${port}`
+      this.logger.info(
+        `[ALGOD CONFIG] Using environment variable override for ${networkId}: ${envUrl}:${port}`
       );
       return new Algodv2(token, envUrl, port);
     }
@@ -338,6 +346,9 @@ export class NetworkConfigLoader {
     if (networkConfig.algod?.url) {
       const token = networkConfig.algod.token || "";
       const port = networkConfig.algod.port || 443;
+      this.logger.info(
+        `[ALGOD CONFIG] Using config algod override for ${networkId}: ${networkConfig.algod.url}:${port}`
+      );
       return new Algodv2(token, networkConfig.algod.url, port);
     }
 
@@ -347,15 +358,69 @@ export class NetworkConfigLoader {
       const token = detailedConfig.networkConfig.rpcToken || "";
       const port = detailedConfig.networkConfig.rpcPort || 443;
       const url = detailedConfig.networkConfig.rpcUrl || networkConfig.rpcUrl;
+      this.logger.info(
+        `[ALGOD CONFIG] Using detailed network config for ${networkId} algod: ${url}:${port}`
+      );
       return new Algodv2(token, url, port);
     }
 
     // Fall back to basic network config
+    this.logger.info(
+      `[ALGOD CONFIG] Using basic network config (default) for ${networkId} algod: ${networkConfig.rpcUrl}:443`
+    );
     return new Algodv2("", networkConfig.rpcUrl, 443);
   }
 
   public async reloadConfigs(): Promise<NetworkConfigs> {
     this.logger.info("Reloading network configurations...");
     return this.loadConfigs();
+  }
+
+  /**
+   * Debug helper: Log all environment variables related to algod configuration
+   */
+  public logAlgodEnvVars(): void {
+    if (!this.networkConfigs) {
+      this.logger.warn("Network configs not loaded yet");
+      return;
+    }
+
+    this.logger.info("Checking for algod-related environment variables...");
+    const envVars = Object.keys(process.env)
+      .filter((key) => key.includes("ALGOD"))
+      .sort();
+
+    if (envVars.length === 0) {
+      this.logger.info("No ALGOD-related environment variables found");
+    } else {
+      this.logger.info(`Found ${envVars.length} ALGOD-related environment variables:`);
+      envVars.forEach((key) => {
+        const value = process.env[key];
+        // Mask sensitive values (tokens)
+        const displayValue = key.includes("TOKEN") && value
+          ? "***"
+          : value || "undefined";
+        this.logger.info(`  ${key}=${displayValue}`);
+      });
+    }
+
+    // Also check what each network would use
+    this.logger.info("Algod client resolution for each network:");
+    Object.keys(this.networkConfigs.networks).forEach((networkId) => {
+      const envPrefix = networkId.toUpperCase().replace(/-/g, "_");
+      const envUrl = process.env[`${envPrefix}_ALGOD_URL`];
+      const envPort = process.env[`${envPrefix}_ALGOD_PORT`];
+      const envToken = process.env[`${envPrefix}_ALGOD_TOKEN`];
+      const networkConfig = this.getNetworkConfig(networkId);
+      const detailedConfig = this.getDetailedNetworkConfig(networkId);
+
+      this.logger.info(`  ${networkId}:`);
+      this.logger.info(`    Env URL: ${envUrl || "not set"}`);
+      this.logger.info(`    Env Port: ${envPort || "not set"}`);
+      this.logger.info(`    Env Token: ${envToken ? "***" : "not set"}`);
+      this.logger.info(`    Config algod.url: ${networkConfig?.algod?.url || "not set"}`);
+      this.logger.info(`    Detailed rpcUrl: ${detailedConfig?.networkConfig?.rpcUrl || "not set"}`);
+      this.logger.info(`    Basic rpcUrl: ${networkConfig?.rpcUrl || "not set"}`);
+    });
   }
 }
