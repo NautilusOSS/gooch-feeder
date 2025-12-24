@@ -1,6 +1,6 @@
 import { Logger, ErrorContext } from "../utils/logger";
 import { ApiErrorHelper } from "../utils/api-error-helper";
-import { PriceFeederConfig, PriceData, PriceFeedResult } from "../types";
+import { PriceFeederConfig, PriceData, PriceFeedResult, BatchFeedItem, BatchFeedResult, BatchProcessingResult } from "../types";
 import { NetworkConfigLoader } from "../utils/network-config-loader";
 import { APP_SPEC as PriceOracleAppSpec } from "../clients/PriceOracleClient";
 import { CONTRACT } from "ulujs";
@@ -817,5 +817,296 @@ export class PriceOracleService {
         retryCount: 0,
       };
     }
+  }
+
+  /**
+   * Posts a batch of prices to the oracle
+   * Groups by network and destination type for efficient processing
+   */
+  public async postBatch(
+    batchItems: BatchFeedItem[],
+    priceLookupService: any
+  ): Promise<BatchProcessingResult> {
+    const startTime = Date.now();
+    const results: BatchFeedResult[] = [];
+
+    if (batchItems.length === 0) {
+      return {
+        success: true,
+        totalProcessed: 0,
+        successful: 0,
+        failed: 0,
+        results: [],
+        duration: 0,
+        timestamp: new Date(),
+      };
+    }
+
+    this.logger.info(`Processing batch of ${batchItems.length} feeders`);
+
+    // Group by network and destination type
+    const groupedBatches = this.groupBatchItems(batchItems);
+
+    // Process each group
+    for (const [groupKey, items] of groupedBatches) {
+      const [networkId, destinationType] = groupKey.split("::");
+      this.logger.debug(
+        `Processing batch group: ${networkId} (${destinationType}) with ${items.length} items`
+      );
+
+      if (destinationType === "price-oracle" && items.length > 1) {
+        // Try to batch post to oracle (if all same network and contract)
+        const batchResult = await this.postBatchToPriceOracle(items);
+        results.push(...batchResult);
+      } else {
+        // Process individually or by destination type
+        for (const item of items) {
+          let result: PriceFeedResult;
+
+          if (item.priceData) {
+            // Price data already fetched, just post
+            result = await this.postPrice(item.config, item.priceData);
+          } else {
+            // Need to fetch and post
+            result = await this.fetchAndPost(item.config, priceLookupService);
+          }
+
+          results.push({
+            feederId: item.config.id,
+            result,
+            config: item.config,
+          });
+        }
+      }
+    }
+
+    const duration = Date.now() - startTime;
+    const successful = results.filter((r) => r.result.success).length;
+    const failed = results.length - successful;
+
+    this.logger.info(
+      `Batch processing completed: ${successful}/${results.length} successful in ${duration}ms`
+    );
+
+    return {
+      success: failed === 0,
+      totalProcessed: results.length,
+      successful,
+      failed,
+      results,
+      duration,
+      timestamp: new Date(),
+    };
+  }
+
+  /**
+   * Groups batch items by network and destination type
+   */
+  private groupBatchItems(
+    items: BatchFeedItem[]
+  ): Map<string, BatchFeedItem[]> {
+    const groups = new Map<string, BatchFeedItem[]>();
+
+    for (const item of items) {
+      const networkId = item.config.networkId;
+      const destinationType = item.config.destination.type;
+      const key = `${networkId}::${destinationType}`;
+
+      if (!groups.has(key)) {
+        groups.set(key, []);
+      }
+      groups.get(key)!.push(item);
+    }
+
+    return groups;
+  }
+
+  /**
+   * Posts a batch of prices to the price oracle contract
+   * Attempts to use atomic transaction composer for efficiency
+   */
+  private async postBatchToPriceOracle(
+    items: BatchFeedItem[]
+  ): Promise<BatchFeedResult[]> {
+    const results: BatchFeedResult[] = [];
+
+    if (items.length === 0) {
+      return results;
+    }
+
+    // All items should be same network (grouped)
+    const networkId = items[0].config.networkId;
+    const networkConfig = this.networkConfigLoader.getDetailedNetworkConfig(
+      networkId
+    );
+
+    if (!networkConfig) {
+      this.logger.error(
+        `Network configuration not found for batch: ${networkId}`
+      );
+      // Return failed results for all items
+      for (const item of items) {
+        results.push({
+          feederId: item.config.id,
+          result: {
+            success: false,
+            error: `Network configuration not found for ${networkId}`,
+            timestamp: new Date(),
+            duration: 0,
+            retryCount: 0,
+          },
+          config: item.config,
+        });
+      }
+      return results;
+    }
+
+    const algod = this.networkConfigLoader.getAlgodClient(networkId);
+    const secretKey = this.accountService.getSecretKey();
+    const address = this.accountService.getAddress();
+
+    if (!secretKey || !address) {
+      const error = "Account service not properly initialized";
+      this.logger.error(error);
+      for (const item of items) {
+        results.push({
+          feederId: item.config.id,
+          result: {
+            success: false,
+            error,
+            timestamp: new Date(),
+            duration: 0,
+            retryCount: 0,
+          },
+          config: item.config,
+        });
+      }
+      return results;
+    }
+
+    // Get contract address (should be same for all items in batch)
+    const contractAddress =
+      items[0].config.destination.contractAddress ||
+      networkConfig.networkConfig.contracts.priceOracle;
+
+    if (!contractAddress) {
+      const error = `Price oracle contract address not found for network ${networkId}`;
+      this.logger.error(error);
+      for (const item of items) {
+        results.push({
+          feederId: item.config.id,
+          result: {
+            success: false,
+            error,
+            timestamp: new Date(),
+            duration: 0,
+            retryCount: 0,
+          },
+          config: item.config,
+        });
+      }
+      return results;
+    }
+
+    const functionName = items[0].config.destination.functionName;
+    if (!functionName) {
+      const error = "Function name not specified";
+      this.logger.error(error);
+      for (const item of items) {
+        results.push({
+          feederId: item.config.id,
+          result: {
+            success: false,
+            error,
+            timestamp: new Date(),
+            duration: 0,
+            retryCount: 0,
+          },
+          config: item.config,
+        });
+      }
+      return results;
+    }
+
+    // Check if all items have price data
+    const itemsWithPriceData = items.filter((item) => item.priceData);
+    if (itemsWithPriceData.length !== items.length) {
+      this.logger.warn(
+        `Some items in batch missing price data. Processing ${itemsWithPriceData.length}/${items.length} items.`
+      );
+    }
+
+    // For now, process individually but in parallel
+    // In the future, could use atomic transaction composer if contract supports batch updates
+    this.logger.debug(
+      `Posting batch of ${itemsWithPriceData.length} prices to oracle contract ${contractAddress}`
+    );
+
+    const postPromises = itemsWithPriceData.map(async (item) => {
+      const startTime = Date.now();
+      try {
+        if (!item.priceData) {
+          return {
+            feederId: item.config.id,
+            result: {
+              success: false,
+              error: "Price data not available",
+              timestamp: new Date(),
+              duration: Date.now() - startTime,
+              retryCount: 0,
+            },
+            config: item.config,
+          } as BatchFeedResult;
+        }
+
+        const result = await this.postToPriceOracle(item.config, item.priceData);
+        return {
+          feederId: item.config.id,
+          result,
+          config: item.config,
+        } as BatchFeedResult;
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : "Unknown error";
+        return {
+          feederId: item.config.id,
+          result: {
+            success: false,
+            error: errorMessage,
+            timestamp: new Date(),
+            duration: Date.now() - startTime,
+            retryCount: 0,
+          },
+          config: item.config,
+        } as BatchFeedResult;
+      }
+    });
+
+    // Process in parallel with concurrency limit
+    const batchSize = 5; // Process 5 at a time
+    for (let i = 0; i < postPromises.length; i += batchSize) {
+      const batch = postPromises.slice(i, i + batchSize);
+      const batchResults = await Promise.all(batch);
+      results.push(...batchResults);
+    }
+
+    // Add failed results for items without price data
+    for (const item of items) {
+      if (!item.priceData) {
+        results.push({
+          feederId: item.config.id,
+          result: {
+            success: false,
+            error: "Price data not available for batch processing",
+            timestamp: new Date(),
+            duration: 0,
+            retryCount: 0,
+          },
+          config: item.config,
+        });
+      }
+    }
+
+    return results;
   }
 }

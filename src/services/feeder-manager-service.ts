@@ -4,7 +4,7 @@ import { NetworkConfigLoader } from '../utils/network-config-loader';
 import { PriceLookupService } from './price-lookup-service';
 import { PriceOracleService } from './price-oracle-service';
 import { AccountService } from './account-service';
-import { PriceFeederConfig, PriceFeedResult, FeederMetrics } from '../types';
+import { PriceFeederConfig, PriceFeedResult, FeederMetrics, BatchFeedItem, BatchProcessingConfig, BatchProcessingResult } from '../types';
 
 export class FeederManagerService implements Service {
   public name = 'FeederManagerService';
@@ -15,7 +15,17 @@ export class FeederManagerService implements Service {
   private feederConfigs: Map<string, PriceFeederConfig> = new Map();
   private feederMetrics: Map<string, FeederMetrics> = new Map();
   private activeFeeders: Map<string, NodeJS.Timeout> = new Map();
+  private feederLastRun: Map<string, Date> = new Map();
   private isRunning: boolean = false;
+  private batchProcessingEnabled: boolean = true;
+  private batchProcessingConfig: BatchProcessingConfig = {
+    enabled: true,
+    batchInterval: 30000, // 30 seconds - check for feeders to process
+    maxBatchSize: 50,
+    groupByNetwork: true,
+    priorityOrder: true
+  };
+  private batchProcessingInterval?: NodeJS.Timeout;
 
   constructor(networkConfigLoader: NetworkConfigLoader, accountService: AccountService) {
     this.logger = new Logger('FeederManagerService');
@@ -51,13 +61,20 @@ export class FeederManagerService implements Service {
     
     this.isRunning = false;
     
-    // Stop all active feeders
+    // Stop batch processing if running
+    if (this.batchProcessingInterval) {
+      clearInterval(this.batchProcessingInterval);
+      this.batchProcessingInterval = undefined;
+    }
+    
+    // Stop all active feeders (individual mode)
     for (const [feederId, interval] of this.activeFeeders) {
       clearInterval(interval);
       this.logger.debug(`Stopped feeder: ${feederId}`);
     }
     
     this.activeFeeders.clear();
+    this.feederLastRun.clear();
     this.logger.info('Feeder Manager Service shut down');
   }
 
@@ -125,18 +142,166 @@ export class FeederManagerService implements Service {
     
     this.logger.info(`Starting ${enabledFeeders.length} enabled feeders`);
     
-    // Stagger feeder starts to avoid hitting rate limits
-    enabledFeeders.forEach((feederConfig, index) => {
-      const delay = index * 5000; // 5 seconds between each feeder start
-      
-      if (delay > 0) {
-        setTimeout(() => {
+    // Check if batch processing is enabled
+    const configs = this.networkConfigLoader.getConfigs();
+    if (configs?.globalSettings?.batchProcessing) {
+      this.batchProcessingConfig = {
+        ...this.batchProcessingConfig,
+        ...configs.globalSettings.batchProcessing
+      };
+      this.batchProcessingEnabled = this.batchProcessingConfig.enabled !== false;
+    }
+
+    if (this.batchProcessingEnabled) {
+      this.logger.info('Starting batch processing mode');
+      this.startBatchProcessing();
+    } else {
+      this.logger.info('Starting individual feeder mode');
+      // Stagger feeder starts to avoid hitting rate limits
+      enabledFeeders.forEach((feederConfig, index) => {
+        const delay = index * 5000; // 5 seconds between each feeder start
+        
+        if (delay > 0) {
+          setTimeout(() => {
+            this.startFeeder(feederConfig);
+          }, delay);
+        } else {
           this.startFeeder(feederConfig);
-        }, delay);
-      } else {
-        this.startFeeder(feederConfig);
-      }
+        }
+      });
+    }
+  }
+
+  /**
+   * Starts batch processing mode
+   * Collects feeders that need to run and processes them in batches
+   */
+  private startBatchProcessing(): void {
+    // Initialize last run times for all enabled feeders
+    const enabledFeeders = Array.from(this.feederConfigs.values()).filter(f => f.enabled);
+    const now = new Date();
+    enabledFeeders.forEach(feeder => {
+      // Set initial last run to now minus interval so they're ready to run
+      this.feederLastRun.set(feeder.id, new Date(now.getTime() - feeder.interval));
     });
+
+    // Start batch processing interval
+    this.batchProcessingInterval = setInterval(async () => {
+      if (this.isRunning) {
+        await this.processBatch();
+      }
+    }, this.batchProcessingConfig.batchInterval);
+
+    this.logger.info(
+      `Batch processing started with ${this.batchProcessingConfig.batchInterval}ms interval`
+    );
+  }
+
+  /**
+   * Collects feeders that need to run and processes them in batches
+   */
+  private async processBatch(): Promise<void> {
+    const now = new Date();
+    const batchItems: BatchFeedItem[] = [];
+
+    // Collect feeders that need to run
+    for (const [feederId, config] of this.feederConfigs) {
+      if (!config.enabled) continue;
+
+      const lastRun = this.feederLastRun.get(feederId);
+      const timeSinceLastRun = lastRun 
+        ? now.getTime() - lastRun.getTime()
+        : Infinity;
+
+      // Check if feeder needs to run (interval has elapsed)
+      if (timeSinceLastRun >= config.interval) {
+        batchItems.push({
+          config,
+          priority: config.priority || 0,
+          scheduledTime: new Date(),
+        });
+      }
+    }
+
+    if (batchItems.length === 0) {
+      return; // No feeders need to run
+    }
+
+    // Sort by priority if enabled
+    if (this.batchProcessingConfig.priorityOrder) {
+      batchItems.sort((a, b) => b.priority - a.priority);
+    }
+
+    // Process in batches if maxBatchSize is set
+    const maxBatchSize = this.batchProcessingConfig.maxBatchSize || batchItems.length;
+    
+    for (let i = 0; i < batchItems.length; i += maxBatchSize) {
+      const batch = batchItems.slice(i, i + maxBatchSize);
+      await this.processBatchItems(batch);
+    }
+  }
+
+  /**
+   * Processes a batch of feeder items
+   */
+  private async processBatchItems(batchItems: BatchFeedItem[]): Promise<void> {
+    this.logger.debug(`Processing batch of ${batchItems.length} feeders`);
+
+    // First, fetch prices for all feeders that need fetching
+    const fetchPromises = batchItems
+      .filter(item => item.config.method === 'fetch-and-post' || item.config.method === 'fetch')
+      .map(async (item) => {
+        try {
+          const fetchResult = await this.priceLookupService.fetchWithRetry(item.config);
+          if (fetchResult.success && fetchResult.data) {
+            item.priceData = fetchResult.data;
+          }
+        } catch (error) {
+          this.logger.warn(`Failed to fetch price for ${item.config.id}:`, error);
+        }
+      });
+
+    await Promise.all(fetchPromises);
+
+    // Now process the batch
+    const batchResult = await this.priceOracleService.postBatch(batchItems, this.priceLookupService);
+
+    // Update metrics and last run times
+    for (const batchFeedResult of batchResult.results) {
+      const metrics = this.feederMetrics.get(batchFeedResult.feederId);
+      const config = batchFeedResult.config;
+
+      if (metrics) {
+        metrics.totalRuns++;
+        metrics.averageResponseTime = 
+          (metrics.averageResponseTime * (metrics.totalRuns - 1) + batchFeedResult.result.duration) / 
+          metrics.totalRuns;
+
+        if (batchFeedResult.result.success) {
+          metrics.successfulRuns++;
+          metrics.consecutiveFailures = 0;
+          metrics.lastSuccess = new Date();
+          metrics.uptime = (metrics.successfulRuns / metrics.totalRuns) * 100;
+        } else {
+          metrics.failedRuns++;
+          metrics.consecutiveFailures++;
+          metrics.lastFailure = new Date();
+          metrics.uptime = (metrics.successfulRuns / metrics.totalRuns) * 100;
+
+          // Try fallback if configured
+          if (config.fallback?.enabled && config.fallback.sources.length > 0) {
+            await this.tryFallbackSources(config, batchFeedResult.result.error || 'Unknown error');
+          }
+        }
+      }
+
+      // Update last run time
+      this.feederLastRun.set(batchFeedResult.feederId, new Date());
+    }
+
+    this.logger.info(
+      `Batch processed: ${batchResult.successful}/${batchResult.totalProcessed} successful in ${batchResult.duration}ms`
+    );
   }
 
   private startFeeder(config: PriceFeederConfig): void {

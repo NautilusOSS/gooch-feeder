@@ -8,7 +8,7 @@
       "marketId": "41877720",
       "assetSymbol": "VOI",
       "enabled": true,
-      "interval": 120000,
+      "interval": 900000,
       "timeout": 10000,
       "retries": 3,
       "priority": 10,
@@ -33,8 +33,14 @@
             "name": "post_price",
             "type": "function",
             "inputs": [
-              { "name": "tokenId", "type": "uint64" },
-              { "name": "price", "type": "uint256" }
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
             ]
           }
         ]
@@ -43,7 +49,10 @@
         "minPrice": 0.0001,
         "maxPrice": 10,
         "maxPriceChange": 50,
-        "requiredFields": ["price", "timestamp"]
+        "requiredFields": [
+          "price",
+          "timestamp"
+        ]
       }
     },
     "voi-mainnet-47139778-UNIT": {
@@ -54,7 +63,7 @@
       "marketId": "420069",
       "assetSymbol": "UNIT",
       "enabled": true,
-      "interval": 120000,
+      "interval": 900000,
       "timeout": 10000,
       "retries": 3,
       "priority": 10,
@@ -77,8 +86,14 @@
             "name": "post_price",
             "type": "function",
             "inputs": [
-              { "name": "tokenId", "type": "uint64" },
-              { "name": "price", "type": "uint256" }
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
             ]
           }
         ]
@@ -87,7 +102,10 @@
         "minPrice": 0.0001,
         "maxPrice": 10,
         "maxPriceChange": 50,
-        "requiredFields": ["price", "timestamp"]
+        "requiredFields": [
+          "price",
+          "timestamp"
+        ]
       }
     },
     "voi-mainnet-47139778-POW": {
@@ -98,7 +116,7 @@
       "marketId": "40153155",
       "assetSymbol": "POW",
       "enabled": true,
-      "interval": 120000,
+      "interval": 900000,
       "timeout": 10000,
       "retries": 3,
       "priority": 10,
@@ -121,8 +139,14 @@
             "name": "post_price",
             "type": "function",
             "inputs": [
-              { "name": "tokenId", "type": "uint64" },
-              { "name": "price", "type": "uint256" }
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
             ]
           }
         ]
@@ -131,7 +155,10 @@
         "minPrice": 0.0001,
         "maxPrice": 10,
         "maxPriceChange": 50,
-        "requiredFields": ["price", "timestamp"]
+        "requiredFields": [
+          "price",
+          "timestamp"
+        ]
       }
     },
     "algorand-mainnet-3333688282-ALGO": {
@@ -142,7 +169,7 @@
       "marketId": "3207744109",
       "assetSymbol": "ALGO",
       "enabled": true,
-      "interval": 120000,
+      "interval": 900000,
       "timeout": 10000,
       "retries": 3,
       "priority": 10,
@@ -168,8 +195,14 @@
             "name": "post_price",
             "type": "function",
             "inputs": [
-              { "name": "tokenId", "type": "uint64" },
-              { "name": "price", "type": "uint256" }
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
             ]
           }
         ]
@@ -178,7 +211,10 @@
         "minPrice": 0.01,
         "maxPrice": 10,
         "maxPriceChange": 50,
-        "requiredFields": ["price", "timestamp"]
+        "requiredFields": [
+          "price",
+          "timestamp"
+        ]
       }
     },
     "algorand-mainnet-3333688282-UNIT": {
@@ -189,7 +225,7 @@
       "marketId": "3220125024",
       "assetSymbol": "UNIT",
       "enabled": true,
-      "interval": 120000,
+      "interval": 900000,
       "timeout": 10000,
       "retries": 3,
       "priority": 10,
@@ -214,8 +250,14 @@
             "name": "post_price",
             "type": "function",
             "inputs": [
-              { "name": "tokenId", "type": "uint64" },
-              { "name": "price", "type": "uint256" }
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
             ]
           }
         ]
@@ -224,7 +266,10 @@
         "minPrice": 0.01,
         "maxPrice": 10,
         "maxPriceChange": 50,
-        "requiredFields": ["price", "timestamp"]
+        "requiredFields": [
+          "price",
+          "timestamp"
+        ]
       }
     },
     "algorand-mainnet-3333688282-POW": {
@@ -235,7 +280,7 @@
       "marketId": "3080081069",
       "assetSymbol": "POW",
       "enabled": true,
-      "interval": 120000,
+      "interval": 900000,
       "timeout": 10000,
       "retries": 3,
       "priority": 10,
@@ -260,8 +305,14 @@
             "name": "post_price",
             "type": "function",
             "inputs": [
-              { "name": "tokenId", "type": "uint64" },
-              { "name": "price", "type": "uint256" }
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
             ]
           }
         ]
@@ -270,7 +321,10 @@
         "minPrice": 0.001,
         "maxPrice": 10,
         "maxPriceChange": 50,
-        "requiredFields": ["price", "timestamp"]
+        "requiredFields": [
+          "price",
+          "timestamp"
+        ]
       }
     },
     "algorand-mainnet-3333688282-BTC": {
@@ -281,7 +335,7 @@
       "marketId": "3211820549",
       "assetSymbol": "goBTC",
       "enabled": true,
-      "interval": 120000,
+      "interval": 900000,
       "timeout": 10000,
       "retries": 3,
       "priority": 10,
@@ -306,8 +360,14 @@
             "name": "post_price",
             "type": "function",
             "inputs": [
-              { "name": "tokenId", "type": "uint64" },
-              { "name": "price", "type": "uint256" }
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
             ]
           }
         ]
@@ -316,7 +376,10 @@
         "minPrice": 10000,
         "maxPrice": 200000,
         "maxPriceChange": 50,
-        "requiredFields": ["price", "timestamp"]
+        "requiredFields": [
+          "price",
+          "timestamp"
+        ]
       }
     },
     "algorand-mainnet-3345940978-FINITE": {
@@ -327,7 +390,7 @@
       "marketId": "3211805086",
       "assetSymbol": "FINITE",
       "enabled": true,
-      "interval": 120000,
+      "interval": 900000,
       "timeout": 10000,
       "retries": 3,
       "priority": 10,
@@ -352,8 +415,14 @@
             "name": "post_price",
             "type": "function",
             "inputs": [
-              { "name": "tokenId", "type": "uint64" },
-              { "name": "price", "type": "uint256" }
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
             ]
           }
         ]
@@ -362,7 +431,10 @@
         "minPrice": 0.001,
         "maxPrice": 10,
         "maxPriceChange": 50,
-        "requiredFields": ["price", "timestamp"]
+        "requiredFields": [
+          "price",
+          "timestamp"
+        ]
       }
     },
     "algorand-mainnet-3345940978-FOLKS": {
@@ -373,7 +445,7 @@
       "marketId": "3346185062",
       "assetSymbol": "FOLKS",
       "enabled": true,
-      "interval": 120000,
+      "interval": 900000,
       "timeout": 10000,
       "retries": 3,
       "priority": 10,
@@ -398,8 +470,14 @@
             "name": "post_price",
             "type": "function",
             "inputs": [
-              { "name": "tokenId", "type": "uint64" },
-              { "name": "price", "type": "uint256" }
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
             ]
           }
         ]
@@ -408,7 +486,10 @@
         "minPrice": 0.01,
         "maxPrice": 1000,
         "maxPriceChange": 50,
-        "requiredFields": ["price", "timestamp"]
+        "requiredFields": [
+          "price",
+          "timestamp"
+        ]
       }
     },
     "algorand-mainnet-3345940978-COOP": {
@@ -419,7 +500,7 @@
       "marketId": "3212524778",
       "assetSymbol": "COOP",
       "enabled": true,
-      "interval": 120000,
+      "interval": 900000,
       "timeout": 10000,
       "retries": 3,
       "priority": 10,
@@ -444,8 +525,14 @@
             "name": "post_price",
             "type": "function",
             "inputs": [
-              { "name": "tokenId", "type": "uint64" },
-              { "name": "price", "type": "uint256" }
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
             ]
           }
         ]
@@ -454,7 +541,10 @@
         "minPrice": 0.0001,
         "maxPrice": 1,
         "maxPriceChange": 50,
-        "requiredFields": ["price", "timestamp"]
+        "requiredFields": [
+          "price",
+          "timestamp"
+        ]
       }
     },
     "algorand-mainnet-3345940978-HOG": {
@@ -465,7 +555,7 @@
       "marketId": "3212773584",
       "assetSymbol": "HOG",
       "enabled": true,
-      "interval": 120000,
+      "interval": 900000,
       "timeout": 10000,
       "retries": 3,
       "priority": 10,
@@ -490,8 +580,14 @@
             "name": "post_price",
             "type": "function",
             "inputs": [
-              { "name": "tokenId", "type": "uint64" },
-              { "name": "price", "type": "uint256" }
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
             ]
           }
         ]
@@ -500,7 +596,10 @@
         "minPrice": 0.0001,
         "maxPrice": 10,
         "maxPriceChange": 50,
-        "requiredFields": ["price", "timestamp"]
+        "requiredFields": [
+          "price",
+          "timestamp"
+        ]
       }
     },
     "algorand-mainnet-3345940978-USDt": {
@@ -511,7 +610,7 @@
       "marketId": "3346408431",
       "assetSymbol": "USDt",
       "enabled": true,
-      "interval": 120000,
+      "interval": 900000,
       "timeout": 10000,
       "retries": 3,
       "priority": 10,
@@ -536,17 +635,26 @@
             "name": "post_price",
             "type": "function",
             "inputs": [
-              { "name": "tokenId", "type": "uint64" },
-              { "name": "price", "type": "uint256" }
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
             ]
           }
         ]
       },
       "validation": {
         "minPrice": 0.01,
-        "maxPrice": 2.0,
+        "maxPrice": 2,
         "maxPriceChange": 50,
-        "requiredFields": ["price", "timestamp"]
+        "requiredFields": [
+          "price",
+          "timestamp"
+        ]
       }
     },
     "algorand-mainnet-3345940978-xUSD": {
@@ -557,7 +665,7 @@
       "marketId": "3346881192",
       "assetSymbol": "xUSD",
       "enabled": true,
-      "interval": 120000,
+      "interval": 900000,
       "timeout": 10000,
       "retries": 3,
       "priority": 10,
@@ -582,17 +690,26 @@
             "name": "post_price",
             "type": "function",
             "inputs": [
-              { "name": "tokenId", "type": "uint64" },
-              { "name": "price", "type": "uint256" }
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
             ]
           }
         ]
       },
       "validation": {
         "minPrice": 0.01,
-        "maxPrice": 2.0,
+        "maxPrice": 2,
         "maxPriceChange": 50,
-        "requiredFields": ["price", "timestamp"]
+        "requiredFields": [
+          "price",
+          "timestamp"
+        ]
       }
     },
     "algorand-mainnet-3345940978-HAY": {
@@ -603,7 +720,7 @@
       "marketId": "3211890928",
       "assetSymbol": "HAY",
       "enabled": true,
-      "interval": 120000,
+      "interval": 900000,
       "timeout": 10000,
       "retries": 3,
       "priority": 10,
@@ -628,17 +745,26 @@
             "name": "post_price",
             "type": "function",
             "inputs": [
-              { "name": "tokenId", "type": "uint64" },
-              { "name": "price", "type": "uint256" }
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
             ]
           }
         ]
       },
       "validation": {
         "minPrice": 0.01,
-        "maxPrice": 2.0,
+        "maxPrice": 2,
         "maxPriceChange": 50,
-        "requiredFields": ["price", "timestamp"]
+        "requiredFields": [
+          "price",
+          "timestamp"
+        ]
       }
     },
     "algorand-mainnet-3345940978-BRO": {
@@ -649,7 +775,7 @@
       "marketId": "3212768756",
       "assetSymbol": "BRO",
       "enabled": true,
-      "interval": 120000,
+      "interval": 900000,
       "timeout": 10000,
       "retries": 3,
       "priority": 10,
@@ -674,17 +800,26 @@
             "name": "post_price",
             "type": "function",
             "inputs": [
-              { "name": "tokenId", "type": "uint64" },
-              { "name": "price", "type": "uint256" }
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
             ]
           }
         ]
       },
       "validation": {
-        "minPrice": 0.00001,
+        "minPrice": 1e-05,
         "maxPrice": 1,
         "maxPriceChange": 50,
-        "requiredFields": ["price", "timestamp"]
+        "requiredFields": [
+          "price",
+          "timestamp"
+        ]
       }
     },
     "algorand-mainnet-3333688282-aVOI": {
@@ -695,7 +830,7 @@
       "marketId": "3210709899",
       "assetSymbol": "aVOI",
       "enabled": true,
-      "interval": 120000,
+      "interval": 900000,
       "timeout": 10000,
       "retries": 3,
       "priority": 10,
@@ -720,8 +855,14 @@
             "name": "post_price",
             "type": "function",
             "inputs": [
-              { "name": "tokenId", "type": "uint64" },
-              { "name": "price", "type": "uint256" }
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
             ]
           }
         ]
@@ -730,7 +871,10 @@
         "minPrice": 0.0001,
         "maxPrice": 10,
         "maxPriceChange": 50,
-        "requiredFields": ["price", "timestamp"]
+        "requiredFields": [
+          "price",
+          "timestamp"
+        ]
       }
     },
     "algorand-mainnet-3345940978-ALPHA": {
@@ -741,7 +885,7 @@
       "marketId": "3212531816",
       "assetSymbol": "ALPHA",
       "enabled": true,
-      "interval": 120000,
+      "interval": 900000,
       "timeout": 10000,
       "retries": 3,
       "priority": 10,
@@ -766,8 +910,14 @@
             "name": "post_price",
             "type": "function",
             "inputs": [
-              { "name": "tokenId", "type": "uint64" },
-              { "name": "price", "type": "uint256" }
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
             ]
           }
         ]
@@ -776,7 +926,10 @@
         "minPrice": 0.0001,
         "maxPrice": 10,
         "maxPriceChange": 50,
-        "requiredFields": ["price", "timestamp"]
+        "requiredFields": [
+          "price",
+          "timestamp"
+        ]
       }
     },
     "algorand-mainnet-3345940978-COMPX": {
@@ -787,7 +940,7 @@
       "marketId": "3211800950",
       "assetSymbol": "COMPX",
       "enabled": true,
-      "interval": 120000,
+      "interval": 900000,
       "timeout": 10000,
       "retries": 3,
       "priority": 10,
@@ -812,8 +965,14 @@
             "name": "post_price",
             "type": "function",
             "inputs": [
-              { "name": "tokenId", "type": "uint64" },
-              { "name": "price", "type": "uint256" }
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
             ]
           }
         ]
@@ -822,7 +981,10 @@
         "minPrice": 0.0001,
         "maxPrice": 10,
         "maxPriceChange": 50,
-        "requiredFields": ["price", "timestamp"]
+        "requiredFields": [
+          "price",
+          "timestamp"
+        ]
       }
     },
     "algorand-mainnet-3345940978-AKTA": {
@@ -833,7 +995,7 @@
       "marketId": "3212534634",
       "assetSymbol": "AKTA",
       "enabled": true,
-      "interval": 120000,
+      "interval": 900000,
       "timeout": 10000,
       "retries": 3,
       "priority": 10,
@@ -858,8 +1020,14 @@
             "name": "post_price",
             "type": "function",
             "inputs": [
-              { "name": "tokenId", "type": "uint64" },
-              { "name": "price", "type": "uint256" }
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
             ]
           }
         ]
@@ -868,7 +1036,10 @@
         "minPrice": 0.0001,
         "maxPrice": 10,
         "maxPriceChange": 50,
-        "requiredFields": ["price", "timestamp"]
+        "requiredFields": [
+          "price",
+          "timestamp"
+        ]
       }
     },
     "algorand-mainnet-3345940978-PEPE": {
@@ -879,7 +1050,7 @@
       "marketId": "3212771255",
       "assetSymbol": "PEPE",
       "enabled": true,
-      "interval": 120000,
+      "interval": 900000,
       "timeout": 10000,
       "retries": 3,
       "priority": 10,
@@ -904,17 +1075,26 @@
             "name": "post_price",
             "type": "function",
             "inputs": [
-              { "name": "tokenId", "type": "uint64" },
-              { "name": "price", "type": "uint256" }
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
             ]
           }
         ]
       },
       "validation": {
-        "minPrice": 0.000001,
+        "minPrice": 1e-06,
         "maxPrice": 10,
         "maxPriceChange": 50,
-        "requiredFields": ["price", "timestamp"]
+        "requiredFields": [
+          "price",
+          "timestamp"
+        ]
       }
     },
     "algorand-mainnet-3345940978-GOLD$": {
@@ -925,7 +1105,7 @@
       "marketId": "3220347315",
       "assetSymbol": "GOLD$",
       "enabled": true,
-      "interval": 120000,
+      "interval": 900000,
       "timeout": 10000,
       "retries": 3,
       "priority": 10,
@@ -950,8 +1130,14 @@
             "name": "post_price",
             "type": "function",
             "inputs": [
-              { "name": "tokenId", "type": "uint64" },
-              { "name": "price", "type": "uint256" }
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
             ]
           }
         ]
@@ -960,7 +1146,10 @@
         "minPrice": 1,
         "maxPrice": 1000,
         "maxPriceChange": 50,
-        "requiredFields": ["price", "timestamp"]
+        "requiredFields": [
+          "price",
+          "timestamp"
+        ]
       }
     },
     "algorand-mainnet-3333688282-wBTC": {
@@ -971,7 +1160,7 @@
       "marketId": "3211827406",
       "assetSymbol": "wBTC",
       "enabled": true,
-      "interval": 120000,
+      "interval": 900000,
       "timeout": 10000,
       "retries": 3,
       "priority": 10,
@@ -996,8 +1185,14 @@
             "name": "post_price",
             "type": "function",
             "inputs": [
-              { "name": "tokenId", "type": "uint64" },
-              { "name": "price", "type": "uint256" }
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
             ]
           }
         ]
@@ -1006,7 +1201,10 @@
         "minPrice": 100,
         "maxPrice": 200000,
         "maxPriceChange": 50,
-        "requiredFields": ["price", "timestamp"]
+        "requiredFields": [
+          "price",
+          "timestamp"
+        ]
       }
     },
     "algorand-mainnet-3333688282-goETH": {
@@ -1017,7 +1215,7 @@
       "marketId": "3211806149",
       "assetSymbol": "goETH",
       "enabled": true,
-      "interval": 120000,
+      "interval": 900000,
       "timeout": 10000,
       "retries": 3,
       "priority": 10,
@@ -1042,8 +1240,14 @@
             "name": "post_price",
             "type": "function",
             "inputs": [
-              { "name": "tokenId", "type": "uint64" },
-              { "name": "price", "type": "uint256" }
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
             ]
           }
         ]
@@ -1052,7 +1256,10 @@
         "minPrice": 100,
         "maxPrice": 10000,
         "maxPriceChange": 50,
-        "requiredFields": ["price", "timestamp"]
+        "requiredFields": [
+          "price",
+          "timestamp"
+        ]
       }
     },
     "algorand-mainnet-3333688282-wETH": {
@@ -1063,7 +1270,7 @@
       "marketId": "3211811648",
       "assetSymbol": "wETH",
       "enabled": true,
-      "interval": 120000,
+      "interval": 900000,
       "timeout": 10000,
       "retries": 3,
       "priority": 10,
@@ -1088,8 +1295,14 @@
             "name": "post_price",
             "type": "function",
             "inputs": [
-              { "name": "tokenId", "type": "uint64" },
-              { "name": "price", "type": "uint256" }
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
             ]
           }
         ]
@@ -1098,7 +1311,10 @@
         "minPrice": 100,
         "maxPrice": 10000,
         "maxPriceChange": 50,
-        "requiredFields": ["price", "timestamp"]
+        "requiredFields": [
+          "price",
+          "timestamp"
+        ]
       }
     },
     "algorand-mainnet-3333688282-LINK": {
@@ -1109,7 +1325,7 @@
       "marketId": "3211838479",
       "assetSymbol": "LINK",
       "enabled": true,
-      "interval": 120000,
+      "interval": 900000,
       "timeout": 10000,
       "retries": 3,
       "priority": 10,
@@ -1134,8 +1350,14 @@
             "name": "post_price",
             "type": "function",
             "inputs": [
-              { "name": "tokenId", "type": "uint64" },
-              { "name": "price", "type": "uint256" }
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
             ]
           }
         ]
@@ -1144,7 +1366,10 @@
         "minPrice": 0.01,
         "maxPrice": 100,
         "maxPriceChange": 50,
-        "requiredFields": ["price", "timestamp"]
+        "requiredFields": [
+          "price",
+          "timestamp"
+        ]
       }
     },
     "algorand-mainnet-3333688282-SOL": {
@@ -1155,7 +1380,7 @@
       "marketId": "3211883276",
       "assetSymbol": "SOL",
       "enabled": true,
-      "interval": 120000,
+      "interval": 900000,
       "timeout": 10000,
       "retries": 3,
       "priority": 10,
@@ -1180,8 +1405,14 @@
             "name": "post_price",
             "type": "function",
             "inputs": [
-              { "name": "tokenId", "type": "uint64" },
-              { "name": "price", "type": "uint256" }
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
             ]
           }
         ]
@@ -1190,7 +1421,10 @@
         "minPrice": 1,
         "maxPrice": 1000,
         "maxPriceChange": 50,
-        "requiredFields": ["price", "timestamp"]
+        "requiredFields": [
+          "price",
+          "timestamp"
+        ]
       }
     },
     "algorand-mainnet-3333688282-AVAX": {
@@ -1201,7 +1435,7 @@
       "marketId": "3211885849",
       "assetSymbol": "AVAX",
       "enabled": true,
-      "interval": 120000,
+      "interval": 900000,
       "timeout": 10000,
       "retries": 3,
       "priority": 10,
@@ -1226,8 +1460,14 @@
             "name": "post_price",
             "type": "function",
             "inputs": [
-              { "name": "tokenId", "type": "uint64" },
-              { "name": "price", "type": "uint256" }
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
             ]
           }
         ]
@@ -1236,7 +1476,10 @@
         "minPrice": 1,
         "maxPrice": 100,
         "maxPriceChange": 50,
-        "requiredFields": ["price", "timestamp"]
+        "requiredFields": [
+          "price",
+          "timestamp"
+        ]
       }
     },
     "voi-mainnet-47139781-GM": {
@@ -1247,7 +1490,7 @@
       "marketId": "300279",
       "assetSymbol": "GM",
       "enabled": true,
-      "interval": 120000,
+      "interval": 900000,
       "timeout": 10000,
       "retries": 3,
       "priority": 10,
@@ -1270,17 +1513,26 @@
             "name": "post_price",
             "type": "function",
             "inputs": [
-              { "name": "tokenId", "type": "uint64" },
-              { "name": "price", "type": "uint256" }
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
             ]
           }
         ]
       },
       "validation": {
-        "minPrice": 0.000001,
+        "minPrice": 1e-06,
         "maxPrice": 1,
         "maxPriceChange": 50,
-        "requiredFields": ["price", "timestamp"]
+        "requiredFields": [
+          "price",
+          "timestamp"
+        ]
       }
     },
     "voi-mainnet-47139781-CORN": {
@@ -1291,7 +1543,7 @@
       "marketId": "412682",
       "assetSymbol": "CORN",
       "enabled": true,
-      "interval": 120000,
+      "interval": 900000,
       "timeout": 10000,
       "retries": 3,
       "priority": 10,
@@ -1314,17 +1566,26 @@
             "name": "post_price",
             "type": "function",
             "inputs": [
-              { "name": "tokenId", "type": "uint64" },
-              { "name": "price", "type": "uint256" }
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
             ]
           }
         ]
       },
       "validation": {
-        "minPrice": 0.000001,
+        "minPrice": 1e-06,
         "maxPrice": 1,
         "maxPriceChange": 50,
-        "requiredFields": ["price", "timestamp"]
+        "requiredFields": [
+          "price",
+          "timestamp"
+        ]
       }
     },
     "voi-mainnet-47139778-aALGO": {
@@ -1335,7 +1596,7 @@
       "marketId": "413153",
       "assetSymbol": "aALGO",
       "enabled": true,
-      "interval": 120000,
+      "interval": 900000,
       "timeout": 10000,
       "retries": 3,
       "priority": 10,
@@ -1358,17 +1619,26 @@
             "name": "post_price",
             "type": "function",
             "inputs": [
-              { "name": "tokenId", "type": "uint64" },
-              { "name": "price", "type": "uint256" }
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
             ]
           }
         ]
       },
       "validation": {
-        "minPrice": 0.000001,
+        "minPrice": 1e-06,
         "maxPrice": 1,
         "maxPriceChange": 50,
-        "requiredFields": ["price", "timestamp"]
+        "requiredFields": [
+          "price",
+          "timestamp"
+        ]
       }
     },
     "voi-mainnet-47139778-aETH": {
@@ -1379,7 +1649,7 @@
       "marketId": "40153308",
       "assetSymbol": "aETH",
       "enabled": true,
-      "interval": 120000,
+      "interval": 900000,
       "timeout": 10000,
       "retries": 3,
       "priority": 10,
@@ -1404,8 +1674,14 @@
             "name": "post_price",
             "type": "function",
             "inputs": [
-              { "name": "tokenId", "type": "uint64" },
-              { "name": "price", "type": "uint256" }
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
             ]
           }
         ]
@@ -1414,7 +1690,10 @@
         "minPrice": 1000,
         "maxPrice": 10000,
         "maxPriceChange": 50,
-        "requiredFields": ["price", "timestamp"]
+        "requiredFields": [
+          "price",
+          "timestamp"
+        ]
       }
     }
   },

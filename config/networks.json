@@ -33,7 +33,14 @@
     "requestDelay": 1000,
     "healthCheckInterval": 60000,
     "circuitBreakerThreshold": 5,
-    "circuitBreakerTimeout": 300000
+    "circuitBreakerTimeout": 300000,
+    "batchProcessing": {
+      "enabled": true,
+      "batchInterval": 600000,
+      "maxBatchSize": 50,
+      "groupByNetwork": true,
+      "priorityOrder": true
+    }
   },
   "detailedNetworksDir": "config/networks"
 }

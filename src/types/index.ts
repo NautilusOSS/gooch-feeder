@@ -224,6 +224,7 @@ export interface NetworkConfigs {
     healthCheckInterval: number;
     circuitBreakerThreshold: number;
     circuitBreakerTimeout: number;
+    batchProcessing?: BatchProcessingConfig;
   };
 }
 
@@ -234,4 +235,37 @@ export interface NetworkHealth {
   responseTime?: number;
   errorCount: number;
   lastError?: string;
+}
+
+// Batch Processing Types
+export interface BatchFeedItem {
+  config: PriceFeederConfig;
+  priceData?: PriceData;
+  priority: number;
+  scheduledTime: Date;
+}
+
+export interface BatchFeedResult {
+  feederId: string;
+  result: PriceFeedResult;
+  config: PriceFeederConfig;
+}
+
+export interface BatchProcessingResult {
+  success: boolean;
+  totalProcessed: number;
+  successful: number;
+  failed: number;
+  results: BatchFeedResult[];
+  duration: number;
+  timestamp: Date;
+  networkId?: string; // If batch is network-specific
+}
+
+export interface BatchProcessingConfig {
+  enabled: boolean;
+  batchInterval: number; // milliseconds - how often to process batches
+  maxBatchSize: number; // maximum feeders per batch
+  groupByNetwork: boolean; // group feeders by network for batch transactions
+  priorityOrder: boolean; // process feeders in priority order
 }
