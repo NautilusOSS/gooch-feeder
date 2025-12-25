@@ -1,8 +1,15 @@
 import { Logger, ErrorContext } from "../utils/logger";
 import { ApiErrorHelper } from "../utils/api-error-helper";
-import { PriceFeederConfig, PriceData, PriceFeedResult, BatchFeedItem, BatchFeedResult, BatchProcessingResult } from "../types";
+import {
+  PriceFeederConfig,
+  PriceData,
+  PriceFeedResult,
+  BatchFeedItem,
+  BatchFeedResult,
+  BatchProcessingResult,
+} from "../types";
 import { NetworkConfigLoader } from "../utils/network-config-loader";
-import { APP_SPEC as PriceOracleAppSpec } from "../clients/PriceOracleClient";
+import { APP_SPEC as PriceOracleAppSpec } from "../clients/GoochClient";
 import { CONTRACT } from "ulujs";
 import { AccountService } from "./account-service";
 import { BigNumber } from "bignumber.js";
@@ -90,37 +97,40 @@ export class PriceOracleService {
     if (!networkConfig) {
       throw new Error(
         `Network configuration not found for ${config.networkId}. ` +
-        `Feeder ID: ${config.id}, Asset: ${config.assetSymbol}`
+          `Feeder ID: ${config.id}, Asset: ${config.assetSymbol}`
       );
     }
 
     // Check for missing required fields and provide detailed error
     const missingFields: string[] = [];
     if (!config.destination.contractAddress) {
-      missingFields.push('contractAddress');
+      missingFields.push("contractAddress");
     }
     if (!config.destination.functionName) {
-      missingFields.push('functionName');
+      missingFields.push("functionName");
     }
 
     if (missingFields.length > 0) {
       // Check if network config has a fallback contract address
-      const networkContractAddress = networkConfig.networkConfig.contracts.priceOracle;
-      const contractAddressSource = config.destination.contractAddress 
+      const networkContractAddress =
+        networkConfig.networkConfig.contracts.priceOracle;
+      const contractAddressSource = config.destination.contractAddress
         ? `feeder config: "${config.destination.contractAddress}"`
-        : networkContractAddress 
-          ? `network config: "${networkContractAddress}"`
-          : 'not found in feeder or network config';
+        : networkContractAddress
+        ? `network config: "${networkContractAddress}"`
+        : "not found in feeder or network config";
 
       const errorDetails = [
         `Feeder ID: ${config.id}`,
         `Asset: ${config.assetSymbol}`,
         `Network: ${config.networkId}`,
-        `Missing fields: ${missingFields.join(', ')}`,
+        `Missing fields: ${missingFields.join(", ")}`,
         `Contract address: ${contractAddressSource}`,
-        `Function name: ${config.destination.functionName || 'not specified'}`,
-        `Market ID: ${config.destination.marketId || config.marketId || 'not specified'}`
-      ].join('; ');
+        `Function name: ${config.destination.functionName || "not specified"}`,
+        `Market ID: ${
+          config.destination.marketId || config.marketId || "not specified"
+        }`,
+      ].join("; ");
 
       throw new Error(
         `Contract address and function name are required for price oracle destination. ${errorDetails}`
@@ -139,8 +149,12 @@ export class PriceOracleService {
         `Feeder ID: ${config.id}`,
         `Asset: ${config.assetSymbol}`,
         `Network: ${config.networkId}`,
-        `Contract address not found in feeder config (${config.destination.contractAddress || 'empty'}) or network config (${networkConfig.networkConfig.contracts.priceOracle || 'empty'})`
-      ].join('; ');
+        `Contract address not found in feeder config (${
+          config.destination.contractAddress || "empty"
+        }) or network config (${
+          networkConfig.networkConfig.contracts.priceOracle || "empty"
+        })`,
+      ].join("; ");
 
       throw new Error(
         `Price oracle contract address not found for network ${config.networkId}. ${errorDetails}`
@@ -188,16 +202,31 @@ export class PriceOracleService {
     // Use destination.marketId if available, otherwise fall back to config.marketId
     const marketId = Number(config.destination.marketId || config.marketId);
     const price = BigInt(formattedPrice);
-    const post_priceR = await ci[functionName](
-      marketId,
-      price
+
+    this.logger.info(
+      `Calling ${functionName} on contract ${contractAddress} ` +
+        `(feeder: ${config.id}, asset: ${config.assetSymbol}, ` +
+        `marketId: ${marketId}, price: $${priceData.price}, formatted: ${formattedPrice})`
     );
-    this.logger.debug("post_priceR", post_priceR);
+
+    const post_priceR = await ci[functionName](marketId, price);
+
+    this.logger.info(
+      `Contract call result for ${config.id} (${config.assetSymbol}): ` +
+        `success=${post_priceR.success}, ` +
+        `marketId=${marketId}, ` +
+        `contract=${contractAddress}, ` +
+        `network=${config.networkId}` +
+        (post_priceR.error ? `, error=${post_priceR.error}` : "")
+    );
 
     if (!post_priceR.success) {
-      throw new Error(
-        `Failed to post price to price oracle: ${post_priceR.error}`
+      const errorMsg = `Failed to post price to price oracle: ${post_priceR.error}`;
+      this.logger.error(
+        `${errorMsg} (feeder: ${config.id}, asset: ${config.assetSymbol}, ` +
+          `marketId: ${marketId}, contract: ${contractAddress}, network: ${config.networkId})`
       );
+      throw new Error(errorMsg);
     }
 
     const stxns = await post_priceR.txns.map((txn: any) =>
@@ -206,8 +235,22 @@ export class PriceOracleService {
         .signTxn(secretKey)
     );
 
+    this.logger.debug(
+      `Prepared ${stxns.length} transaction(s) for ${config.id} (${config.assetSymbol})`
+    );
+
     const res = await algod.sendRawTransaction(stxns).do();
+    this.logger.info(
+      `Transaction submitted for ${config.id} (${config.assetSymbol}): ` +
+        `txId=${res.txId}, network=${config.networkId}, contract=${contractAddress}`
+    );
+
     await waitForConfirmation(algod, res.txId, 4);
+
+    this.logger.info(
+      `Transaction confirmed for ${config.id} (${config.assetSymbol}): ` +
+      `txId=${res.txId}, network=${config.networkId}`
+    );
 
     return {
       success: true,
@@ -215,6 +258,8 @@ export class PriceOracleService {
       timestamp: new Date(),
       duration: 0,
       retryCount: 0,
+      batchSize: 1, // Individual post = 1 feed per transaction
+      batchIndex: 0,
     };
   }
 
@@ -665,9 +710,9 @@ export class PriceOracleService {
         assetSymbol: priceData.symbol,
         networkId: config.networkId,
         marketId: config.destination.marketId || config.marketId,
-        contractAddress: config.destination.contractAddress || 'not specified',
-        functionName: config.destination.functionName || 'not specified',
-        error: lastError
+        contractAddress: config.destination.contractAddress || "not specified",
+        functionName: config.destination.functionName || "not specified",
+        error: lastError,
       };
       this.logger.warn(
         `Initial price post failed for ${priceData.symbol} (Feeder: ${config.id}, Network: ${config.networkId}), will retry up to ${maxRetries} times using midpoint strategy`,
@@ -936,9 +981,8 @@ export class PriceOracleService {
 
     // All items should be same network (grouped)
     const networkId = items[0].config.networkId;
-    const networkConfig = this.networkConfigLoader.getDetailedNetworkConfig(
-      networkId
-    );
+    const networkConfig =
+      this.networkConfigLoader.getDetailedNetworkConfig(networkId);
 
     if (!networkConfig) {
       this.logger.error(
@@ -1036,59 +1080,12 @@ export class PriceOracleService {
       );
     }
 
-    // For now, process individually but in parallel
-    // In the future, could use atomic transaction composer if contract supports batch updates
+    // Use batch posting with fallback strategy
     this.logger.debug(
-      `Posting batch of ${itemsWithPriceData.length} prices to oracle contract ${contractAddress}`
+      `Posting batch of ${itemsWithPriceData.length} prices to oracle contract ${contractAddress} using batch methods`
     );
 
-    const postPromises = itemsWithPriceData.map(async (item) => {
-      const startTime = Date.now();
-      try {
-        if (!item.priceData) {
-          return {
-            feederId: item.config.id,
-            result: {
-              success: false,
-              error: "Price data not available",
-              timestamp: new Date(),
-              duration: Date.now() - startTime,
-              retryCount: 0,
-            },
-            config: item.config,
-          } as BatchFeedResult;
-        }
-
-        const result = await this.postToPriceOracle(item.config, item.priceData);
-        return {
-          feederId: item.config.id,
-          result,
-          config: item.config,
-        } as BatchFeedResult;
-      } catch (error) {
-        const errorMessage =
-          error instanceof Error ? error.message : "Unknown error";
-        return {
-          feederId: item.config.id,
-          result: {
-            success: false,
-            error: errorMessage,
-            timestamp: new Date(),
-            duration: Date.now() - startTime,
-            retryCount: 0,
-          },
-          config: item.config,
-        } as BatchFeedResult;
-      }
-    });
-
-    // Process in parallel with concurrency limit
-    const batchSize = 5; // Process 5 at a time
-    for (let i = 0; i < postPromises.length; i += batchSize) {
-      const batch = postPromises.slice(i, i + batchSize);
-      const batchResults = await Promise.all(batch);
-      results.push(...batchResults);
-    }
+    await this.postBatchWithFallback(itemsWithPriceData, contractAddress, networkId, results);
 
     // Add failed results for items without price data
     for (const item of items) {
@@ -1108,5 +1105,245 @@ export class PriceOracleService {
     }
 
     return results;
+  }
+
+  /**
+   * Posts a batch of prices using batch methods with fallback strategy:
+   * 1. Try to post up to 3 prices at once using post_price_batch3
+   * 2. If that fails, split into batches of 2 using post_price_batch2
+   * 3. If that fails, post individually using post_price
+   */
+  private async postBatchWithFallback(
+    items: BatchFeedItem[],
+    contractAddress: string,
+    networkId: string,
+    results: BatchFeedResult[]
+  ): Promise<void> {
+    if (items.length === 0) {
+      return;
+    }
+
+    const algod = this.networkConfigLoader.getAlgodClient(networkId);
+    const secretKey = this.accountService.getSecretKey();
+    const address = this.accountService.getAddress();
+
+    if (!secretKey || !address) {
+      throw new Error("Account service not properly initialized");
+    }
+
+    const ci = new CONTRACT(
+      Number(contractAddress),
+      algod,
+      undefined,
+      { ...PriceOracleAppSpec.contract, events: [] },
+      { addr: address, sk: secretKey }
+    );
+
+    // Process items in batches of 3, then 2, then individually
+    let remainingItems = [...items];
+    
+    while (remainingItems.length > 0) {
+      if (remainingItems.length >= 3) {
+        // Try batch of 3
+        const batch3 = remainingItems.slice(0, 3);
+        const batch3Result = await this.tryPostBatch3(batch3, ci, algod, secretKey);
+        
+        if (batch3Result.success) {
+          results.push(...batch3Result.results);
+          remainingItems = remainingItems.slice(3);
+          this.logger.info(`Successfully posted batch of 3 prices`);
+          continue;
+        } else {
+          this.logger.warn(`Batch of 3 failed, splitting into smaller batches: ${batch3Result.error}`);
+        }
+      }
+
+      if (remainingItems.length >= 2) {
+        // Try batch of 2
+        const batch2 = remainingItems.slice(0, 2);
+        const batch2Result = await this.tryPostBatch2(batch2, ci, algod, secretKey);
+        
+        if (batch2Result.success) {
+          results.push(...batch2Result.results);
+          remainingItems = remainingItems.slice(2);
+          this.logger.info(`Successfully posted batch of 2 prices`);
+          continue;
+        } else {
+          this.logger.warn(`Batch of 2 failed, posting individually: ${batch2Result.error}`);
+        }
+      }
+
+      // Post individually
+      const item = remainingItems[0];
+      try {
+        const result = await this.postToPriceOracle(item.config, item.priceData!);
+        results.push({
+          feederId: item.config.id,
+          result,
+          config: item.config,
+        });
+        this.logger.info(`Successfully posted individual price for ${item.config.id}`);
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        results.push({
+          feederId: item.config.id,
+          result: {
+            success: false,
+            error: errorMessage,
+            timestamp: new Date(),
+            duration: 0,
+            retryCount: 0,
+          },
+          config: item.config,
+        });
+        this.logger.error(`Failed to post individual price for ${item.config.id}: ${errorMessage}`);
+      }
+      remainingItems = remainingItems.slice(1);
+    }
+  }
+
+  /**
+   * Try to post 3 prices using post_price_batch3
+   */
+  private async tryPostBatch3(
+    items: BatchFeedItem[],
+    ci: any,
+    algod: algosdk.Algodv2,
+    secretKey: Uint8Array
+  ): Promise<{ success: boolean; results: BatchFeedResult[]; error?: string }> {
+    if (items.length !== 3 || !items[0].priceData || !items[1].priceData || !items[2].priceData) {
+      return { success: false, results: [], error: "Invalid batch size or missing price data" };
+    }
+
+    try {
+      const marketId0 = Number(items[0].config.destination.marketId || items[0].config.marketId);
+      const price0 = BigInt(this.formatPriceForContract(items[0].priceData.price, items[0].config));
+      
+      const marketId1 = Number(items[1].config.destination.marketId || items[1].config.marketId);
+      const price1 = BigInt(this.formatPriceForContract(items[1].priceData.price, items[1].config));
+      
+      const marketId2 = Number(items[2].config.destination.marketId || items[2].config.marketId);
+      const price2 = BigInt(this.formatPriceForContract(items[2].priceData.price, items[2].config));
+
+      this.logger.info(
+        `Attempting batch3: ${items[0].config.id}, ${items[1].config.id}, ${items[2].config.id}`
+      );
+
+      if (!ci.post_price_batch3) {
+        return { success: false, results: [], error: "post_price_batch3 method not available" };
+      }
+
+      const batch3Result = await ci.post_price_batch3(marketId0, price0, marketId1, price1, marketId2, price2);
+
+      if (!batch3Result.success) {
+        return { success: false, results: [], error: batch3Result.error || "Batch3 call failed" };
+      }
+
+      // Sign and send transaction
+      const stxns = await batch3Result.txns.map((txn: any) =>
+        algosdk
+          .decodeUnsignedTransaction(Uint8Array.from(Buffer.from(txn, "base64")))
+          .signTxn(secretKey)
+      );
+
+      const res = await algod.sendRawTransaction(stxns).do();
+      await waitForConfirmation(algod, res.txId, 4);
+
+      this.logger.info(
+        `Batch3 transaction confirmed: txId=${res.txId} for ${items.map(i => i.config.id).join(', ')}`
+      );
+
+      // All 3 succeeded - mark as batch transaction
+      return {
+        success: true,
+        results: items.map((item, index) => ({
+          feederId: item.config.id,
+          result: {
+            success: true,
+            data: item.priceData!,
+            timestamp: new Date(),
+            duration: 0,
+            retryCount: 0,
+            batchSize: 3, // Mark as part of batch of 3
+            batchIndex: index, // Position in batch
+          },
+          config: item.config,
+        })),
+      };
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      return { success: false, results: [], error: errorMessage };
+    }
+  }
+
+  /**
+   * Try to post 2 prices using post_price_batch2
+   */
+  private async tryPostBatch2(
+    items: BatchFeedItem[],
+    ci: any,
+    algod: algosdk.Algodv2,
+    secretKey: Uint8Array
+  ): Promise<{ success: boolean; results: BatchFeedResult[]; error?: string }> {
+    if (items.length !== 2 || !items[0].priceData || !items[1].priceData) {
+      return { success: false, results: [], error: "Invalid batch size or missing price data" };
+    }
+
+    try {
+      const marketId0 = Number(items[0].config.destination.marketId || items[0].config.marketId);
+      const price0 = BigInt(this.formatPriceForContract(items[0].priceData.price, items[0].config));
+      
+      const marketId1 = Number(items[1].config.destination.marketId || items[1].config.marketId);
+      const price1 = BigInt(this.formatPriceForContract(items[1].priceData.price, items[1].config));
+
+      this.logger.info(
+        `Attempting batch2: ${items[0].config.id}, ${items[1].config.id}`
+      );
+
+      if (!ci.post_price_batch2) {
+        return { success: false, results: [], error: "post_price_batch2 method not available" };
+      }
+
+      const batch2Result = await ci.post_price_batch2(marketId0, price0, marketId1, price1);
+
+      if (!batch2Result.success) {
+        return { success: false, results: [], error: batch2Result.error || "Batch2 call failed" };
+      }
+
+      // Sign and send transaction
+      const stxns = await batch2Result.txns.map((txn: any) =>
+        algosdk
+          .decodeUnsignedTransaction(Uint8Array.from(Buffer.from(txn, "base64")))
+          .signTxn(secretKey)
+      );
+
+      const res = await algod.sendRawTransaction(stxns).do();
+      await waitForConfirmation(algod, res.txId, 4);
+
+      this.logger.info(
+        `Batch2 transaction confirmed: txId=${res.txId} for ${items.map(i => i.config.id).join(', ')}`
+      );
+
+      // Both succeeded - mark as batch transaction
+      return {
+        success: true,
+        results: items.map((item, index) => ({
+          feederId: item.config.id,
+          result: {
+            success: true,
+            data: item.priceData!,
+            timestamp: new Date(),
+            duration: 0,
+            retryCount: 0,
+            batchSize: 2, // Mark as part of batch of 2
+            batchIndex: index, // Position in batch
+          },
+          config: item.config,
+        })),
+      };
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      return { success: false, results: [], error: errorMessage };
+    }
   }
 }

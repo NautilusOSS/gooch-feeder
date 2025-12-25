@@ -58,13 +58,19 @@ export class NetworkConfigLoader {
       }
 
       // Create the complete configuration
-      const completeConfig: NetworkConfigs = {
+      let completeConfig: NetworkConfigs = {
         networks: parsedConfig.networks,
         detailedNetworks,
         defaultNetwork: parsedConfig.defaultNetwork,
         fallbackNetworks: parsedConfig.fallbackNetworks,
         globalSettings: parsedConfig.globalSettings,
       };
+
+      // Apply dev mode overrides if enabled
+      if (this.isDevMode()) {
+        this.logger.info("DEV_MODE enabled - applying localnet overrides");
+        completeConfig = this.applyDevModeOverrides(completeConfig);
+      }
 
       this.networkConfigs = completeConfig;
 
@@ -317,6 +323,19 @@ export class NetworkConfigLoader {
       throw new Error(`Network config not found for networkId: ${networkId}`);
     }
 
+    // In dev mode, use localhost settings for localnet
+    if (this.isDevMode() && networkId === "localnet") {
+      const ALGO_SERVER = "http://localhost";
+      const ALGO_PORT = 4001;
+      // Default localnet token (can be overridden via DEV_ALGOD_TOKEN env var)
+      const DEFAULT_LOCALNET_TOKEN = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+      const token = process.env.DEV_ALGOD_TOKEN || DEFAULT_LOCALNET_TOKEN;
+      this.logger.info(
+        `[ALGOD CONFIG] Dev mode: Using localnet algod at ${ALGO_SERVER}:${ALGO_PORT} with token ${token.substring(0, 8)}...`
+      );
+      return new Algodv2(token, ALGO_SERVER, ALGO_PORT);
+    }
+
     // Convert networkId to environment variable prefix (e.g., "algorand-mainnet" -> "ALGORAND_MAINNET")
     const envPrefix = networkId.toUpperCase().replace(/-/g, "_");
     const envUrlKey = `${envPrefix}_ALGOD_URL`;
@@ -374,6 +393,118 @@ export class NetworkConfigLoader {
   public async reloadConfigs(): Promise<NetworkConfigs> {
     this.logger.info("Reloading network configurations...");
     return this.loadConfigs();
+  }
+
+  /**
+   * Check if dev mode is enabled via environment variable
+   */
+  private isDevMode(): boolean {
+    return process.env.DEV_MODE === "true" || process.env.DEV_MODE === "1";
+  }
+
+  /**
+   * Apply dev mode overrides to network configuration
+   */
+  private applyDevModeOverrides(config: NetworkConfigs): NetworkConfigs {
+    const NETWORK = "localnet";
+    const ALGO_SERVER = "http://localhost";
+    const ALGO_PORT = 4001;
+    const ALGO_INDEXER_SERVER = "http://localhost";
+    const ALGO_INDEXER_PORT = 8980;
+    // Default localnet token (can be overridden via DEV_ALGOD_TOKEN env var)
+    const DEFAULT_LOCALNET_TOKEN = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+    const token = process.env.DEV_ALGOD_TOKEN || DEFAULT_LOCALNET_TOKEN;
+
+    // Create localnet network config
+    const localnetConfig: NetworkConfig = {
+      name: "Local Network",
+      chainId: 0,
+      rpcUrl: ALGO_SERVER,
+      wsUrl: ALGO_SERVER.replace("http", "ws"),
+      explorerUrl: "http://localhost",
+      enabled: true,
+      timeout: 30000,
+      retries: 3,
+      algod: {
+        url: ALGO_SERVER,
+        port: ALGO_PORT,
+        token: token,
+      },
+    };
+
+    // Override networks to only include localnet
+    const overriddenConfig: NetworkConfigs = {
+      ...config,
+      networks: {
+        [NETWORK]: localnetConfig,
+      },
+      defaultNetwork: NETWORK,
+      fallbackNetworks: [],
+    };
+
+    // Create a minimal detailed network config for localnet
+    const localnetDetailedConfig: DetailedNetworkConfig = {
+      metadata: {
+        network: NETWORK,
+        exportDate: new Date().toISOString(),
+        contractId: "",
+        isDeployed: false,
+        hasPriceOracleRole: false,
+      },
+      networkConfig: {
+        networkId: NETWORK,
+        walletNetworkId: NETWORK,
+        name: "Local Network",
+        networkType: "avm",
+        rpcUrl: ALGO_SERVER,
+        rpcPort: ALGO_PORT,
+        rpcToken: token,
+        indexerUrl: `${ALGO_INDEXER_SERVER}:${ALGO_INDEXER_PORT}`,
+        explorerUrl: "http://localhost",
+        faucetUrl: "",
+        contracts: {
+          priceOracle: "", // Will be overridden in feeders
+          marketController: "",
+          sToken: "",
+          lendingPools: [],
+        },
+        tokens: {},
+        gasStation: {},
+        preFiParameters: {
+          collateral_factor: 0,
+          liquidation_threshold: 0,
+          reserve_factor: 0,
+          borrow_rate_base: 0,
+          slope: 0,
+          liquidation_bonus: 0,
+          close_factor: 0,
+          max_borrow_caps: {
+            stablecoins: "0",
+            majors: "0",
+            volatile: "0",
+          },
+        },
+      },
+      supportedAssets: [],
+      contractState: {
+        appId: 0,
+        creator: "",
+        globalState: [],
+        localState: [],
+      },
+      assetPrices: {},
+      priceFeedStatus: {},
+    };
+
+    overriddenConfig.detailedNetworks = {
+      [NETWORK]: localnetDetailedConfig,
+    };
+
+    this.logger.info(
+      `Dev mode: Overriding network configuration to use ${NETWORK} at ${ALGO_SERVER}:${ALGO_PORT} with token ${token.substring(0, 8)}...`
+    );
+
+    return overriddenConfig;
   }
 
   /**

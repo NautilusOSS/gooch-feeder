@@ -69,6 +69,11 @@ export interface PriceFeederConfig {
     enabled: boolean;
     sources: PriceFeederConfig[];
   };
+  twap?: {
+    enabled: boolean;
+    interval?: number; // milliseconds - how often to fetch/update TWAP samples (default: interval / 4)
+    window?: number; // milliseconds - time window for TWAP calculation (default: interval)
+  };
 }
 
 export interface PriceData {
@@ -91,6 +96,8 @@ export interface PriceFeedResult {
   timestamp: Date;
   duration: number; // milliseconds
   retryCount: number;
+  batchSize?: number; // Number of feeds in this transaction (for batch transactions)
+  batchIndex?: number; // Position in batch (0-based)
 }
 
 export interface FeederMetrics {
