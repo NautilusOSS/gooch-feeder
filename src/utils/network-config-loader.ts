@@ -185,6 +185,24 @@ export class NetworkConfigLoader {
       : null;
   }
 
+  public getTokenConfigByContractId(networkId: string, contractId: string): any {
+    const detailedConfig = this.getDetailedNetworkConfig(networkId);
+    if (!detailedConfig) {
+      return null;
+    }
+
+    // Search through all tokens to find one with matching contractId
+    const tokens = detailedConfig.networkConfig.tokens;
+    for (const tokenSymbol in tokens) {
+      const token = tokens[tokenSymbol];
+      if (token.contractId === contractId) {
+        return token;
+      }
+    }
+
+    return null;
+  }
+
   public updateNetworkHealth(
     networkId: string,
     isHealthy: boolean,

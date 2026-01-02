@@ -13,6 +13,7 @@
     "lint:fix": "eslint src/**/*.ts --fix",
     "test:feeder": "ts-node src/cli/test-feeder.ts",
     "test:all-feeders": "ts-node src/cli/test-all-feeders.ts",
+    "test:price-fetch": "ts-node src/cli/test-price-fetch.ts",
     "list:feeders": "ts-node src/cli/list-feeders.ts",
     "service:start": "./service.sh start",
     "service:stop": "./service.sh stop",

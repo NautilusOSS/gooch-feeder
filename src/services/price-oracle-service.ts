@@ -211,6 +211,8 @@ export class PriceOracleService {
 
     const post_priceR = await ci[functionName](marketId, price);
 
+    console.log("post_priceR", post_priceR);
+
     this.logger.info(
       `Contract call result for ${config.id} (${config.assetSymbol}): ` +
         `success=${post_priceR.success}, ` +
@@ -415,15 +417,44 @@ export class PriceOracleService {
     price: number,
     config: PriceFeederConfig
   ): string {
-    // Get token configuration to determine decimals
-    const tokenConfig = this.networkConfigLoader.getTokenConfig(
-      config.networkId,
-      config.assetSymbol
-    );
-    const tokenDecimals = tokenConfig?.decimals || 6;
+    // Get marketId (contractId) - this is the token ID in the price oracle contract
+    const marketId = config.destination.marketId || config.marketId;
+    
+    // Try to get token config by contractId (marketId) first, as this is the actual token
+    // that the price oracle contract uses for this market
+    let tokenConfig = null;
+    let tokenDecimals = 6; // default
+    
+    if (marketId) {
+      tokenConfig = this.networkConfigLoader.getTokenConfigByContractId(
+        config.networkId,
+        String(marketId)
+      );
+    }
+    
+    // Fallback to assetSymbol if we couldn't find by contractId
+    if (!tokenConfig) {
+      tokenConfig = this.networkConfigLoader.getTokenConfig(
+        config.networkId,
+        config.assetSymbol
+      );
+    }
+    
+    tokenDecimals = tokenConfig?.decimals || 6;
+
+    // Log which token we're using for decimals (for debugging)
+    if (marketId && tokenConfig) {
+      this.logger.debug(
+        `Using decimals from market token (contractId: ${marketId}, symbol: ${tokenConfig.symbol}, decimals: ${tokenDecimals})`
+      );
+    } else {
+      this.logger.debug(
+        `Using decimals from asset symbol (${config.assetSymbol}, decimals: ${tokenDecimals})`
+      );
+    }
 
     // Adjust target price by 12 - token decimals
-    // Price oracle uses 6 decimals as standard, but we need to adjust based on token decimals
+    // Price oracle uses 12 decimals as standard, but we need to adjust based on token decimals
     // Formula: 12 - tokenDecimals
     // Example: token with 8 decimals -> 12 - 8 = 4, so we use 10^4
     // Example: token with 6 decimals -> 12 - 6 = 6, so we use 10^6
@@ -442,14 +473,32 @@ export class PriceOracleService {
     price: bigint | number,
     config: PriceFeederConfig
   ): number {
-    // Get token configuration to determine decimals
-    const tokenConfig = this.networkConfigLoader.getTokenConfig(
-      config.networkId,
-      config.assetSymbol
-    );
-    const tokenDecimals = tokenConfig?.decimals || 6;
+    // Get marketId (contractId) - this is the token ID in the price oracle contract
+    const marketId = config.destination.marketId || config.marketId;
+    
+    // Try to get token config by contractId (marketId) first, as this is the actual token
+    // that the price oracle contract uses for this market
+    let tokenConfig = null;
+    let tokenDecimals = 6; // default
+    
+    if (marketId) {
+      tokenConfig = this.networkConfigLoader.getTokenConfigByContractId(
+        config.networkId,
+        String(marketId)
+      );
+    }
+    
+    // Fallback to assetSymbol if we couldn't find by contractId
+    if (!tokenConfig) {
+      tokenConfig = this.networkConfigLoader.getTokenConfig(
+        config.networkId,
+        config.assetSymbol
+      );
+    }
+    
+    tokenDecimals = tokenConfig?.decimals || 6;
 
-    // Price oracle uses 6 decimals as standard, but we need to adjust based on token decimals
+    // Price oracle uses 12 decimals as standard, but we need to adjust based on token decimals
     // Formula: 12 - tokenDecimals
     // This must match the formatPriceForContract calculation
     const priceOracleDecimals = 12 - tokenDecimals;
@@ -528,16 +577,6 @@ export class PriceOracleService {
         // The CONTRACT class might try to create a transaction, which could fail
         const getPriceResult = await ci.get_price_with_timestamp(marketId);
 
-        // Log the full result for debugging
-        this.logger.debug(`getPriceResult for ${config.assetSymbol}:`, {
-          success: getPriceResult.success,
-          error: getPriceResult.error,
-          return: getPriceResult.returnValue,
-          hasReturn:
-            getPriceResult.returnValue !== undefined &&
-            getPriceResult.returnValue !== null,
-        });
-
         if (!getPriceResult.success) {
           const errorMsg = getPriceResult.error || "Unknown error";
           this.logger.warn(
@@ -560,26 +599,81 @@ export class PriceOracleService {
           return null;
         }
 
-        // Extract price from the returned value
+        // Extract price and timestamp from return value
         // get_price_with_timestamp returns (uint256, uint64) which could be:
         // - An array [price, timestamp]
         // - An object { price, timestamp }
         // - Just the price value
-        let priceValue: bigint | number;
+        let priceValue: bigint | number | undefined;
+        let timestampValue: bigint | number | undefined;
+        let returnType = 'unknown';
+        
         if (Array.isArray(getPriceResult.returnValue)) {
-          // Tuple returned as array: [price, timestamp]
+          returnType = 'array';
           priceValue = getPriceResult.returnValue[0];
+          timestampValue = getPriceResult.returnValue[1];
         } else if (
           getPriceResult.returnValue &&
           typeof getPriceResult.returnValue === "object" &&
           "price" in getPriceResult.returnValue
         ) {
-          // Object with price property: { price, timestamp }
+          returnType = 'object';
           priceValue = (getPriceResult.returnValue as any).price;
+          timestampValue = (getPriceResult.returnValue as any).timestamp;
         } else {
-          // Just the price value
+          returnType = 'single';
           priceValue = getPriceResult.returnValue;
         }
+
+        // Check if priceValue was extracted successfully
+        if (priceValue === undefined) {
+          this.logger.warn(
+            `Failed to extract price from return value for ${config.assetSymbol}`
+          );
+          return null;
+        }
+
+        // Format price for display
+        const formattedPrice = typeof priceValue === 'bigint' 
+          ? priceValue.toString() 
+          : String(priceValue);
+        
+        // Format timestamp for display
+        let formattedTimestamp = 'undefined';
+        if (timestampValue !== undefined) {
+          if (typeof timestampValue === 'bigint') {
+            const ts = Number(timestampValue);
+            formattedTimestamp = `${timestampValue.toString()} (${ts > 0 ? new Date(ts * 1000).toISOString() : 'epoch'})`;
+          } else {
+            const ts = Number(timestampValue);
+            formattedTimestamp = `${timestampValue} (${ts > 0 ? new Date(ts * 1000).toISOString() : 'epoch'})`;
+          }
+        }
+
+        // Log the full result for debugging with enhanced information
+        this.logger.debug(`getPriceResult for ${config.assetSymbol}:`, {
+          networkId: config.networkId,
+          contractAddress: contractAddress,
+          marketId: marketId,
+          feederId: config.id,
+          success: getPriceResult.success,
+          error: getPriceResult.error,
+          returnType: returnType,
+          returnValue: getPriceResult.returnValue,
+          hasReturn:
+            getPriceResult.returnValue !== undefined &&
+            getPriceResult.returnValue !== null,
+          price: formattedPrice,
+          timestamp: formattedTimestamp,
+          priceIsZero: (
+            (typeof priceValue === 'bigint' && priceValue === 0n) ||
+            (typeof priceValue === 'number' && priceValue === 0)
+          ),
+          interpretation: (
+            (typeof priceValue === 'bigint' && priceValue === 0n) ||
+            (typeof priceValue === 'number' && priceValue === 0)
+          ) ? 'No price set (price is 0)' : 'Price is set'
+        });
 
         this.logger.debug("priceValue", priceValue);
 
@@ -649,15 +743,36 @@ export class PriceOracleService {
     config: PriceFeederConfig,
     priceData: PriceData
   ): Promise<PriceFeedResult> {
-    // Get token configuration to determine decimals for target adjustment
-    console.log("config.networkId", config.networkId);
-    console.log("config.assetSymbol", config.assetSymbol);
-    const tokenConfig = this.networkConfigLoader.getTokenConfig(
-      config.networkId,
-      config.assetSymbol
+    // Get marketId (contractId) - this is the token ID in the price oracle contract
+    const marketId = config.destination.marketId || config.marketId;
+    
+    // Try to get token config by contractId (marketId) first, as this is the actual token
+    // that the price oracle contract uses for this market
+    let tokenConfig = null;
+    let tokenDecimals = 6; // default
+    
+    if (marketId) {
+      tokenConfig = this.networkConfigLoader.getTokenConfigByContractId(
+        config.networkId,
+        String(marketId)
+      );
+    }
+    
+    // Fallback to assetSymbol if we couldn't find by contractId
+    if (!tokenConfig) {
+      tokenConfig = this.networkConfigLoader.getTokenConfig(
+        config.networkId,
+        config.assetSymbol
+      );
+    }
+    
+    tokenDecimals = tokenConfig?.decimals || 6;
+    
+    this.logger.debug(
+      `Using decimals for price comparison: ${tokenDecimals} ` +
+      `(from ${tokenConfig && marketId ? `market token contractId: ${marketId}` : `asset symbol: ${config.assetSymbol}`})`
     );
-    const tokenDecimals = tokenConfig?.decimals || 6;
-    console.log("tokenDecimals", tokenDecimals);
+    
     const targetAdjustment = 12 - tokenDecimals;
     const adjustmentMultiplier = Math.pow(10, targetAdjustment);
 

@@ -102,6 +102,160 @@
         "logoPath": "https://asset-verification.nautilus.sh/icons/412682.png",
         "tokenStandard": "arc200"
       },
+      "SHELLY": {
+        "contractId": "410111",
+        "poolId": "47139781",
+        "nTokenId": "48169022",
+        "migration": {
+          "contractId": "410111",
+          "poolId": "44866061",
+          "nTokenId": "44872410"
+        },
+        "decimals": 8,
+        "name": "SHELLY",
+        "symbol": "SHELLY",
+        "logoPath": "https://asset-verification.nautilus.sh/icons/410111.png",
+        "tokenStandard": "arc200"
+      },
+      "BUIDL": {
+        "contractId": "419744",
+        "poolId": "47139781",
+        "nTokenId": "48174565",
+        "migration": {
+          "contractId": "419744",
+          "poolId": "44866061",
+          "nTokenId": "44872401"
+        },
+        "decimals": 8,
+        "name": "BUIDL",
+        "symbol": "BUIDL",
+        "logoPath": "https://asset-verification.nautilus.sh/icons/419744.png",
+        "tokenStandard": "arc200"
+      },
+      "F": {
+        "contractId": "302222",
+        "poolId": "47139781",
+        "nTokenId": "48174629",
+        "migration": {
+          "contractId": "302222",
+          "poolId": "44866061",
+          "nTokenId": "44872864"
+        },
+        "decimals": 6,
+        "name": "F",
+        "symbol": "F",
+        "logoPath": "https://asset-verification.nautilus.sh/icons/302222.png",
+        "tokenStandard": "arc200"
+      },
+      "NODE": {
+        "contractId": "410811",
+        "poolId": "47139781",
+        "nTokenId": "48174745",
+        "migration": {
+          "contractId": "410811",
+          "poolId": "44866061",
+          "nTokenId": "44872392"
+        },
+        "decimals": 6,
+        "name": "NODE",
+        "symbol": "NODE",
+        "logoPath": "https://asset-verification.nautilus.sh/icons/410811.png",
+        "tokenStandard": "arc200"
+      },
+      "AMMO": {
+        "contractId": "798968",
+        "poolId": "47139781",
+        "nTokenId": "48174796",
+        "migration": {
+          "contractId": "798968",
+          "poolId": "44866061",
+          "nTokenId": "44872488"
+        },
+        "decimals": 6,
+        "name": "AMMO",
+        "symbol": "AMMO",
+        "logoPath": "https://asset-verification.nautilus.sh/icons/798968.png",
+        "tokenStandard": "arc200"
+      },
+      "IAT": {
+        "contractId": "420024",
+        "poolId": "47139781",
+        "nTokenId": "48174826",
+        "migration": {
+          "contractId": "420024",
+          "poolId": "44866061",
+          "nTokenId": "44872814"
+        },
+        "decimals": 6,
+        "name": "IAT",
+        "symbol": "IAT",
+        "logoPath": "https://asset-verification.nautilus.sh/icons/420024.png",
+        "tokenStandard": "arc200"
+      },
+      "bVOI": {
+        "assetId": "0",
+        "contractId": "8471125",
+        "poolId": "47139781",
+        "nTokenId": "48174861",
+        "migration": {
+          "contractId": "8471125",
+          "poolId": "44866061",
+          "nTokenId": "45052513"
+        },
+        "decimals": 6,
+        "name": "BUIDL VOI",
+        "symbol": "bVOI",
+        "logoPath": "/lovable-uploads/bVOI.png",
+        "tokenStandard": "network"
+      },
+      "NV": {
+        "assetId": "0",
+        "contractId": "8324600",
+        "poolId": "47139781",
+        "nTokenId": "48174965",
+        "migration": {
+          "contractId": "8324600",
+          "poolId": "44866061",
+          "nTokenId": "45052477"
+        },
+        "decimals": 6,
+        "name": "Nautilus VOI",
+        "symbol": "NV",
+        "logoPath": "/lovable-uploads/NV.png",
+        "tokenStandard": "network"
+      },
+      "EV": {
+        "assetId": "0",
+        "contractId": "828295",
+        "poolId": "47139781",
+        "nTokenId": "",
+        "migration": {
+          "contractId": "828295",
+          "poolId": "44866061",
+          "nTokenId": "45447486"
+        },
+        "decimals": 6,
+        "name": "enVOI",
+        "symbol": "EV",
+        "logoPath": "/lovable-uploads/EV.png",
+        "tokenStandard": "network"
+      },
+      "FV": {
+        "assetId": "0",
+        "contractId": "770561",
+        "poolId": "47139781",
+        "nTokenId": "",
+        "migration": {
+          "contractId": "770561",
+          "poolId": "44866061",
+          "nTokenId": "45052343"
+        },
+        "decimals": 6,
+        "name": "Fountain VOI",
+        "symbol": "FV",
+        "logoPath": "https://asset-verification.nautilus.sh/icons/770561.png",
+        "tokenStandard": "network"
+      },
       "aALGO": {
         "assetId": "302189",
         "contractId": "413153",
@@ -134,20 +288,36 @@
         "logoPath": "/lovable-uploads/aETH.png",
         "tokenStandard": "asa"
       },
-      "AVAX": {
-        "assetId": "893309613",
-        "poolId": "3333688282",
-        "contractId": "3211885849",
-        "nTokenId": "3352584524",
+      "aBTC": {
+        "assetId": "40152643",
+        "contractId": "40153368",
+        "poolId": "47139778",
+        "nTokenId": "48168253",
         "migration": {
-          "poolId": "3207735602",
-          "contractId": "3211885849",
-          "nTokenId": "3212025852"
+          "contractId": "40153368",
+          "poolId": "41760711",
+          "nTokenId": "42701185"
         },
         "decimals": 8,
-        "name": "AVAX",
-        "symbol": "AVAX",
-        "logoPath": "/lovable-uploads/wAVAX.png",
+        "name": "Wrapped BTC",
+        "symbol": "aBTC",
+        "logoPath": "/lovable-uploads/WrappedBTC.png",
+        "tokenStandard": "asa"
+      },
+      "acbBTC": {
+        "assetId": "40152648",
+        "contractId": "40153415",
+        "poolId": "47139778",
+        "nTokenId": "42706178",
+        "migration": {
+          "contractId": "40153415",
+          "poolId": "41760711",
+          "nTokenId": "42706178"
+        },
+        "decimals": 8,
+        "name": "Coinbase BTC",
+        "symbol": "acbBTC",
+        "logoPath": "/lovable-uploads/cbBTC.png",
         "tokenStandard": "asa"
       }
     }

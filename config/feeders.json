@@ -49,10 +49,7 @@
         "minPrice": 0.0001,
         "maxPrice": 10,
         "maxPriceChange": 50,
-        "requiredFields": [
-          "price",
-          "timestamp"
-        ]
+        "requiredFields": ["price", "timestamp"]
       },
       "twap": {
         "enabled": true
@@ -105,10 +102,7 @@
         "minPrice": 0.0001,
         "maxPrice": 10,
         "maxPriceChange": 50,
-        "requiredFields": [
-          "price",
-          "timestamp"
-        ]
+        "requiredFields": ["price", "timestamp"]
       },
       "twap": {
         "enabled": true
@@ -161,10 +155,7 @@
         "minPrice": 0.0001,
         "maxPrice": 10,
         "maxPriceChange": 50,
-        "requiredFields": [
-          "price",
-          "timestamp"
-        ]
+        "requiredFields": ["price", "timestamp"]
       },
       "twap": {
         "enabled": true
@@ -220,10 +211,7 @@
         "minPrice": 0.01,
         "maxPrice": 10,
         "maxPriceChange": 50,
-        "requiredFields": [
-          "price",
-          "timestamp"
-        ]
+        "requiredFields": ["price", "timestamp"]
       },
       "twap": {
         "enabled": true
@@ -278,10 +266,7 @@
         "minPrice": 0.01,
         "maxPrice": 10,
         "maxPriceChange": 50,
-        "requiredFields": [
-          "price",
-          "timestamp"
-        ]
+        "requiredFields": ["price", "timestamp"]
       },
       "twap": {
         "enabled": true
@@ -336,10 +321,7 @@
         "minPrice": 0.001,
         "maxPrice": 10,
         "maxPriceChange": 50,
-        "requiredFields": [
-          "price",
-          "timestamp"
-        ]
+        "requiredFields": ["price", "timestamp"]
       },
       "twap": {
         "enabled": true
@@ -394,10 +376,7 @@
         "minPrice": 10000,
         "maxPrice": 200000,
         "maxPriceChange": 50,
-        "requiredFields": [
-          "price",
-          "timestamp"
-        ]
+        "requiredFields": ["price", "timestamp"]
       },
       "twap": {
         "enabled": true
@@ -452,10 +431,7 @@
         "minPrice": 0.001,
         "maxPrice": 10,
         "maxPriceChange": 50,
-        "requiredFields": [
-          "price",
-          "timestamp"
-        ]
+        "requiredFields": ["price", "timestamp"]
       },
       "twap": {
         "enabled": true
@@ -510,10 +486,7 @@
         "minPrice": 0.01,
         "maxPrice": 1000,
         "maxPriceChange": 50,
-        "requiredFields": [
-          "price",
-          "timestamp"
-        ]
+        "requiredFields": ["price", "timestamp"]
       },
       "twap": {
         "enabled": true
@@ -568,10 +541,7 @@
         "minPrice": 0.0001,
         "maxPrice": 1,
         "maxPriceChange": 50,
-        "requiredFields": [
-          "price",
-          "timestamp"
-        ]
+        "requiredFields": ["price", "timestamp"]
       },
       "twap": {
         "enabled": true
@@ -626,10 +596,7 @@
         "minPrice": 0.0001,
         "maxPrice": 10,
         "maxPriceChange": 50,
-        "requiredFields": [
-          "price",
-          "timestamp"
-        ]
+        "requiredFields": ["price", "timestamp"]
       },
       "twap": {
         "enabled": true
@@ -684,10 +651,7 @@
         "minPrice": 0.01,
         "maxPrice": 2,
         "maxPriceChange": 50,
-        "requiredFields": [
-          "price",
-          "timestamp"
-        ]
+        "requiredFields": ["price", "timestamp"]
       },
       "twap": {
         "enabled": true
@@ -742,10 +706,7 @@
         "minPrice": 0.01,
         "maxPrice": 2,
         "maxPriceChange": 50,
-        "requiredFields": [
-          "price",
-          "timestamp"
-        ]
+        "requiredFields": ["price", "timestamp"]
       },
       "twap": {
         "enabled": true
@@ -800,10 +761,7 @@
         "minPrice": 0.01,
         "maxPrice": 2,
         "maxPriceChange": 50,
-        "requiredFields": [
-          "price",
-          "timestamp"
-        ]
+        "requiredFields": ["price", "timestamp"]
       },
       "twap": {
         "enabled": true
@@ -858,10 +816,7 @@
         "minPrice": 0.00001,
         "maxPrice": 1,
         "maxPriceChange": 50,
-        "requiredFields": [
-          "price",
-          "timestamp"
-        ]
+        "requiredFields": ["price", "timestamp"]
       },
       "twap": {
         "enabled": true
@@ -916,10 +871,7 @@
         "minPrice": 0.0001,
         "maxPrice": 10,
         "maxPriceChange": 50,
-        "requiredFields": [
-          "price",
-          "timestamp"
-        ]
+        "requiredFields": ["price", "timestamp"]
       },
       "twap": {
         "enabled": true
@@ -933,7 +885,7 @@
       "marketId": "3212531816",
       "assetSymbol": "ALPHA",
       "enabled": true,
-      "interval": 900000, 
+      "interval": 900000,
       "timeout": 10000,
       "retries": 3,
       "priority": 10,
@@ -974,10 +926,7 @@
         "minPrice": 0.0001,
         "maxPrice": 10,
         "maxPriceChange": 50,
-        "requiredFields": [
-          "price",
-          "timestamp"
-        ]
+        "requiredFields": ["price", "timestamp"]
       },
       "twap": {
         "enabled": true
@@ -1032,10 +981,7 @@
         "minPrice": 0.0001,
         "maxPrice": 10,
         "maxPriceChange": 50,
-        "requiredFields": [
-          "price",
-          "timestamp"
-        ]
+        "requiredFields": ["price", "timestamp"]
       },
       "twap": {
         "enabled": true
@@ -1090,10 +1036,7 @@
         "minPrice": 0.0001,
         "maxPrice": 10,
         "maxPriceChange": 50,
-        "requiredFields": [
-          "price",
-          "timestamp"
-        ]
+        "requiredFields": ["price", "timestamp"]
       },
       "twap": {
         "enabled": true
@@ -1148,10 +1091,7 @@
         "minPrice": 0.000001,
         "maxPrice": 10,
         "maxPriceChange": 50,
-        "requiredFields": [
-          "price",
-          "timestamp"
-        ]
+        "requiredFields": ["price", "timestamp"]
       },
       "twap": {
         "enabled": true
@@ -1206,10 +1146,7 @@
         "minPrice": 1,
         "maxPrice": 1000,
         "maxPriceChange": 50,
-        "requiredFields": [
-          "price",
-          "timestamp"
-        ]
+        "requiredFields": ["price", "timestamp"]
       },
       "twap": {
         "enabled": true
@@ -1264,10 +1201,7 @@
         "minPrice": 0.0005,
         "maxPrice": 0.1,
         "maxPriceChange": 0.01,
-        "requiredFields": [
-          "price",
-          "timestamp"
-        ]
+        "requiredFields": ["price", "timestamp"]
       },
       "twap": {
         "enabled": true
@@ -1322,10 +1256,7 @@
         "minPrice": 100,
         "maxPrice": 200000,
         "maxPriceChange": 50,
-        "requiredFields": [
-          "price",
-          "timestamp"
-        ]
+        "requiredFields": ["price", "timestamp"]
       },
       "twap": {
         "enabled": true
@@ -1380,10 +1311,7 @@
         "minPrice": 100,
         "maxPrice": 10000,
         "maxPriceChange": 50,
-        "requiredFields": [
-          "price",
-          "timestamp"
-        ]
+        "requiredFields": ["price", "timestamp"]
       },
       "twap": {
         "enabled": true
@@ -1438,10 +1366,7 @@
         "minPrice": 100,
         "maxPrice": 10000,
         "maxPriceChange": 50,
-        "requiredFields": [
-          "price",
-          "timestamp"
-        ]
+        "requiredFields": ["price", "timestamp"]
       },
       "twap": {
         "enabled": true
@@ -1496,10 +1421,7 @@
         "minPrice": 0.01,
         "maxPrice": 100,
         "maxPriceChange": 50,
-        "requiredFields": [
-          "price",
-          "timestamp"
-        ]
+        "requiredFields": ["price", "timestamp"]
       },
       "twap": {
         "enabled": true
@@ -1554,10 +1476,7 @@
         "minPrice": 1,
         "maxPrice": 1000,
         "maxPriceChange": 50,
-        "requiredFields": [
-          "price",
-          "timestamp"
-        ]
+        "requiredFields": ["price", "timestamp"]
       },
       "twap": {
         "enabled": true
@@ -1612,10 +1531,7 @@
         "minPrice": 1,
         "maxPrice": 100,
         "maxPriceChange": 50,
-        "requiredFields": [
-          "price",
-          "timestamp"
-        ]
+        "requiredFields": ["price", "timestamp"]
       },
       "twap": {
         "enabled": true
@@ -1668,10 +1584,7 @@
         "minPrice": 0.000001,
         "maxPrice": 1,
         "maxPriceChange": 50,
-        "requiredFields": [
-          "price",
-          "timestamp"
-        ]
+        "requiredFields": ["price", "timestamp"]
       },
       "twap": {
         "enabled": true
@@ -1685,7 +1598,7 @@
       "marketId": "412682",
       "assetSymbol": "CORN",
       "enabled": true,
-      "interval": 300000,
+      "interval": 900000,
       "timeout": 10000,
       "retries": 3,
       "priority": 10,
@@ -1724,10 +1637,537 @@
         "minPrice": 0.000001,
         "maxPrice": 1,
         "maxPriceChange": 50,
-        "requiredFields": [
-          "price",
-          "timestamp"
+        "requiredFields": ["price", "timestamp"]
+      },
+      "twap": {
+        "enabled": true
+      }
+    },
+    "voi-mainnet-47139781-SHELLY": {
+      "id": "voi-mainnet-47139781-SHELLY",
+      "method": "fetch-and-post",
+      "networkId": "voi-mainnet",
+      "poolId": "47139781",
+      "marketId": "410111",
+      "assetSymbol": "SHELLY",
+      "enabled": true,
+      "interval": 900000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://humble-api.voi.nautilus.sh/tokens/410111/stats",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {}
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "47138069",
+        "marketId": "410111",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
+            ]
+          }
         ]
+      },
+      "validation": {
+        "minPrice": 0.000001,
+        "maxPrice": 1,
+        "maxPriceChange": 0.1,
+        "requiredFields": ["price", "timestamp"]
+      },
+      "twap": {
+        "enabled": true
+      }
+    },
+    "voi-mainnet-47139781-BUIDL": {
+      "id": "voi-mainnet-47139781-BUIDL",
+      "method": "fetch-and-post",
+      "networkId": "voi-mainnet",
+      "poolId": "47139781",
+      "marketId": "419744",
+      "assetSymbol": "BUIDL",
+      "enabled": true,
+      "interval": 900000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://humble-api.voi.nautilus.sh/tokens/419744/stats",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {}
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "47138069",
+        "marketId": "419744",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.000001,
+        "maxPrice": 1,
+        "maxPriceChange": 0.1,
+        "requiredFields": ["price", "timestamp"]
+      },
+      "twap": {
+        "enabled": true
+      }
+    },
+    "voi-mainnet-47139781-F": {
+      "id": "voi-mainnet-47139781-F",
+      "method": "fetch-and-post",
+      "networkId": "voi-mainnet",
+      "poolId": "47139781",
+      "marketId": "302222",
+      "assetSymbol": "F",
+      "enabled": true,
+      "interval": 900000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://humble-api.voi.nautilus.sh/tokens/302222/stats",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {}
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "47138069",
+        "marketId": "302222",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.000001,
+        "maxPrice": 1,
+        "maxPriceChange": 0.1,
+        "requiredFields": ["price", "timestamp"]
+      },
+      "twap": {
+        "enabled": true
+      }
+    },
+    "voi-mainnet-47139781-NODE": {
+      "id": "voi-mainnet-47139781-NODE",
+      "method": "fetch-and-post",
+      "networkId": "voi-mainnet",
+      "poolId": "47139781",
+      "marketId": "410811",
+      "assetSymbol": "NODE",
+      "enabled": true,
+      "interval": 900000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://humble-api.voi.nautilus.sh/tokens/410811/stats",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {}
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "47138069",
+        "marketId": "410811",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.000001,
+        "maxPrice": 1,
+        "maxPriceChange": 0.1,
+        "requiredFields": ["price", "timestamp"]
+      },
+      "twap": {
+        "enabled": true
+      }
+    },
+    "voi-mainnet-47139781-AMMO": {
+      "id": "voi-mainnet-47139781-AMMO",
+      "method": "fetch-and-post",
+      "networkId": "voi-mainnet",
+      "poolId": "47139781",
+      "marketId": "798968",
+      "assetSymbol": "AMMO",
+      "enabled": true,
+      "interval": 900000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://humble-api.voi.nautilus.sh/tokens/798968/stats",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {}
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "47138069",
+        "marketId": "798968",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.000001,
+        "maxPrice": 1,
+        "maxPriceChange": 0.1,
+        "requiredFields": ["price", "timestamp"]
+      },
+      "twap": {
+        "enabled": true
+      }
+    },
+    "voi-mainnet-47139781-IAT": {
+      "id": "voi-mainnet-47139781-IAT",
+      "method": "fetch-and-post",
+      "networkId": "voi-mainnet",
+      "poolId": "47139781",
+      "marketId": "420024",
+      "assetSymbol": "IAT",
+      "enabled": true,
+      "interval": 900000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://humble-api.voi.nautilus.sh/tokens/420024/stats",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {}
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "47138069",
+        "marketId": "420024",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.000001,
+        "maxPrice": 1,
+        "maxPriceChange": 0.1,
+        "requiredFields": ["price", "timestamp"]
+      },
+      "twap": {
+        "enabled": true
+      }
+    },
+    "voi-mainnet-47139781-bVOI": {
+      "id": "voi-mainnet-47139781-bVOI",
+      "method": "fetch-and-post",
+      "networkId": "voi-mainnet",
+      "poolId": "47139781",
+      "marketId": "8471125",
+      "assetSymbol": "bVOI",
+      "enabled": true,
+      "interval": 900000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://humble-api.voi.nautilus.sh/tokens/390001/stats",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {}
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "47138069",
+        "marketId": "8471125",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.000001,
+        "maxPrice": 1,
+        "maxPriceChange": 0.1,
+        "requiredFields": ["price", "timestamp"]
+      },
+      "twap": {
+        "enabled": true
+      }
+    },
+    "voi-mainnet-47139781-NV": {
+      "id": "voi-mainnet-47139781-NV",
+      "method": "fetch-and-post",
+      "networkId": "voi-mainnet",
+      "poolId": "47139781",
+      "marketId": "8324600",
+      "assetSymbol": "NV",
+      "enabled": true,
+      "interval": 900000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://humble-api.voi.nautilus.sh/tokens/390001/stats",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {}
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "47138069",
+        "marketId": "8324600",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.000001,
+        "maxPrice": 1,
+        "maxPriceChange": 0.1,
+        "requiredFields": ["price", "timestamp"]
+      },
+      "twap": {
+        "enabled": true
+      }
+    },
+    "voi-mainnet-47139781-EV": {
+      "id": "voi-mainnet-47139781-EV",
+      "method": "fetch-and-post",
+      "networkId": "voi-mainnet",
+      "poolId": "47139781",
+      "marketId": "828295",
+      "assetSymbol": "EV",
+      "enabled": true,
+      "interval": 900000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://humble-api.voi.nautilus.sh/tokens/390001/stats",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {}
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "47138069",
+        "marketId": "828295",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.000001,
+        "maxPrice": 1,
+        "maxPriceChange": 0.1,
+        "requiredFields": ["price", "timestamp"]
+      },
+      "twap": {
+        "enabled": true
+      }
+    },
+    "voi-mainnet-47139781-FV": {
+      "id": "voi-mainnet-47139781-FV",
+      "method": "fetch-and-post",
+      "networkId": "voi-mainnet",
+      "poolId": "47139781",
+      "marketId": "770561",
+      "assetSymbol": "FV",
+      "enabled": true,
+      "interval": 900000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://humble-api.voi.nautilus.sh/tokens/390001/stats",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {}
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "47138069",
+        "marketId": "770561",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.000001,
+        "maxPrice": 1,
+        "maxPriceChange": 0.1,
+        "requiredFields": ["price", "timestamp"]
       },
       "twap": {
         "enabled": true
@@ -1780,10 +2220,7 @@
         "minPrice": 0.000001,
         "maxPrice": 1,
         "maxPriceChange": 50,
-        "requiredFields": [
-          "price",
-          "timestamp"
-        ]
+        "requiredFields": ["price", "timestamp"]
       },
       "twap": {
         "enabled": true
@@ -1838,10 +2275,114 @@
         "minPrice": 1000,
         "maxPrice": 10000,
         "maxPriceChange": 50,
-        "requiredFields": [
-          "price",
-          "timestamp"
+        "requiredFields": ["price", "timestamp"]
+      },
+      "twap": {
+        "enabled": true
+      }
+    },
+    "voi-mainnet-47139778-aBTC": {
+      "id": "voi-mainnet-47139778-aBTC",
+      "method": "fetch-and-post",
+      "networkId": "voi-mainnet",
+      "poolId": "47139778",
+      "marketId": "40153368",
+      "assetSymbol": "aBTC",
+      "enabled": true,
+      "interval": 900000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://mainnet.api.perawallet.app/v1/assets/",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {
+          "asset_ids": "386192725"
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "47138069",
+        "marketId": "40153368",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
+            ]
+          }
         ]
+      },
+      "validation": {
+        "minPrice": 10000,
+        "maxPrice": 200000,
+        "maxPriceChange": 1000,
+        "requiredFields": ["price", "timestamp"]
+      }
+    },
+    "voi-mainnet-47139778-acbBTC": {
+      "id": "voi-mainnet-47139778-acbBTC",
+      "method": "fetch-and-post",
+      "networkId": "voi-mainnet",
+      "poolId": "47139778",
+      "marketId": "40153415",
+      "assetSymbol": "acbBTC",
+      "enabled": true,
+      "interval": 900000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://mainnet.api.perawallet.app/v1/assets/",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {
+          "asset_ids": "386192725"
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "47138069",
+        "marketId": "40153415",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 10000,
+        "maxPrice": 200000,
+        "maxPriceChange": 1000,
+        "requiredFields": ["price", "timestamp"]
       },
       "twap": {
         "enabled": true
