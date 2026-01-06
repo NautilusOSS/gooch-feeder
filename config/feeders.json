@@ -99,9 +99,9 @@
         ]
       },
       "validation": {
-        "minPrice": 0.0001,
-        "maxPrice": 10,
-        "maxPriceChange": 50,
+        "minPrice": 0.4,
+        "maxPrice": 1.2,
+        "maxPriceChange": 0.1,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {
@@ -152,9 +152,9 @@
         ]
       },
       "validation": {
-        "minPrice": 0.0001,
-        "maxPrice": 10,
-        "maxPriceChange": 50,
+        "minPrice": 0.00005,
+        "maxPrice": 0.004,
+        "maxPriceChange": 0.001,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {
@@ -208,9 +208,9 @@
         ]
       },
       "validation": {
-        "minPrice": 0.01,
-        "maxPrice": 10,
-        "maxPriceChange": 50,
+        "minPrice": 0.075,
+        "maxPrice": 0.25,
+        "maxPriceChange": 0.01,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {
@@ -263,9 +263,9 @@
         ]
       },
       "validation": {
-        "minPrice": 0.01,
-        "maxPrice": 10,
-        "maxPriceChange": 50,
+        "minPrice": 0.6,
+        "maxPrice": 1.2,
+        "maxPriceChange": 0.1,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {
@@ -318,9 +318,9 @@
         ]
       },
       "validation": {
-        "minPrice": 0.001,
-        "maxPrice": 10,
-        "maxPriceChange": 50,
+        "minPrice": 0.0005,
+        "maxPrice": 0.003,
+        "maxPriceChange": 0.002,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {
@@ -375,7 +375,7 @@
       "validation": {
         "minPrice": 10000,
         "maxPrice": 200000,
-        "maxPriceChange": 50,
+        "maxPriceChange": 1000,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {
@@ -428,9 +428,9 @@
         ]
       },
       "validation": {
-        "minPrice": 0.001,
-        "maxPrice": 10,
-        "maxPriceChange": 50,
+        "minPrice": 0.006,
+        "maxPrice": 0.01,
+        "maxPriceChange": 0.003,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {
@@ -483,9 +483,9 @@
         ]
       },
       "validation": {
-        "minPrice": 0.01,
-        "maxPrice": 1000,
-        "maxPriceChange": 50,
+        "minPrice": 1,
+        "maxPrice": 4,
+        "maxPriceChange": 1,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {
@@ -538,9 +538,9 @@
         ]
       },
       "validation": {
-        "minPrice": 0.0001,
-        "maxPrice": 1,
-        "maxPriceChange": 50,
+        "minPrice": 0.005,
+        "maxPrice": 0.015,
+        "maxPriceChange": 0.002,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {
@@ -593,9 +593,9 @@
         ]
       },
       "validation": {
-        "minPrice": 0.0001,
-        "maxPrice": 10,
-        "maxPriceChange": 50,
+        "minPrice": 0.25,
+        "maxPrice": 1.25,
+        "maxPriceChange": 0.05,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {
@@ -648,9 +648,9 @@
         ]
       },
       "validation": {
-        "minPrice": 0.01,
-        "maxPrice": 2,
-        "maxPriceChange": 50,
+        "minPrice": 0.25,
+        "maxPrice": 0.75,
+        "maxPriceChange": 0.05,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {
@@ -703,9 +703,9 @@
         ]
       },
       "validation": {
-        "minPrice": 0.01,
-        "maxPrice": 2,
-        "maxPriceChange": 50,
+        "minPrice": 0.5,
+        "maxPrice": 1,
+        "maxPriceChange": 0.1,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {
@@ -759,8 +759,8 @@
       },
       "validation": {
         "minPrice": 0.01,
-        "maxPrice": 2,
-        "maxPriceChange": 50,
+        "maxPrice": 0.05,
+        "maxPriceChange": 0.005,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {
@@ -813,9 +813,9 @@
         ]
       },
       "validation": {
-        "minPrice": 0.00001,
-        "maxPrice": 1,
-        "maxPriceChange": 50,
+        "minPrice": 0.000001,
+        "maxPrice": 0.00005,
+        "maxPriceChange": 0.00001,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {
@@ -869,8 +869,8 @@
       },
       "validation": {
         "minPrice": 0.0001,
-        "maxPrice": 10,
-        "maxPriceChange": 50,
+        "maxPrice": 0.001,
+        "maxPriceChange": 0.0001,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {
@@ -923,9 +923,9 @@
         ]
       },
       "validation": {
-        "minPrice": 0.0001,
-        "maxPrice": 10,
-        "maxPriceChange": 50,
+        "minPrice": 0.01,
+        "maxPrice": 0.05,
+        "maxPriceChange": 0.01,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {
@@ -978,9 +978,9 @@
         ]
       },
       "validation": {
-        "minPrice": 0.0001,
-        "maxPrice": 10,
-        "maxPriceChange": 50,
+        "minPrice": 0.0007,
+        "maxPrice": 0.0015,
+        "maxPriceChange": 0.0002,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {
@@ -1033,9 +1033,9 @@
         ]
       },
       "validation": {
-        "minPrice": 0.0001,
-        "maxPrice": 10,
-        "maxPriceChange": 50,
+        "minPrice": 0.0002,
+        "maxPrice": 0.001,
+        "maxPriceChange": 0.0002,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {
@@ -1089,8 +1089,8 @@
       },
       "validation": {
         "minPrice": 0.000001,
-        "maxPrice": 10,
-        "maxPriceChange": 50,
+        "maxPrice": 0.000015,
+        "maxPriceChange": 0.000005,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {
@@ -1143,9 +1143,9 @@
         ]
       },
       "validation": {
-        "minPrice": 1,
-        "maxPrice": 1000,
-        "maxPriceChange": 50,
+        "minPrice": 100,
+        "maxPrice": 200,
+        "maxPriceChange": 25,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {
@@ -1198,9 +1198,9 @@
         ]
       },
       "validation": {
-        "minPrice": 0.0005,
-        "maxPrice": 0.1,
-        "maxPriceChange": 0.01,
+        "minPrice": 0.001,
+        "maxPrice": 0.005,
+        "maxPriceChange": 0.001,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {
@@ -1253,9 +1253,9 @@
         ]
       },
       "validation": {
-        "minPrice": 100,
+        "minPrice": 75000,
         "maxPrice": 200000,
-        "maxPriceChange": 50,
+        "maxPriceChange": 1000,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {
@@ -1308,9 +1308,9 @@
         ]
       },
       "validation": {
-        "minPrice": 100,
-        "maxPrice": 10000,
-        "maxPriceChange": 50,
+        "minPrice": 1500,
+        "maxPrice": 5000,
+        "maxPriceChange": 500,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {
@@ -1363,9 +1363,9 @@
         ]
       },
       "validation": {
-        "minPrice": 100,
-        "maxPrice": 10000,
-        "maxPriceChange": 50,
+        "minPrice": 2500,
+        "maxPrice": 5000,
+        "maxPriceChange": 100,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {
@@ -1418,9 +1418,9 @@
         ]
       },
       "validation": {
-        "minPrice": 0.01,
-        "maxPrice": 100,
-        "maxPriceChange": 50,
+        "minPrice": 10,
+        "maxPrice": 25,
+        "maxPriceChange": 1,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {
@@ -1473,9 +1473,9 @@
         ]
       },
       "validation": {
-        "minPrice": 1,
-        "maxPrice": 1000,
-        "maxPriceChange": 50,
+        "minPrice": 75,
+        "maxPrice": 250,
+        "maxPriceChange": 5,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {
@@ -1528,9 +1528,9 @@
         ]
       },
       "validation": {
-        "minPrice": 1,
-        "maxPrice": 100,
-        "maxPriceChange": 50,
+        "minPrice": 5,
+        "maxPrice": 20,
+        "maxPriceChange": 1,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {
@@ -1582,8 +1582,8 @@
       },
       "validation": {
         "minPrice": 0.000001,
-        "maxPrice": 1,
-        "maxPriceChange": 50,
+        "maxPrice": 0.0001,
+        "maxPriceChange": 0.00001,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {
@@ -1635,8 +1635,8 @@
       },
       "validation": {
         "minPrice": 0.000001,
-        "maxPrice": 1,
-        "maxPriceChange": 50,
+        "maxPrice": 0.008,
+        "maxPriceChange": 0.001,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {
@@ -1687,9 +1687,9 @@
         ]
       },
       "validation": {
-        "minPrice": 0.000001,
-        "maxPrice": 1,
-        "maxPriceChange": 0.1,
+        "minPrice": 0.0001,
+        "maxPrice": 0.1,
+        "maxPriceChange": 0.01,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {
@@ -1741,8 +1741,8 @@
       },
       "validation": {
         "minPrice": 0.000001,
-        "maxPrice": 1,
-        "maxPriceChange": 0.1,
+        "maxPrice": 0.0004,
+        "maxPriceChange": 0.0001,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {
@@ -1794,8 +1794,8 @@
       },
       "validation": {
         "minPrice": 0.000001,
-        "maxPrice": 1,
-        "maxPriceChange": 0.1,
+        "maxPrice": 0.000015,
+        "maxPriceChange": 0.000002,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {
@@ -1847,8 +1847,8 @@
       },
       "validation": {
         "minPrice": 0.000001,
-        "maxPrice": 1,
-        "maxPriceChange": 0.1,
+        "maxPrice": 0.000005,
+        "maxPriceChange": 0.000001,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {
@@ -1900,8 +1900,8 @@
       },
       "validation": {
         "minPrice": 0.000001,
-        "maxPrice": 1,
-        "maxPriceChange": 0.1,
+        "maxPrice": 0.0003,
+        "maxPriceChange": 0.0001,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {
@@ -1953,8 +1953,8 @@
       },
       "validation": {
         "minPrice": 0.000001,
-        "maxPrice": 1,
-        "maxPriceChange": 0.1,
+        "maxPrice": 0.0004,
+        "maxPriceChange": 0.0001,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {
@@ -2006,8 +2006,8 @@
       },
       "validation": {
         "minPrice": 0.000001,
-        "maxPrice": 1,
-        "maxPriceChange": 0.1,
+        "maxPrice": 0.01,
+        "maxPriceChange": 0.001,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {
@@ -2059,8 +2059,8 @@
       },
       "validation": {
         "minPrice": 0.000001,
-        "maxPrice": 1,
-        "maxPriceChange": 0.1,
+        "maxPrice": 0.001,
+        "maxPriceChange": 0.0001,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {
@@ -2112,8 +2112,8 @@
       },
       "validation": {
         "minPrice": 0.000001,
-        "maxPrice": 1,
-        "maxPriceChange": 0.1,
+        "maxPrice": 0.001,
+        "maxPriceChange": 0.0001,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {
@@ -2217,9 +2217,9 @@
         ]
       },
       "validation": {
-        "minPrice": 0.000001,
-        "maxPrice": 1,
-        "maxPriceChange": 50,
+        "minPrice": 0.075,
+        "maxPrice": 0.3,
+        "maxPriceChange": 0.01,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {

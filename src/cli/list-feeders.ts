@@ -21,9 +21,9 @@ async function listFeeders(): Promise<void> {
     const accountService = new AccountService();
     await accountService.initialize();
     
-    // Initialize feeder manager service
+    // Initialize feeder manager service (skip starting feeders since we're just listing)
     const feederManagerService = new FeederManagerService(networkConfigLoader, accountService);
-    await feederManagerService.initialize();
+    await feederManagerService.initialize(true);
     
     // Get all feeder configs
     const feederConfigs = feederManagerService.getAllFeederConfigs();

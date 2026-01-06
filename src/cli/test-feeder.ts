@@ -55,9 +55,9 @@ async function testFeeder(feederId: string): Promise<void> {
     const accountService = new AccountService();
     await accountService.initialize();
     
-    // Initialize feeder manager service
+    // Initialize feeder manager service (skip starting feeders to avoid batch processing)
     const feederManagerService = new FeederManagerService(networkConfigLoader, accountService);
-    await feederManagerService.initialize();
+    await feederManagerService.initialize(true);
     
     // Run the feeder once
     console.log('\n=== Running Feeder ===');

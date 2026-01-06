@@ -70,7 +70,7 @@ export class FeederManagerService implements Service {
     this.twapService = new TwapService();
   }
 
-  public async initialize(): Promise<void> {
+  public async initialize(skipStartFeeders: boolean = false): Promise<void> {
     this.logger.info('Initializing Feeder Manager Service...');
     
     try {
@@ -101,12 +101,16 @@ export class FeederManagerService implements Service {
       // Initialize metrics for each feeder
       this.initializeMetrics();
       
-      // Start enabled feeders
-      this.startEnabledFeeders();
-      
-      // Start burn rate reporting
-      this.startBurnRateReporting();
-      this.startTwapReporting();
+      // Start enabled feeders (unless skipped for testing)
+      if (!skipStartFeeders) {
+        this.startEnabledFeeders();
+        
+        // Start burn rate reporting
+        this.startBurnRateReporting();
+        this.startTwapReporting();
+      } else {
+        this.logger.info('Skipping feeder startup (test mode)');
+      }
       
       this.isRunning = true;
       this.logger.info(`Feeder Manager Service initialized with ${this.feederConfigs.size} feeders`);
