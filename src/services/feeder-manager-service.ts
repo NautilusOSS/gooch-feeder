@@ -6,6 +6,7 @@ import { PriceOracleService } from './price-oracle-service';
 import { AccountService } from './account-service';
 import { TwapService } from './twap-service';
 import { DiscordWebhookService } from './discord-webhook-service';
+import { isOraclePriceChangeInsufficientError } from '../utils/oracle-error-classification';
 import { PriceFeederConfig, PriceFeedResult, FeederMetrics, BatchFeedItem, BatchFeedResult, BatchProcessingConfig, BatchProcessingResult } from '../types';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -86,6 +87,13 @@ export class FeederManagerService implements Service {
       return;
     }
     if (options?.fromCli && !DiscordWebhookService.shouldNotifyFromCli()) {
+      return;
+    }
+    // Oracle rejected: price not sufficiently different from on-chain value — not actionable
+    if (isOraclePriceChangeInsufficientError(error)) {
+      this.logger.debug(
+        `Skipping Discord notify for ${config.id}: oracle price delta too small (expected rejection)`
+      );
       return;
     }
     void this.discordWebhook.notifyFeederFailure({
