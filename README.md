@@ -16,6 +16,7 @@ A TypeScript background service for data feeding and processing.
 - 🔗 Price oracle integration
 - 📈 Real-time price monitoring and posting
 - 🔔 Optional Discord webhook alerts on feeder failures
+- 💸 Optional Discord alerts when signer balance is low on Algorand and Voi
 
 ## Project Structure
 
@@ -433,6 +434,10 @@ Run the service in a Docker container for isolation and easy deployment.
 | `DISCORD_MIN_INTERVAL_MS` | Min ms between Discord alerts per feeder (anti-spam) | `60000` (`0` = no throttle) |
 | `DISCORD_NOTIFY_ON_CLI` | Send Discord alerts from `npm run test:feeder` / `test:all-feeders` | `false` |
 | `DISCORD_NOTIFY_ON_STARTUP` | One Discord message when the service starts (feeder counts, mode) | `true` |
+| `DISCORD_NOTIFY_BALANCE` | Discord when signer balance is low on Algorand + Voi mainnets | `true` |
+| `DISCORD_BALANCE_THRESHOLD_MICRO` | Low-balance threshold in micro-units (5e6 = 5 ALGO / 5 VOI) | `5000000` |
+| `DISCORD_BALANCE_CHECK_INTERVAL_MS` | How often to poll balances | `900000` (15 min) |
+| `DISCORD_BALANCE_MIN_INTERVAL_MS` | Min time between Discord low-balance alerts per network | `3600000` (1 h) |
 
 ## Contributing
 

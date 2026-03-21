@@ -5,7 +5,7 @@ import { PriceLookupService } from './price-lookup-service';
 import { PriceOracleService } from './price-oracle-service';
 import { AccountService } from './account-service';
 import { TwapService } from './twap-service';
-import { DiscordWebhookService } from './discord-webhook-service';
+import { DiscordWebhookService, DiscordStartupBalanceRow } from './discord-webhook-service';
 import { isOraclePriceChangeInsufficientError } from '../utils/oracle-error-classification';
 import { PriceFeederConfig, PriceFeedResult, FeederMetrics, BatchFeedItem, BatchFeedResult, BatchProcessingConfig, BatchProcessingResult } from '../types';
 import * as fs from 'fs';
@@ -64,10 +64,20 @@ export class FeederManagerService implements Service {
   private burnRateReportInterval?: NodeJS.Timeout;
   private twapReportInterval?: NodeJS.Timeout;
   private discordWebhook: DiscordWebhookService;
+  private accountService: AccountService;
+  /** algorand-mainnet + voi-mainnet native balance (µ) monitoring for Discord */
+  private balanceCheckInterval?: NodeJS.Timeout;
+
+  /** Networks checked for low signer balance (same mnemonic / address on both chains). */
+  private static readonly BALANCE_NETWORK_IDS: readonly string[] = [
+    'algorand-mainnet',
+    'voi-mainnet',
+  ];
 
   constructor(networkConfigLoader: NetworkConfigLoader, accountService: AccountService) {
     this.logger = new Logger('FeederManagerService');
     this.networkConfigLoader = networkConfigLoader;
+    this.accountService = accountService;
     this.priceLookupService = new PriceLookupService();
     this.priceOracleService = new PriceOracleService(networkConfigLoader, accountService);
     this.twapService = new TwapService();
@@ -143,6 +153,7 @@ export class FeederManagerService implements Service {
         // Start burn rate reporting
         this.startBurnRateReporting();
         this.startTwapReporting();
+        this.startBalanceMonitoring();
       } else {
         this.logger.info('Skipping feeder startup (test mode)');
       }
@@ -152,11 +163,25 @@ export class FeederManagerService implements Service {
 
       if (!skipStartFeeders) {
         const enabledCount = Array.from(this.feederConfigs.values()).filter(f => f.enabled).length;
-        void this.discordWebhook.notifyStartup({
+        let balances: DiscordStartupBalanceRow[] | undefined;
+        let signerAddressShort: string | undefined;
+        let thresholdMicro: number | undefined;
+        if (this.discordWebhook.isEnabled() && DiscordWebhookService.shouldNotifyOnStartup()) {
+          balances = await this.fetchSignerBalancesForStartup();
+          const addr = this.accountService.getAddress();
+          signerAddressShort =
+            addr && addr.length > 12 ? `${addr.slice(0, 6)}…${addr.slice(-4)}` : addr ?? undefined;
+          const thrParsed = parseInt(process.env.DISCORD_BALANCE_THRESHOLD_MICRO || '5000000', 10);
+          thresholdMicro = Number.isFinite(thrParsed) && thrParsed > 0 ? thrParsed : 5_000_000;
+        }
+        await this.discordWebhook.notifyStartup({
           enabledFeeders: enabledCount,
           totalFeeders: this.feederConfigs.size,
           batchMode: this.batchProcessingEnabled,
           nodeEnv: process.env.NODE_ENV,
+          signerAddressShort,
+          balances,
+          thresholdMicro,
         });
       }
       
@@ -187,6 +212,11 @@ export class FeederManagerService implements Service {
     if (this.twapReportInterval) {
       clearInterval(this.twapReportInterval);
       this.twapReportInterval = undefined;
+    }
+
+    if (this.balanceCheckInterval) {
+      clearInterval(this.balanceCheckInterval);
+      this.balanceCheckInterval = undefined;
     }
     
     // Stop all active feeders (individual mode)
@@ -1195,6 +1225,118 @@ export class FeederManagerService implements Service {
       // Keep only last 24 hours
       if (this.burnRateStats.feedsByHour.length > 24) {
         this.burnRateStats.feedsByHour.shift();
+      }
+    }
+  }
+
+  /** Fetch µ balances for startup Discord embed (same networks as balance monitoring). */
+  private async fetchSignerBalancesForStartup(): Promise<DiscordStartupBalanceRow[]> {
+    const address = this.accountService.getAddress();
+    if (!address) {
+      return [];
+    }
+
+    const rows: DiscordStartupBalanceRow[] = [];
+    for (const networkId of FeederManagerService.BALANCE_NETWORK_IDS) {
+      const nc = this.networkConfigLoader.getNetworkConfig(networkId);
+      if (!nc?.enabled) {
+        rows.push({
+          networkId,
+          networkLabel: nc?.name ?? networkId,
+          balanceMicro: null,
+          error: 'network disabled in config',
+        });
+        continue;
+      }
+
+      try {
+        const algod = this.networkConfigLoader.getAlgodClient(networkId);
+        const info = await algod.accountInformation(address).do();
+        const raw = info.amount as bigint | number | undefined;
+        const amount =
+          raw === undefined ? 0 : typeof raw === 'bigint' ? Number(raw) : Number(raw);
+        rows.push({
+          networkId,
+          networkLabel: nc.name,
+          balanceMicro: amount,
+        });
+      } catch (e) {
+        rows.push({
+          networkId,
+          networkLabel: nc.name,
+          balanceMicro: null,
+          error: e instanceof Error ? e.message : String(e),
+        });
+      }
+    }
+    return rows;
+  }
+
+  /**
+   * Poll signer native balance on Algorand + Voi; Discord alert when below threshold (default 5e6 µ).
+   */
+  private startBalanceMonitoring(): void {
+    const intervalMs = parseInt(process.env.DISCORD_BALANCE_CHECK_INTERVAL_MS || '900000', 10);
+    const checkMs = Number.isFinite(intervalMs) && intervalMs > 0 ? intervalMs : 900000;
+
+    void this.runBalanceChecksAndNotify();
+
+    this.balanceCheckInterval = setInterval(() => {
+      if (this.isRunning) {
+        void this.runBalanceChecksAndNotify();
+      }
+    }, checkMs);
+
+    this.logger.info(
+      `Balance monitoring for ${FeederManagerService.BALANCE_NETWORK_IDS.join(', ')} every ${checkMs}ms ` +
+        `(Discord when below DISCORD_BALANCE_THRESHOLD_MICRO, default 5000000 µ)`
+    );
+  }
+
+  private async runBalanceChecksAndNotify(): Promise<void> {
+    const address = this.accountService.getAddress();
+    if (!address) {
+      return;
+    }
+
+    const parsed = parseInt(process.env.DISCORD_BALANCE_THRESHOLD_MICRO || '5000000', 10);
+    const thresholdMicro = Number.isFinite(parsed) && parsed > 0 ? parsed : 5_000_000;
+
+    for (const networkId of FeederManagerService.BALANCE_NETWORK_IDS) {
+      const nc = this.networkConfigLoader.getNetworkConfig(networkId);
+      if (!nc?.enabled) {
+        this.discordWebhook.clearBalanceThrottle(networkId);
+        continue;
+      }
+
+      try {
+        const algod = this.networkConfigLoader.getAlgodClient(networkId);
+        const info = await algod.accountInformation(address).do();
+        const raw = info.amount as bigint | number | undefined;
+        const amount =
+          raw === undefined ? 0 : typeof raw === 'bigint' ? Number(raw) : Number(raw);
+
+        if (amount >= thresholdMicro) {
+          this.discordWebhook.clearBalanceThrottle(networkId);
+          continue;
+        }
+
+        this.logger.warn(
+          `Low signer balance on ${networkId}: ${amount} micro-units (threshold ${thresholdMicro})`
+        );
+
+        await this.discordWebhook.notifyLowBalance({
+          networkId,
+          networkLabel: nc.name,
+          address,
+          balanceMicro: amount,
+          thresholdMicro,
+        });
+      } catch (e) {
+        this.logger.warn(
+          `Balance check failed for ${networkId}:`,
+          e instanceof Error ? e.message : String(e)
+        );
       }
     }
   }
