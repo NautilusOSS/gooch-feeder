@@ -860,19 +860,20 @@ export class FeederManagerService implements Service {
         // Track burn rate (use original network for tracking)
         this.trackFeedAttempt(config.id, config.networkId, false);
         
-        this.logger.error(
-          `✗ Feeder ${config.id} (${config.assetSymbol}) failed: ${result.error || 'Unknown error'}`
-        );
-        
+        const failMsg = result.error || 'Unknown error';
+        if (isOraclePriceChangeInsufficientError(failMsg)) {
+          this.logger.debug(
+            `Feeder ${config.id} (${config.assetSymbol}): oracle rejected (expected): ${failMsg}`
+          );
+        } else {
+          this.logger.error(`✗ Feeder ${config.id} (${config.assetSymbol}) failed: ${failMsg}`);
+        }
+
         // Check if we should use fallback
         if (config.fallback?.enabled && config.fallback.sources.length > 0) {
-          await this.tryFallbackSources(config, result.error || 'Unknown error');
+          await this.tryFallbackSources(config, failMsg);
         } else {
-          this.notifyFeederFailureAsync(
-            config,
-            result.error || 'Unknown error',
-            'interval'
-          );
+          this.notifyFeederFailureAsync(config, failMsg, 'interval');
         }
       }
 
@@ -1014,13 +1015,13 @@ export class FeederManagerService implements Service {
         metrics.lastFailure = new Date();
         metrics.uptime = (metrics.successfulRuns / metrics.totalRuns) * 100;
         
-        this.logger.warn(`Feeder ${feederId} failed: ${result.error}`);
-        this.notifyFeederFailureAsync(
-          config,
-          result.error || 'Unknown error',
-          'cli',
-          { fromCli: true }
-        );
+        const cliErr = result.error || 'Unknown error';
+        if (isOraclePriceChangeInsufficientError(cliErr)) {
+          this.logger.debug(`Feeder ${feederId} (cli): oracle rejected (expected): ${cliErr}`);
+        } else {
+          this.logger.warn(`Feeder ${feederId} failed: ${cliErr}`);
+        }
+        this.notifyFeederFailureAsync(config, cliErr, 'cli', { fromCli: true });
       }
 
       return result;
