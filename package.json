@@ -25,7 +25,8 @@
     "pm2:restart": "pm2 restart gooch-feeder",
     "pm2:delete": "pm2 delete gooch-feeder",
     "pm2:logs": "pm2 logs gooch-feeder",
-    "pm2:status": "pm2 status"
+    "pm2:status": "pm2 status",
+    "deploy:service": "bash scripts/update-service.sh"
   },
   "keywords": [
     "typescript",

@@ -335,7 +335,54 @@ export class NetworkConfigLoader {
     }
   }
 
-  public getAlgodClient(networkId: string): Algodv2 {
+  /**
+   * Resolved algod host and port (same rules as {@link getAlgodClient}).
+   * Does not log; use for summaries (e.g. Discord) without duplicate `[ALGOD CONFIG]` lines.
+   */
+  public getResolvedAlgodEndpoint(networkId: string): string {
+    const r = this.resolveAlgodConnection(networkId);
+    return `${r.server}:${r.port}`;
+  }
+
+  /**
+   * One row per enabled network: resolved Algod `server:port` for Discord / dashboards.
+   */
+  public getAlgodEndpointsForEnabledNetworks(): Array<{
+    networkId: string;
+    networkName: string;
+    endpoint: string;
+  }> {
+    if (!this.networkConfigs) {
+      return [];
+    }
+    const rows: Array<{ networkId: string; networkName: string; endpoint: string }> = [];
+    for (const [networkId, network] of Object.entries(this.networkConfigs.networks)) {
+      if (!network.enabled) {
+        continue;
+      }
+      try {
+        rows.push({
+          networkId,
+          networkName: network.name,
+          endpoint: this.getResolvedAlgodEndpoint(networkId),
+        });
+      } catch (e) {
+        rows.push({
+          networkId,
+          networkName: network.name,
+          endpoint: `error: ${e instanceof Error ? e.message : String(e)}`,
+        });
+      }
+    }
+    return rows;
+  }
+
+  private resolveAlgodConnection(networkId: string): {
+    server: string;
+    port: number;
+    token: string;
+    logSuffix: string;
+  } {
     const networkConfig = this.getNetworkConfig(networkId);
     if (!networkConfig) {
       throw new Error(`Network config not found for networkId: ${networkId}`);
@@ -345,67 +392,77 @@ export class NetworkConfigLoader {
     if (this.isDevMode() && networkId === "localnet") {
       const ALGO_SERVER = "http://localhost";
       const ALGO_PORT = 4001;
-      // Default localnet token (can be overridden via DEV_ALGOD_TOKEN env var)
-      const DEFAULT_LOCALNET_TOKEN = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+      const DEFAULT_LOCALNET_TOKEN =
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
       const token = process.env.DEV_ALGOD_TOKEN || DEFAULT_LOCALNET_TOKEN;
-      this.logger.info(
-        `[ALGOD CONFIG] Dev mode: Using localnet algod at ${ALGO_SERVER}:${ALGO_PORT} with token ${token.substring(0, 8)}...`
-      );
-      return new Algodv2(token, ALGO_SERVER, ALGO_PORT);
+      return {
+        server: ALGO_SERVER,
+        port: ALGO_PORT,
+        token,
+        logSuffix: `Dev mode: Using localnet algod at ${ALGO_SERVER}:${ALGO_PORT} with token ${token.substring(0, 8)}...`,
+      };
     }
 
-    // Convert networkId to environment variable prefix (e.g., "algorand-mainnet" -> "ALGORAND_MAINNET")
     const envPrefix = networkId.toUpperCase().replace(/-/g, "_");
     const envUrlKey = `${envPrefix}_ALGOD_URL`;
     const envPortKey = `${envPrefix}_ALGOD_PORT`;
     const envTokenKey = `${envPrefix}_ALGOD_TOKEN`;
 
-    // Check environment variables first (highest priority)
     const envUrl = process.env[envUrlKey];
     const envPort = process.env[envPortKey];
     const envToken = process.env[envTokenKey];
 
-    // Log what we're checking (helpful for debugging)
     this.logger.debug(
-      `Checking env vars for ${networkId}: ${envUrlKey}=${envUrl ? 'set' : 'undefined'}, ${envPortKey}=${envPort || 'undefined'}, ${envTokenKey}=${envToken ? 'set' : 'undefined'}`
+      `Checking env vars for ${networkId}: ${envUrlKey}=${envUrl ? "set" : "undefined"}, ${envPortKey}=${envPort || "undefined"}, ${envTokenKey}=${envToken ? "set" : "undefined"}`
     );
 
     if (envUrl) {
       const token = envToken || "";
       const port = envPort ? parseInt(envPort, 10) : 443;
-      this.logger.info(
-        `[ALGOD CONFIG] Using environment variable override for ${networkId}: ${envUrl}:${port}`
-      );
-      return new Algodv2(token, envUrl, port);
+      return {
+        server: envUrl,
+        port,
+        token,
+        logSuffix: `Using environment variable override for ${networkId}: ${envUrl}:${port}`,
+      };
     }
 
-    // Check for explicit algod override in network config
     if (networkConfig.algod?.url) {
       const token = networkConfig.algod.token || "";
       const port = networkConfig.algod.port || 443;
-      this.logger.info(
-        `[ALGOD CONFIG] Using config algod override for ${networkId}: ${networkConfig.algod.url}:${port}`
-      );
-      return new Algodv2(token, networkConfig.algod.url, port);
+      return {
+        server: networkConfig.algod.url,
+        port,
+        token,
+        logSuffix: `Using config algod override for ${networkId}: ${networkConfig.algod.url}:${port}`,
+      };
     }
 
-    // Check detailed network config for rpcUrl and rpcToken
     const detailedConfig = this.getDetailedNetworkConfig(networkId);
     if (detailedConfig?.networkConfig) {
       const token = detailedConfig.networkConfig.rpcToken || "";
       const port = detailedConfig.networkConfig.rpcPort || 443;
       const url = detailedConfig.networkConfig.rpcUrl || networkConfig.rpcUrl;
-      this.logger.info(
-        `[ALGOD CONFIG] Using detailed network config for ${networkId} algod: ${url}:${port}`
-      );
-      return new Algodv2(token, url, port);
+      return {
+        server: url,
+        port,
+        token,
+        logSuffix: `Using detailed network config for ${networkId} algod: ${url}:${port}`,
+      };
     }
 
-    // Fall back to basic network config
-    this.logger.info(
-      `[ALGOD CONFIG] Using basic network config (default) for ${networkId} algod: ${networkConfig.rpcUrl}:443`
-    );
-    return new Algodv2("", networkConfig.rpcUrl, 443);
+    return {
+      server: networkConfig.rpcUrl,
+      port: 443,
+      token: "",
+      logSuffix: `Using basic network config (default) for ${networkId} algod: ${networkConfig.rpcUrl}:443`,
+    };
+  }
+
+  public getAlgodClient(networkId: string): Algodv2 {
+    const r = this.resolveAlgodConnection(networkId);
+    this.logger.info(`[ALGOD CONFIG] ${r.logSuffix}`);
+    return new Algodv2(r.token, r.server, r.port);
   }
 
   public async reloadConfigs(): Promise<NetworkConfigs> {
@@ -526,7 +583,8 @@ export class NetworkConfigLoader {
   }
 
   /**
-   * Debug helper: Log all environment variables related to algod configuration
+   * Log all environment variables related to algod configuration and per-network resolution.
+   * Called once at startup regardless of LOG_LEVEL.
    */
   public logAlgodEnvVars(): void {
     if (!this.networkConfigs) {

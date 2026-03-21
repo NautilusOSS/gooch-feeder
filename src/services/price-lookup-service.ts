@@ -120,8 +120,9 @@ export class PriceLookupService {
         throw new Error(`API request failed: ${response.status} ${response.statusText}`);
       }
 
-      const data = await response.json();
-      
+      const bodyText = await response.text();
+      const data = this.parsePriceApiJsonBody(bodyText, url.toString());
+
       // Extract price from response (this would need to be customized based on API response format)
       const price = this.extractPriceFromAPIResponse(data, config);
       
@@ -188,6 +189,26 @@ export class PriceLookupService {
       }
 
       throw error;
+    }
+  }
+
+  /**
+   * Public price APIs often return plain text or HTML on rate limit (e.g. CoinGecko free tier).
+   * `response.json()` then throws an opaque SyntaxError; we surface the body preview instead.
+   */
+  private parsePriceApiJsonBody(bodyText: string, sourceUrl: string): unknown {
+    try {
+      return bodyText ? JSON.parse(bodyText) : null;
+    } catch {
+      const preview = bodyText.replace(/\s+/g, " ").trim().slice(0, 280);
+      const rateLimitHint = /daily|rate|limit|free tier|too many requests/i.test(
+        preview
+      )
+        ? " Likely cause: public API rate limit (e.g. CoinGecko). Add an API key in source headers, increase the feeder interval, or switch price source."
+        : "";
+      throw new Error(
+        `Price API returned non-JSON (${sourceUrl}). Body preview: ${preview}.${rateLimitHint}`
+      );
     }
   }
 

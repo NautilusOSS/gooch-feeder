@@ -176,10 +176,8 @@ class GoochFeederService {
       this.logger.info('Loading network configurations...');
       const configs = await this.networkConfigLoader.loadConfigs();
       
-      // Debug: Log algod environment variable configuration
-      if (process.env.LOG_LEVEL === 'debug' || process.env.NODE_ENV === 'development') {
-        this.networkConfigLoader.logAlgodEnvVars();
-      }
+      // Log algod environment variable resolution (same detail at every log level)
+      this.networkConfigLoader.logAlgodEnvVars();
       
       // Log loaded networks and verify algod client configuration
       const enabledNetworks = this.networkConfigLoader.getEnabledNetworks();

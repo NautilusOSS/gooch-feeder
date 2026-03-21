@@ -163,10 +163,12 @@ export class FeederManagerService implements Service {
 
       if (!skipStartFeeders) {
         const enabledCount = Array.from(this.feederConfigs.values()).filter(f => f.enabled).length;
+        const discordStartup =
+          this.discordWebhook.isEnabled() && DiscordWebhookService.shouldNotifyOnStartup();
         let balances: DiscordStartupBalanceRow[] | undefined;
         let signerAddressShort: string | undefined;
         let thresholdMicro: number | undefined;
-        if (this.discordWebhook.isEnabled() && DiscordWebhookService.shouldNotifyOnStartup()) {
+        if (discordStartup) {
           balances = await this.fetchSignerBalancesForStartup();
           const addr = this.accountService.getAddress();
           signerAddressShort =
@@ -182,6 +184,9 @@ export class FeederManagerService implements Service {
           signerAddressShort,
           balances,
           thresholdMicro,
+          algodEndpoints: discordStartup
+            ? this.networkConfigLoader.getAlgodEndpointsForEnabledNetworks()
+            : undefined,
         });
       }
       

@@ -19,6 +19,13 @@ export interface DiscordStartupBalanceRow {
   error?: string;
 }
 
+export interface DiscordStartupAlgodRow {
+  networkId: string;
+  networkName: string;
+  /** Resolved Algod base URL and port (same rules as `[ALGOD CONFIG]` logs) */
+  endpoint: string;
+}
+
 export interface DiscordStartupPayload {
   enabledFeeders: number;
   totalFeeders: number;
@@ -30,6 +37,8 @@ export interface DiscordStartupPayload {
   balances?: DiscordStartupBalanceRow[];
   /** Same threshold as low-balance alerts (for context in embed) */
   thresholdMicro?: number;
+  /** Resolved Algod endpoint per enabled network */
+  algodEndpoints?: DiscordStartupAlgodRow[];
 }
 
 export interface DiscordLowBalancePayload {
@@ -171,6 +180,15 @@ export class DiscordWebhookService {
       }
     }
 
+    const algodLines: string[] = [];
+    if (payload.algodEndpoints && payload.algodEndpoints.length > 0) {
+      for (const a of payload.algodEndpoints) {
+        algodLines.push(
+          `**${truncate(a.networkName, 80)}** (\`${a.networkId}\`): \`${truncate(a.endpoint, 200)}\``
+        );
+      }
+    }
+
     const fields = [
       {
         name: 'Feeders',
@@ -202,6 +220,15 @@ export class DiscordWebhookService {
             {
               name: 'Native balances (µ)',
               value: truncate(balanceLines.join('\n'), 1024),
+              inline: false,
+            },
+          ]
+        : []),
+      ...(algodLines.length > 0
+        ? [
+            {
+              name: 'Algod endpoints',
+              value: truncate(algodLines.join('\n'), 1024),
               inline: false,
             },
           ]
