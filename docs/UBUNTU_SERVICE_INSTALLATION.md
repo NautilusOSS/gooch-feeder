@@ -454,11 +454,12 @@ rsync -avz --exclude 'node_modules' --exclude '.git' --exclude 'dist' \
 
 **Option B: Using rsync on the same server:**
 ```bash
-cd /opt/gooch-feeder
-rsync -avz --exclude 'node_modules' --exclude '.git' --exclude 'dist' \
+sudo rsync -a --exclude 'node_modules' --exclude '.git' --exclude 'dist' \
   --exclude '.env' --exclude 'logs' \
   /path/to/source/gooch-feeder/ /opt/gooch-feeder/
 ```
+
+Add `--delete` to the rsync command if you want `/opt/gooch-feeder` to match the source tree exactly (files removed from the source are removed on the server). Omit it if you keep extra files under the install directory that are not in the repository.
 
 **Option C: Using git (if repository is in git):**
 ```bash
@@ -466,23 +467,25 @@ cd /opt/gooch-feeder
 git pull
 ```
 
-3. **Install new dependencies** (if needed):
-```bash
-cd /opt/gooch-feeder
-npm install
-```
+3. **Set ownership before install** (when using a dedicated service user):
 
-4. **Rebuild**:
-```bash
-npm run build
-```
+Required if files were copied or updated as **root** (common with `sudo rsync`). Without this step, `npm install` can fail with permission errors on `package-lock.json` and related paths.
 
-5. **Set proper ownership** (if using dedicated user):
 ```bash
 sudo chown -R gooch-feeder:gooch-feeder /opt/gooch-feeder
 ```
 
-6. **Start the service**:
+If you run `git pull` or rsync **as** `gooch-feeder` and the tree is already owned by that user, you can skip this step.
+
+4. **Install dependencies and rebuild** (run as the service user so new files are not owned by root):
+
+```bash
+sudo -u gooch-feeder bash -lc 'cd /opt/gooch-feeder && npm install && npm run build'
+```
+
+If you are already logged in as `gooch-feeder`, use `cd /opt/gooch-feeder && npm install && npm run build` instead.
+
+5. **Start the service**:
 ```bash
 sudo systemctl start gooch-feeder.service
 ```
