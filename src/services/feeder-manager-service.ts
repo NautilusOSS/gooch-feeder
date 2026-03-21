@@ -5,6 +5,7 @@ import { PriceLookupService } from './price-lookup-service';
 import { PriceOracleService } from './price-oracle-service';
 import { AccountService } from './account-service';
 import { TwapService } from './twap-service';
+import { DiscordWebhookService } from './discord-webhook-service';
 import { PriceFeederConfig, PriceFeedResult, FeederMetrics, BatchFeedItem, BatchFeedResult, BatchProcessingConfig, BatchProcessingResult } from '../types';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -61,6 +62,7 @@ export class FeederManagerService implements Service {
   };
   private burnRateReportInterval?: NodeJS.Timeout;
   private twapReportInterval?: NodeJS.Timeout;
+  private discordWebhook: DiscordWebhookService;
 
   constructor(networkConfigLoader: NetworkConfigLoader, accountService: AccountService) {
     this.logger = new Logger('FeederManagerService');
@@ -68,6 +70,31 @@ export class FeederManagerService implements Service {
     this.priceLookupService = new PriceLookupService();
     this.priceOracleService = new PriceOracleService(networkConfigLoader, accountService);
     this.twapService = new TwapService();
+    this.discordWebhook = new DiscordWebhookService();
+  }
+
+  /**
+   * Fire-and-forget Discord notification when a feeder fails (optional; requires DISCORD_WEBHOOK_URL).
+   */
+  private notifyFeederFailureAsync(
+    config: PriceFeederConfig,
+    error: string,
+    context: string,
+    options?: { fromCli?: boolean }
+  ): void {
+    if (!this.discordWebhook.isEnabled()) {
+      return;
+    }
+    if (options?.fromCli && !DiscordWebhookService.shouldNotifyFromCli()) {
+      return;
+    }
+    void this.discordWebhook.notifyFeederFailure({
+      feederId: config.id,
+      assetSymbol: config.assetSymbol,
+      networkId: config.networkId,
+      error,
+      context,
+    });
   }
 
   public async initialize(skipStartFeeders: boolean = false): Promise<void> {
@@ -114,6 +141,16 @@ export class FeederManagerService implements Service {
       
       this.isRunning = true;
       this.logger.info(`Feeder Manager Service initialized with ${this.feederConfigs.size} feeders`);
+
+      if (!skipStartFeeders) {
+        const enabledCount = Array.from(this.feederConfigs.values()).filter(f => f.enabled).length;
+        void this.discordWebhook.notifyStartup({
+          enabledFeeders: enabledCount,
+          totalFeeders: this.feederConfigs.size,
+          batchMode: this.batchProcessingEnabled,
+          nodeEnv: process.env.NODE_ENV,
+        });
+      }
       
     } catch (error) {
       this.logger.error('Failed to initialize Feeder Manager Service:', error instanceof Error ? error : String(error));
@@ -530,6 +567,12 @@ export class FeederManagerService implements Service {
           // Try fallback if configured
           if (config.fallback?.enabled && config.fallback.sources.length > 0) {
             await this.tryFallbackSources(config, batchFeedResult.result.error || 'Unknown error');
+          } else {
+            this.notifyFeederFailureAsync(
+              config,
+              batchFeedResult.result.error || 'Unknown error',
+              'batch'
+            );
           }
         }
       }
@@ -781,6 +824,12 @@ export class FeederManagerService implements Service {
         // Check if we should use fallback
         if (config.fallback?.enabled && config.fallback.sources.length > 0) {
           await this.tryFallbackSources(config, result.error || 'Unknown error');
+        } else {
+          this.notifyFeederFailureAsync(
+            config,
+            result.error || 'Unknown error',
+            'interval'
+          );
         }
       }
 
@@ -795,6 +844,7 @@ export class FeederManagerService implements Service {
       metrics.uptime = (metrics.successfulRuns / metrics.totalRuns) * 100;
       
       this.logger.error(`Feeder ${config.id} threw error:`, errorMessage);
+      this.notifyFeederFailureAsync(config, errorMessage, 'interval-exception');
     }
   }
 
@@ -820,6 +870,11 @@ export class FeederManagerService implements Service {
     }
     
     this.logger.error(`All fallback sources failed for ${config.id}`);
+    this.notifyFeederFailureAsync(
+      config,
+      `Primary and all fallback sources failed. Original: ${originalError}`,
+      'fallback-exhausted'
+    );
   }
 
   public getFeederMetrics(feederId?: string): FeederMetrics | Map<string, FeederMetrics> {
@@ -917,6 +972,12 @@ export class FeederManagerService implements Service {
         metrics.uptime = (metrics.successfulRuns / metrics.totalRuns) * 100;
         
         this.logger.warn(`Feeder ${feederId} failed: ${result.error}`);
+        this.notifyFeederFailureAsync(
+          config,
+          result.error || 'Unknown error',
+          'cli',
+          { fromCli: true }
+        );
       }
 
       return result;
@@ -933,7 +994,8 @@ export class FeederManagerService implements Service {
       metrics.uptime = (metrics.successfulRuns / metrics.totalRuns) * 100;
       
       this.logger.error(`Feeder ${feederId} threw error:`, errorMessage);
-      
+      this.notifyFeederFailureAsync(config, errorMessage, 'cli', { fromCli: true });
+
       result = {
         success: false,
         error: errorMessage,

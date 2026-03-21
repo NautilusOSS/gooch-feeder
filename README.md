@@ -15,6 +15,7 @@ A TypeScript background service for data feeding and processing.
 - 💰 Price feeder system with multiple sources
 - 🔗 Price oracle integration
 - 📈 Real-time price monitoring and posting
+- 🔔 Optional Discord webhook alerts on feeder failures
 
 ## Project Structure
 
@@ -428,6 +429,10 @@ Run the service in a Docker container for isolation and easy deployment.
 | `API_BASE_URL` | API base URL | `https://api.example.com` |
 | `API_TIMEOUT` | API timeout (ms) | `30000` |
 | `API_RETRIES` | API retry count | `3` |
+| `DISCORD_WEBHOOK_URL` | Discord incoming webhook URL for failure notifications | _(unset = disabled)_ |
+| `DISCORD_MIN_INTERVAL_MS` | Min ms between Discord alerts per feeder (anti-spam) | `60000` (`0` = no throttle) |
+| `DISCORD_NOTIFY_ON_CLI` | Send Discord alerts from `npm run test:feeder` / `test:all-feeders` | `false` |
+| `DISCORD_NOTIFY_ON_STARTUP` | One Discord message when the service starts (feeder counts, mode) | `true` |
 
 ## Contributing
 
