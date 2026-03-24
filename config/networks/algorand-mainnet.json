@@ -120,6 +120,28 @@
         "logoPath": "/lovable-uploads/FOLKS.png",
         "tokenStandard": "asa"
       },
+      "TALGO": {
+        "assetId": "2537013734",
+        "poolId": "3345940978",
+        "contractId": "3490783147",
+        "nTokenId": "3490789358",
+        "decimals": 6,
+        "name": "TALGO",
+        "symbol": "TALGO",
+        "logoPath": "/lovable-uploads/TALGO.webp",
+        "tokenStandard": "asa"
+      },
+      "xALGO": {
+        "assetId": "1134696561",
+        "poolId": "3345940978",
+        "contractId": "3490854290",
+        "nTokenId": "3490863151",
+        "decimals": 6,
+        "name": "Governance xALGO",
+        "symbol": "xALGO",
+        "logoPath": "/lovable-uploads/xALGO.webp",
+        "tokenStandard": "asa"
+      },
       "COOP": {
         "assetId": "796425061",
         "poolId": "3345940978",

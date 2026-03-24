@@ -2387,6 +2387,116 @@
       "twap": {
         "enabled": true
       }
+    },
+    "algorand-mainnet-3345940978-TALGO": {
+      "id": "algorand-mainnet-3345940978-TALGO",
+      "method": "fetch-and-post",
+      "networkId": "algorand-mainnet",
+      "poolId": "3345940978",
+      "marketId": "3490783147",
+      "assetSymbol": "TALGO",
+      "enabled": true,
+      "interval": 900000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://mainnet.api.perawallet.app/v1/assets/",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {
+          "asset_ids": "2537013734"
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "3333688500",
+        "marketId": "3490783147",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.03,
+        "maxPrice": 0.2,
+        "maxPriceChange": 0.2,
+        "requiredFields": ["price", "timestamp"]
+      },
+      "twap": {
+        "enabled": true
+      }
+    },
+    "algorand-mainnet-3345940978-xALGO": {
+      "id": "algorand-mainnet-3345940978-xALGO",
+      "method": "fetch-and-post",
+      "networkId": "algorand-mainnet",
+      "poolId": "3345940978",
+      "marketId": "3490854290",
+      "assetSymbol": "xALGO",
+      "enabled": true,
+      "interval": 900000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "api",
+        "url": "https://mainnet.api.perawallet.app/v1/assets/",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "params": {
+          "asset_ids": "1134696561"
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "3333688500",
+        "marketId": "3490854290",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.03,
+        "maxPrice": 0.2,
+        "maxPriceChange": 0.2,
+        "requiredFields": ["price", "timestamp"]
+      },
+      "twap": {
+        "enabled": true
+      }
     }
   },
   "globalSettings": {
