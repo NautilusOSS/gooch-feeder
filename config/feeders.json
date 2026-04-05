@@ -609,7 +609,7 @@
       "poolId": "3345940978",
       "marketId": "3346408431",
       "assetSymbol": "USDt",
-      "enabled": true,
+      "enabled": false,
       "interval": 900000,
       "timeout": 10000,
       "retries": 3,
