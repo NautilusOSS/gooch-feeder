@@ -45,6 +45,31 @@
           "isSmartContract": true
         }
       },
+      "fALGO": {
+        "assetId": "971381860",
+        "poolId": "3333688282",
+        "contractId": "3524740731",
+        "nTokenId": "3526254085",
+        "decimals": 6,
+        "name": "Folks V2 ALGO",
+        "symbol": "fALGO",
+        "logoPath": "/lovable-uploads/fALGO.webp",
+        "tokenStandard": "asa"
+      },
+      "tALGO": {
+        "assetId": "2537013734",
+        "poolId": "3333688282",
+        "contractId": "3490783147",
+        "nTokenId": "3490789358",
+        "decimals": 6,
+        "name": "TALGO",
+        "symbol": "tALGO",
+        "logoPath": "/lovable-uploads/tALGO.webp",
+        "tokenStandard": "asa",
+        "dataAddedAt": "2026-03-23T00:00:00.000Z",
+        "intrinsicApyPercent": 4.51,
+        "intrinsicApyLiveSource": "tinyman_liquid_staking"
+      },
       "UNIT": {
         "assetId": "3121954282",
         "poolId": "3333688282",
