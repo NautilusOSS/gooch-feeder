@@ -1647,6 +1647,62 @@
         "enabled": true
       }
     },
+    "algorand-mainnet-3333688282-fiUSDC": {
+      "id": "algorand-mainnet-3333688282-fiUSDC",
+      "method": "fetch-and-post",
+      "networkId": "algorand-mainnet",
+      "poolId": "3333688282",
+      "marketId": "3540156071",
+      "assetSymbol": "fiUSDC",
+      "enabled": true,
+      "interval": 900000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "folks-sdk",
+        "url": "https://mainnet-idx.algonode.cloud",
+        "params": {
+          "oracleAppId": "1040271396",
+          "priceAssetId": "31566704",
+          "folksPoolAppId": "3184324594",
+          "folksUnderlyingAssetId": "31566704",
+          "folksFAssetId": "3184331239",
+          "folksFrAssetId": "3184331240"
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "3333688500",
+        "marketId": "3540156071",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.85,
+        "maxPrice": 1.15,
+        "maxPriceChange": 0.05,
+        "requiredFields": ["price", "timestamp"]
+      },
+      "twap": {
+        "enabled": true
+      }
+    },
     "voi-mainnet-47139781-GM": {
       "id": "voi-mainnet-47139781-GM",
       "method": "fetch-and-post",

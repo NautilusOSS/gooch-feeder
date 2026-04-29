@@ -56,6 +56,25 @@
         "logoPath": "/lovable-uploads/fALGO.webp",
         "tokenStandard": "asa"
       },
+      "fiUSDC": {
+        "assetId": "3184331239",
+        "poolId": "3333688282",
+        "contractId": "3540156071",
+        "nTokenId": "3540213205",
+        "decimals": 6,
+        "name": "Folks V2 Isolated USDC",
+        "symbol": "fiUSDC",
+        "logoPath": "/lovable-uploads/USDC.webp",
+        "marketOverride": {
+          "displayName": "USD Coin",
+          "displaySymbol": "USDC",
+          "isSmartContract": true
+        },
+        "tokenStandard": "asa",
+        "dataAddedAt": "2026-04-29T00:00:00.000Z",
+        "intrinsicApyPercent": 7.78,
+        "intrinsicBorrowApyPercent": 7.78
+      },
       "tALGO": {
         "assetId": "2537013734",
         "poolId": "3333688282",

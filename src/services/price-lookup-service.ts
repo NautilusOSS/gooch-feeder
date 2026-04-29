@@ -1,5 +1,9 @@
 import { Logger, ErrorContext } from '../utils/logger';
 import { ApiErrorHelper } from '../utils/api-error-helper';
+import {
+  defaultFolksMainnetOracle0AppId,
+  fetchFolksOracleUsdPrice,
+} from '../utils/folks-oracle-price-fetch';
 import { PriceFeederConfig, PriceData, PriceFeedResult } from '../types';
 
 export class PriceLookupService {
@@ -34,6 +38,9 @@ export class PriceLookupService {
           break;
         case 'contract':
           priceData = await this.fetchFromContract(config);
+          break;
+        case 'folks-sdk':
+          priceData = await this.fetchFromFolksSdk(config);
           break;
         default:
           throw new Error(`Unsupported source type: ${config.source.type}`);
@@ -240,6 +247,51 @@ export class PriceLookupService {
     // This would implement smart contract calls to fetch prices
     // For now, return a placeholder
     throw new Error('Contract fetching not yet implemented');
+  }
+
+  /**
+   * On-chain Folks oracle USD price via indexer REST (Folks mainnet oracle
+   * global-state layout; see `folks-oracle-price-fetch.ts`).
+   *
+   * Required: `source.url` — indexer base URL (e.g. https://mainnet-idx.algonode.cloud).
+   * Required: `source.params.priceAssetId` — ASA id whose Folks oracle slot to read.
+   * Optional: `source.params.oracleAppId` — Folks oracle 0 app id (defaults to `MainnetOracle.oracle0AppId`).
+   * Optional (documentation / tooling; ignored by fetch): `folksPoolAppId`, `folksUnderlyingAssetId`, `folksFAssetId`, `folksFrAssetId`.
+   */
+  private async fetchFromFolksSdk(config: PriceFeederConfig): Promise<PriceData> {
+    if (!config.source.url) {
+      throw new Error('Indexer base URL (source.url) is required for folks-sdk source type');
+    }
+    const priceAssetId = Number(config.source.params?.priceAssetId);
+    if (!Number.isFinite(priceAssetId) || priceAssetId <= 0) {
+      throw new Error('source.params.priceAssetId (number) is required for folks-sdk source type');
+    }
+    const oracleAppIdRaw = config.source.params?.oracleAppId;
+    const oracleAppId =
+      oracleAppIdRaw !== undefined && oracleAppIdRaw !== null && String(oracleAppIdRaw).trim() !== ''
+        ? Number(oracleAppIdRaw)
+        : defaultFolksMainnetOracle0AppId();
+    if (!Number.isFinite(oracleAppId) || oracleAppId <= 0) {
+      throw new Error('source.params.oracleAppId must be a positive number when set');
+    }
+
+    const { usd, sourceLabel } = await fetchFolksOracleUsdPrice({
+      indexerBaseUrl: config.source.url,
+      oracleAppId,
+      priceAssetId,
+      timeoutMs: config.timeout,
+    });
+
+    return {
+      symbol: config.assetSymbol,
+      price: usd,
+      timestamp: new Date(),
+      source: sourceLabel,
+      networkId: config.networkId,
+      poolId: config.poolId,
+      marketId: config.marketId,
+      confidence: 0.95,
+    };
   }
 
   private extractPriceFromAPIResponse(data: any, config: PriceFeederConfig): number {
