@@ -75,6 +75,17 @@
         "intrinsicApyPercent": 7.78,
         "intrinsicBorrowApyPercent": 7.78
       },
+      "fiTINY": {
+        "assetId": "3184331789",
+        "poolId": "3345940978",
+        "contractId": "3540827780",
+        "nTokenId": "3540842561",
+        "decimals": 6,
+        "name": "Folks V2 Isolated TINY",
+        "symbol": "fiTINY",
+        "logoPath": "/lovable-uploads/TINY.webp",
+        "tokenStandard": "asa"
+      },
       "tALGO": {
         "assetId": "2537013734",
         "poolId": "3333688282",
