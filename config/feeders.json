@@ -1378,7 +1378,7 @@
       "method": "fetch-and-post",
       "networkId": "algorand-mainnet",
       "poolId": "3333688282",
-      "marketId": "3211827406",
+      "marketId": "3573862137",
       "assetSymbol": "wBTC",
       "enabled": true,
       "interval": 300000,
@@ -1393,13 +1393,13 @@
           "Content-Type": "application/json"
         },
         "params": {
-          "asset_ids": "1058926737"
+          "asset_ids": "3495558025"
         }
       },
       "destination": {
         "type": "price-oracle",
         "contractAddress": "3333688500",
-        "marketId": "3211827406",
+        "marketId": "3573862137",
         "functionName": "post_price",
         "abi": [
           {

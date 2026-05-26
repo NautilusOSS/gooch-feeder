@@ -380,20 +380,25 @@
         "tokenStandard": "asa"
       },
       "wBTC": {
-        "assetId": "1058926737",
+        "assetId": "3495558025",
         "poolId": "3333688282",
-        "contractId": "3211827406",
-        "nTokenId": "3348042762",
+        "contractId": "3573862137",
+        "nTokenId": "3573966772",
         "migration": {
-          "poolId": "3207735602",
+          "poolId": "3333688282",
           "contractId": "3211827406",
-          "nTokenId": "3211979645"
+          "nTokenId": "3348042762"
         },
         "decimals": 8,
         "name": "wBTC",
         "symbol": "wBTC",
         "logoPath": "/lovable-uploads/wBTCm.png",
-        "tokenStandard": "asa"
+        "tokenStandard": "asa-asa",
+        "dataAddedAt": "2026-05-26T00:00:00.000Z",
+        "intrinsicApyPercent": 1,
+        "intrinsicBorrowApyPercent": 1,
+        "intrinsicApyLiveSource": "folks_mainnet_wbtc_ntt_pool_deposit",
+        "intrinsicBorrowApyLiveSource": "folks_mainnet_wbtc_ntt_pool_deposit"
       },
       "goETH": {
         "assetId": "386195940",
