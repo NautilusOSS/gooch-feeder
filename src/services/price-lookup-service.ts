@@ -256,6 +256,7 @@ export class PriceLookupService {
    * Required: `source.url` — indexer base URL (e.g. https://mainnet-idx.algonode.cloud).
    * Required: `source.params.priceAssetId` — ASA id whose Folks oracle slot to read.
    * Optional: `source.params.oracleAppId` — Folks oracle 0 app id (defaults to mainnet oracle 0).
+   * Optional: `source.params.assetDecimals` — ASA decimals for oracle USD scaling (default 6).
    * Optional (documentation / tooling; ignored by fetch): `folksPoolAppId`, `folksUnderlyingAssetId`, `folksFAssetId`, `folksFrAssetId`.
    */
   private async fetchFromFolksSdk(config: PriceFeederConfig): Promise<PriceData> {
@@ -275,11 +276,18 @@ export class PriceLookupService {
       throw new Error('source.params.oracleAppId must be a positive number when set');
     }
 
+    const assetDecimalsRaw = config.source.params?.assetDecimals;
+    const assetDecimals =
+      assetDecimalsRaw !== undefined && assetDecimalsRaw !== null && String(assetDecimalsRaw).trim() !== ''
+        ? Number(assetDecimalsRaw)
+        : undefined;
+
     const { usd, sourceLabel } = await fetchFolksOracleUsdPrice({
       indexerBaseUrl: config.source.url,
       oracleAppId,
       priceAssetId,
       timeoutMs: config.timeout,
+      assetDecimals,
     });
 
     return {

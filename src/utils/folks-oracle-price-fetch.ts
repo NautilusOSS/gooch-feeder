@@ -12,7 +12,15 @@
 /** Folks mainnet oracle 0 app id (`MainnetOracle.oracle0AppId` in @folks-finance/algorand-sdk). */
 const FOLKS_MAINNET_ORACLE0_APP_ID = 1040271396;
 
-const FOLKS_ORACLE_PRICE_USD_DIVISOR = 1e8;
+const FOLKS_ORACLE_PRICE_USD_DIVISOR_DEFAULT = 1e8;
+
+/** USD scale for Folks oracle global-state prices: `10^(14 - assetDecimals)`. */
+export function folksOracleUsdDivisor(assetDecimals: number): number {
+  if (!Number.isFinite(assetDecimals) || assetDecimals < 0 || assetDecimals > 18) {
+    throw new Error(`Invalid Folks oracle assetDecimals: ${assetDecimals}`);
+  }
+  return Math.pow(10, 14 - assetDecimals);
+}
 
 interface IndexerGlobalStateEntry {
   key: string;
@@ -40,6 +48,7 @@ export async function fetchFolksOracleUsdPrice(params: {
   oracleAppId: number;
   priceAssetId: number;
   timeoutMs: number;
+  assetDecimals?: number;
 }): Promise<{ usd: number; onChainTimestampSec: bigint; sourceLabel: string }> {
   const base = params.indexerBaseUrl.replace(/\/$/, '');
   const url = `${base}/v2/applications/${params.oracleAppId}`;
@@ -67,7 +76,11 @@ export async function fetchFolksOracleUsdPrice(params: {
   if (price <= BigInt(0)) {
     throw new Error(`Folks oracle: non-positive price for asset ${params.priceAssetId}`);
   }
-  const usd = Number(price) / FOLKS_ORACLE_PRICE_USD_DIVISOR;
+  const usdDivisor =
+    params.assetDecimals !== undefined
+      ? folksOracleUsdDivisor(params.assetDecimals)
+      : FOLKS_ORACLE_PRICE_USD_DIVISOR_DEFAULT;
+  const usd = Number(price) / usdDivisor;
   return {
     usd,
     onChainTimestampSec: timestamp,

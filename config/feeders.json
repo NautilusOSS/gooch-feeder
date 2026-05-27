@@ -1386,14 +1386,15 @@
       "retries": 3,
       "priority": 10,
       "source": {
-        "type": "api",
-        "url": "https://mainnet.api.perawallet.app/v1/assets/",
-        "method": "GET",
-        "headers": {
-          "Content-Type": "application/json"
-        },
+        "type": "folks-sdk",
+        "url": "https://mainnet-idx.algonode.cloud",
         "params": {
-          "asset_ids": "3495558025"
+          "oracleAppId": "1040271396",
+          "priceAssetId": "3495558025",
+          "assetDecimals": "8",
+          "folksUnderlyingAssetId": "3495558025",
+          "folksFAssetId": "3495558025",
+          "folksFrAssetId": "3573966772"
         }
       },
       "destination": {
