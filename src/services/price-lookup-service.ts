@@ -255,7 +255,7 @@ export class PriceLookupService {
    *
    * Required: `source.url` — indexer base URL (e.g. https://mainnet-idx.algonode.cloud).
    * Required: `source.params.priceAssetId` — ASA id whose Folks oracle slot to read.
-   * Optional: `source.params.oracleAppId` — Folks oracle 0 app id (defaults to `MainnetOracle.oracle0AppId`).
+   * Optional: `source.params.oracleAppId` — Folks oracle 0 app id (defaults to mainnet oracle 0).
    * Optional (documentation / tooling; ignored by fetch): `folksPoolAppId`, `folksUnderlyingAssetId`, `folksFAssetId`, `folksFrAssetId`.
    */
   private async fetchFromFolksSdk(config: PriceFeederConfig): Promise<PriceData> {

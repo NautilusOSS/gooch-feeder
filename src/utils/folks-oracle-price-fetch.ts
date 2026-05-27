@@ -1,5 +1,3 @@
-import { MainnetOracle } from '@folks-finance/algorand-sdk';
-
 /**
  * Folks oracle global-state value layout matches
  * {@link https://github.com/Folks-Finance/algorand-js-sdk Folks algorand-js-sdk}
@@ -10,6 +8,9 @@ import { MainnetOracle } from '@folks-finance/algorand-sdk';
  * Uses indexer HTTP JSON directly so this works with algosdk v2 (Folks SDK
  * `getOraclePrices` + Indexer responses expect different field naming).
  */
+
+/** Folks mainnet oracle 0 app id (`MainnetOracle.oracle0AppId` in @folks-finance/algorand-sdk). */
+const FOLKS_MAINNET_ORACLE0_APP_ID = 1040271396;
 
 const FOLKS_ORACLE_PRICE_USD_DIVISOR = 1e8;
 
@@ -31,7 +32,7 @@ function parseOracleValueBase64(base64Value: string): { price: bigint; timestamp
 }
 
 export function defaultFolksMainnetOracle0AppId(): number {
-  return MainnetOracle.oracle0AppId;
+  return FOLKS_MAINNET_ORACLE0_APP_ID;
 }
 
 export async function fetchFolksOracleUsdPrice(params: {
