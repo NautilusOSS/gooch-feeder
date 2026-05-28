@@ -1378,7 +1378,7 @@
       "method": "fetch-and-post",
       "networkId": "algorand-mainnet",
       "poolId": "3333688282",
-      "marketId": "3573862137",
+      "marketId": "3575837891",
       "assetSymbol": "wBTC",
       "enabled": true,
       "interval": 300000,
@@ -1394,13 +1394,13 @@
           "assetDecimals": "8",
           "folksUnderlyingAssetId": "3495558025",
           "folksFAssetId": "3495558025",
-          "folksFrAssetId": "3573966772"
+          "folksFrAssetId": "3575859479"
         }
       },
       "destination": {
         "type": "price-oracle",
         "contractAddress": "3333688500",
-        "marketId": "3573862137",
+        "marketId": "3575837891",
         "functionName": "post_price",
         "abi": [
           {
@@ -1489,7 +1489,7 @@
       "method": "fetch-and-post",
       "networkId": "algorand-mainnet",
       "poolId": "3333688282",
-      "marketId": "3211811648",
+      "marketId": "3575840444",
       "assetSymbol": "wETH",
       "enabled": true,
       "interval": 300000,
@@ -1497,20 +1497,21 @@
       "retries": 3,
       "priority": 10,
       "source": {
-        "type": "api",
-        "url": "https://mainnet.api.perawallet.app/v1/assets/",
-        "method": "GET",
-        "headers": {
-          "Content-Type": "application/json"
-        },
+        "type": "folks-sdk",
+        "url": "https://mainnet-idx.algonode.cloud",
         "params": {
-          "asset_ids": "887406851"
+          "oracleAppId": "1040271396",
+          "priceAssetId": "3495722210",
+          "assetDecimals": "8",
+          "folksUnderlyingAssetId": "3495722210",
+          "folksFAssetId": "3495722210",
+          "folksFrAssetId": "3575954102"
         }
       },
       "destination": {
         "type": "price-oracle",
         "contractAddress": "3333688500",
-        "marketId": "3211811648",
+        "marketId": "3575840444",
         "functionName": "post_price",
         "abi": [
           {
