@@ -3234,6 +3234,299 @@
       "twap": {
         "enabled": true
       }
+    },
+    "algorand-mainnet-3589083110-LP_TMPOOL2_USDC_ALGO": {
+      "id": "algorand-mainnet-3589083110-LP_TMPOOL2_USDC_ALGO",
+      "method": "fetch-and-post",
+      "networkId": "algorand-mainnet",
+      "poolId": "3589083110",
+      "marketId": "3589026317",
+      "assetSymbol": "LP_TMPOOL2_USDC_ALGO",
+      "enabled": true,
+      "interval": 900000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "lp-standard-unit",
+        "url": "https://mainnet-idx.algonode.cloud",
+        "params": {
+          "lpAssetId": "1002590888",
+          "protocol": "tinyman-v2",
+          "poolAppId": "1002541853",
+          "underlyingPrices": [
+            {
+              "assetId": "31566704",
+              "decimals": 6,
+              "type": "api",
+              "url": "https://mainnet.api.perawallet.app/v1/assets/",
+              "params": {
+                "asset_ids": "31566704"
+              }
+            },
+            {
+              "assetId": "0",
+              "decimals": 6,
+              "type": "api",
+              "url": "https://api.coingecko.com/api/v3/simple/price",
+              "params": {
+                "ids": "algorand",
+                "vs_currencies": "usd"
+              }
+            }
+          ]
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "3333688500",
+        "marketId": "3589026317",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.01,
+        "maxPrice": 10,
+        "maxPriceChange": 0.5,
+        "requiredFields": ["price", "timestamp"]
+      },
+      "twap": {
+        "enabled": true
+      }
+    },
+    "algorand-mainnet-3589083110-LP_TMPOOL2_TALGO_USDC": {
+      "id": "algorand-mainnet-3589083110-LP_TMPOOL2_TALGO_USDC",
+      "method": "fetch-and-post",
+      "networkId": "algorand-mainnet",
+      "poolId": "3589083110",
+      "marketId": "3589029580",
+      "assetSymbol": "LP_TMPOOL2_TALGO_USDC",
+      "enabled": true,
+      "interval": 900000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "lp-standard-unit",
+        "url": "https://mainnet-idx.algonode.cloud",
+        "params": {
+          "lpAssetId": "2537254960",
+          "protocol": "tinyman-v2",
+          "poolAppId": "1002541853",
+          "underlyingPrices": [
+            {
+              "assetId": "2537013734",
+              "decimals": 6,
+              "type": "api",
+              "url": "https://mainnet.api.perawallet.app/v1/assets/",
+              "params": {
+                "asset_ids": "2537013734"
+              }
+            },
+            {
+              "assetId": "31566704",
+              "decimals": 6,
+              "type": "api",
+              "url": "https://mainnet.api.perawallet.app/v1/assets/",
+              "params": {
+                "asset_ids": "31566704"
+              }
+            }
+          ]
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "3333688500",
+        "marketId": "3589029580",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.01,
+        "maxPrice": 10,
+        "maxPriceChange": 0.5,
+        "requiredFields": ["price", "timestamp"]
+      },
+      "twap": {
+        "enabled": true
+      }
+    },
+    "algorand-mainnet-3589083110-LP_TMPOOL2_HAY_USDC": {
+      "id": "algorand-mainnet-3589083110-LP_TMPOOL2_HAY_USDC",
+      "method": "fetch-and-post",
+      "networkId": "algorand-mainnet",
+      "poolId": "3589083110",
+      "marketId": "3589032117",
+      "assetSymbol": "LP_TMPOOL2_HAY_USDC",
+      "enabled": true,
+      "interval": 900000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "lp-standard-unit",
+        "url": "https://mainnet-idx.algonode.cloud",
+        "params": {
+          "lpAssetId": "3196310546",
+          "protocol": "tinyman-v2",
+          "poolAppId": "1002541853",
+          "underlyingPrices": [
+            {
+              "assetId": "3160000000",
+              "decimals": 6,
+              "type": "api",
+              "url": "https://mainnet.api.perawallet.app/v1/assets/",
+              "params": {
+                "asset_ids": "3160000000"
+              }
+            },
+            {
+              "assetId": "31566704",
+              "decimals": 6,
+              "type": "api",
+              "url": "https://mainnet.api.perawallet.app/v1/assets/",
+              "params": {
+                "asset_ids": "31566704"
+              }
+            }
+          ]
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "3333688500",
+        "marketId": "3589032117",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.01,
+        "maxPrice": 10,
+        "maxPriceChange": 0.5,
+        "requiredFields": ["price", "timestamp"]
+      },
+      "twap": {
+        "enabled": true
+      }
+    },
+    "algorand-mainnet-3589083110-LP_TMPOOL2_ALPHA_USDC": {
+      "id": "algorand-mainnet-3589083110-LP_TMPOOL2_ALPHA_USDC",
+      "method": "fetch-and-post",
+      "networkId": "algorand-mainnet",
+      "poolId": "3589083110",
+      "marketId": "3589036846",
+      "assetSymbol": "LP_TMPOOL2_ALPHA_USDC",
+      "enabled": true,
+      "interval": 900000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "lp-standard-unit",
+        "url": "https://mainnet-idx.algonode.cloud",
+        "params": {
+          "lpAssetId": "2741116468",
+          "protocol": "tinyman-v2",
+          "poolAppId": "1002541853",
+          "underlyingPrices": [
+            {
+              "assetId": "2726252423",
+              "decimals": 6,
+              "type": "api",
+              "url": "https://mainnet.api.perawallet.app/v1/assets/",
+              "params": {
+                "asset_ids": "2726252423"
+              }
+            },
+            {
+              "assetId": "31566704",
+              "decimals": 6,
+              "type": "api",
+              "url": "https://mainnet.api.perawallet.app/v1/assets/",
+              "params": {
+                "asset_ids": "31566704"
+              }
+            }
+          ]
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "3333688500",
+        "marketId": "3589036846",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.01,
+        "maxPrice": 10,
+        "maxPriceChange": 0.5,
+        "requiredFields": ["price", "timestamp"]
+      },
+      "twap": {
+        "enabled": true
+      }
     }
   },
   "globalSettings": {

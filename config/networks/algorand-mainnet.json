@@ -572,6 +572,54 @@
         "logoPath": "/lovable-uploads/LP_TMPOOL2_WAD_GOBTC.png",
         "tokenStandard": "asa",
         "dataAddedAt": "2026-06-03T00:00:00.000Z"
+      },
+      "LP_TMPOOL2_USDC_ALGO": {
+        "assetId": "1002590888",
+        "contractId": "3589026317",
+        "poolId": "3589083110",
+        "nTokenId": "3589091424",
+        "decimals": 6,
+        "name": "TinymanPool2.0 USDC-ALGO",
+        "symbol": "TMPOOL2",
+        "logoPath": "/lovable-uploads/LP_TMPOOL2_USDC_ALGO.png",
+        "tokenStandard": "asa",
+        "dataAddedAt": "2026-06-05T00:00:00.000Z"
+      },
+      "LP_TMPOOL2_TALGO_USDC": {
+        "assetId": "2537254960",
+        "contractId": "3589029580",
+        "poolId": "3589083110",
+        "nTokenId": "3589093059",
+        "decimals": 6,
+        "name": "TinymanPool2.0 TALGO-USDC",
+        "symbol": "TMPOOL2",
+        "logoPath": "/lovable-uploads/LP_TMPOOL2_TALGO_USDC.png",
+        "tokenStandard": "asa",
+        "dataAddedAt": "2026-06-05T00:00:00.000Z"
+      },
+      "LP_TMPOOL2_HAY_USDC": {
+        "assetId": "3196310546",
+        "contractId": "3589032117",
+        "poolId": "3589083110",
+        "nTokenId": "3589094325",
+        "decimals": 6,
+        "name": "TinymanPool2.0 HAY-USDC",
+        "symbol": "TMPOOL2",
+        "logoPath": "/lovable-uploads/LP_TMPOOL2_HAY_USDC.png",
+        "tokenStandard": "asa",
+        "dataAddedAt": "2026-06-05T00:00:00.000Z"
+      },
+      "LP_TMPOOL2_ALPHA_USDC": {
+        "assetId": "2741116468",
+        "contractId": "3589036846",
+        "poolId": "3589083110",
+        "nTokenId": "3589095663",
+        "decimals": 6,
+        "name": "TinymanPool2.0 ALPHA-USDC",
+        "symbol": "TMPOOL2",
+        "logoPath": "/lovable-uploads/LP_TMPOOL2_ALPHA_USDC.png",
+        "tokenStandard": "asa",
+        "dataAddedAt": "2026-06-05T00:00:00.000Z"
       }
     },
     "gasStation": {},
