@@ -41,7 +41,7 @@ export interface PriceFeederConfig {
   retries: number;
   priority: number; // Higher number = higher priority
   source: {
-    type: 'api' | 'rpc' | 'websocket' | 'contract' | 'folks-sdk';
+    type: 'api' | 'rpc' | 'websocket' | 'contract' | 'folks-sdk' | 'lp-standard-unit';
     url?: string;
     method?: string;
     headers?: Record<string, string>;

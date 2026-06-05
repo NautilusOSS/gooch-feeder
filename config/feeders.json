@@ -152,8 +152,8 @@
         ]
       },
       "validation": {
-        "minPrice": 0.00005,
-        "maxPrice": 0.004,
+        "minPrice": 0.0002,
+        "maxPrice": 0.001,
         "maxPriceChange": 0.001,
         "requiredFields": ["price", "timestamp"]
       },
@@ -428,8 +428,8 @@
         ]
       },
       "validation": {
-        "minPrice": 0.0004,
-        "maxPrice": 0.003,
+        "minPrice": 0.0002,
+        "maxPrice": 0.001,
         "maxPriceChange": 0.001,
         "requiredFields": ["price", "timestamp"]
       },
@@ -2716,6 +2716,519 @@
         "minPrice": 0.03,
         "maxPrice": 0.2,
         "maxPriceChange": 0.2,
+        "requiredFields": ["price", "timestamp"]
+      },
+      "twap": {
+        "enabled": true
+      }
+    },
+    "algorand-mainnet-3578814346-LP_TMPOOL2_UNIT_ALGO": {
+      "id": "algorand-mainnet-3578814346-LP_TMPOOL2_UNIT_ALGO",
+      "method": "fetch-and-post",
+      "networkId": "algorand-mainnet",
+      "poolId": "3578814346",
+      "marketId": "3577729953",
+      "assetSymbol": "LP_TMPOOL2_UNIT_ALGO",
+      "enabled": true,
+      "interval": 900000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "lp-standard-unit",
+        "url": "https://mainnet-idx.algonode.cloud",
+        "params": {
+          "lpAssetId": "3157974960",
+          "protocol": "tinyman-v2",
+          "poolAppId": "1002541853",
+          "underlyingPrices": [
+            {
+              "assetId": "3121954282",
+              "decimals": 8,
+              "type": "api",
+              "url": "https://mainnet.api.perawallet.app/v1/assets/",
+              "params": {
+                "asset_ids": "3121954282"
+              }
+            },
+            {
+              "assetId": "0",
+              "decimals": 6,
+              "type": "api",
+              "url": "https://api.coingecko.com/api/v3/simple/price",
+              "params": {
+                "ids": "algorand",
+                "vs_currencies": "usd"
+              }
+            }
+          ]
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "3333688500",
+        "marketId": "3577729953",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.01,
+        "maxPrice": 1,
+        "maxPriceChange": 0.5,
+        "requiredFields": ["price", "timestamp"]
+      },
+      "twap": {
+        "enabled": true
+      }
+    },
+    "algorand-mainnet-3578814346-LP_TMPOOL2_UNIT_GOBTC": {
+      "id": "algorand-mainnet-3578814346-LP_TMPOOL2_UNIT_GOBTC",
+      "method": "fetch-and-post",
+      "networkId": "algorand-mainnet",
+      "poolId": "3578814346",
+      "marketId": "3577777819",
+      "assetSymbol": "LP_TMPOOL2_UNIT_GOBTC",
+      "enabled": true,
+      "interval": 900000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "lp-standard-unit",
+        "url": "https://mainnet-idx.algonode.cloud",
+        "params": {
+          "lpAssetId": "3159132330",
+          "protocol": "tinyman-v2",
+          "poolAppId": "1002541853",
+          "underlyingPrices": [
+            {
+              "assetId": "3121954282",
+              "decimals": 8,
+              "type": "api",
+              "url": "https://mainnet.api.perawallet.app/v1/assets/",
+              "params": {
+                "asset_ids": "3121954282"
+              }
+            },
+            {
+              "assetId": "386192725",
+              "decimals": 8,
+              "type": "api",
+              "url": "https://mainnet.api.perawallet.app/v1/assets/",
+              "params": {
+                "asset_ids": "386192725"
+              }
+            }
+          ]
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "3333688500",
+        "marketId": "3577777819",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.01,
+        "maxPrice": 100,
+        "maxPriceChange": 0.5,
+        "requiredFields": ["price", "timestamp"]
+      },
+      "twap": {
+        "enabled": true
+      }
+    },
+    "algorand-mainnet-3578814346-LP_TMPOOL2_WAD_UNIT": {
+      "id": "algorand-mainnet-3578814346-LP_TMPOOL2_WAD_UNIT",
+      "method": "fetch-and-post",
+      "networkId": "algorand-mainnet",
+      "poolId": "3578814346",
+      "marketId": "3577783311",
+      "assetSymbol": "LP_TMPOOL2_WAD_UNIT",
+      "enabled": true,
+      "interval": 900000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "lp-standard-unit",
+        "url": "https://mainnet-idx.algonode.cloud",
+        "params": {
+          "lpAssetId": "3334546641",
+          "protocol": "tinyman-v2",
+          "poolAppId": "1002541853",
+          "underlyingPrices": [
+            {
+              "assetId": "3334160924",
+              "decimals": 6,
+              "type": "api",
+              "url": "https://mainnet.api.perawallet.app/v1/assets/",
+              "params": {
+                "asset_ids": "3334160924"
+              }
+            },
+            {
+              "assetId": "3121954282",
+              "decimals": 8,
+              "type": "api",
+              "url": "https://mainnet.api.perawallet.app/v1/assets/",
+              "params": {
+                "asset_ids": "3121954282"
+              }
+            }
+          ]
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "3333688500",
+        "marketId": "3577783311",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.01,
+        "maxPrice": 10,
+        "maxPriceChange": 0.5,
+        "requiredFields": ["price", "timestamp"]
+      },
+      "twap": {
+        "enabled": true
+      }
+    },
+    "algorand-mainnet-3585829377-LP_TMPOOL2_WAD_ALGO": {
+      "id": "algorand-mainnet-3585829377-LP_TMPOOL2_WAD_ALGO",
+      "method": "fetch-and-post",
+      "networkId": "algorand-mainnet",
+      "poolId": "3585829377",
+      "marketId": "3578405588",
+      "assetSymbol": "LP_TMPOOL2_WAD_ALGO",
+      "enabled": true,
+      "interval": 900000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "lp-standard-unit",
+        "url": "https://mainnet-idx.algonode.cloud",
+        "params": {
+          "lpAssetId": "3346320836",
+          "protocol": "tinyman-v2",
+          "poolAppId": "1002541853",
+          "underlyingPrices": [
+            {
+              "assetId": "3334160924",
+              "decimals": 6,
+              "type": "api",
+              "url": "https://mainnet.api.perawallet.app/v1/assets/",
+              "params": {
+                "asset_ids": "3334160924"
+              }
+            },
+            {
+              "assetId": "0",
+              "decimals": 6,
+              "type": "api",
+              "url": "https://api.coingecko.com/api/v3/simple/price",
+              "params": {
+                "ids": "algorand",
+                "vs_currencies": "usd"
+              }
+            }
+          ]
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "3333688500",
+        "marketId": "3578405588",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.01,
+        "maxPrice": 10,
+        "maxPriceChange": 0.5,
+        "requiredFields": ["price", "timestamp"]
+      },
+      "twap": {
+        "enabled": true
+      }
+    },
+    "algorand-mainnet-3585829377-LP_TMPOOL2_WAD_USDC": {
+      "id": "algorand-mainnet-3585829377-LP_TMPOOL2_WAD_USDC",
+      "method": "fetch-and-post",
+      "networkId": "algorand-mainnet",
+      "poolId": "3585829377",
+      "marketId": "3577799583",
+      "assetSymbol": "LP_TMPOOL2_WAD_USDC",
+      "enabled": true,
+      "interval": 900000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "lp-standard-unit",
+        "url": "https://mainnet-idx.algonode.cloud",
+        "params": {
+          "lpAssetId": "3334448440",
+          "protocol": "tinyman-v2",
+          "poolAppId": "1002541853",
+          "underlyingPrices": [
+            {
+              "assetId": "3334160924",
+              "decimals": 6,
+              "type": "api",
+              "url": "https://mainnet.api.perawallet.app/v1/assets/",
+              "params": {
+                "asset_ids": "3334160924"
+              }
+            },
+            {
+              "assetId": "31566704",
+              "decimals": 6,
+              "type": "api",
+              "url": "https://mainnet.api.perawallet.app/v1/assets/",
+              "params": {
+                "asset_ids": "31566704"
+              }
+            }
+          ]
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "3333688500",
+        "marketId": "3577799583",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.01,
+        "maxPrice": 10,
+        "maxPriceChange": 0.5,
+        "requiredFields": ["price", "timestamp"]
+      },
+      "twap": {
+        "enabled": true
+      }
+    },
+    "algorand-mainnet-3585829377-LP_TMPOOL2_WAD_GOETH": {
+      "id": "algorand-mainnet-3585829377-LP_TMPOOL2_WAD_GOETH",
+      "method": "fetch-and-post",
+      "networkId": "algorand-mainnet",
+      "poolId": "3585829377",
+      "marketId": "3578394082",
+      "assetSymbol": "LP_TMPOOL2_WAD_GOETH",
+      "enabled": true,
+      "interval": 900000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "lp-standard-unit",
+        "url": "https://mainnet-idx.algonode.cloud",
+        "params": {
+          "lpAssetId": "3495913115",
+          "protocol": "tinyman-v2",
+          "poolAppId": "1002541853",
+          "underlyingPrices": [
+            {
+              "assetId": "3334160924",
+              "decimals": 6,
+              "type": "api",
+              "url": "https://mainnet.api.perawallet.app/v1/assets/",
+              "params": {
+                "asset_ids": "3334160924"
+              }
+            },
+            {
+              "assetId": "386195940",
+              "decimals": 8,
+              "type": "api",
+              "url": "https://mainnet.api.perawallet.app/v1/assets/",
+              "params": {
+                "asset_ids": "386195940"
+              }
+            }
+          ]
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "3333688500",
+        "marketId": "3578394082",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.01,
+        "maxPrice": 100,
+        "maxPriceChange": 0.5,
+        "requiredFields": ["price", "timestamp"]
+      },
+      "twap": {
+        "enabled": true
+      }
+    },
+    "algorand-mainnet-3585829377-LP_TMPOOL2_WAD_GOBTC": {
+      "id": "algorand-mainnet-3585829377-LP_TMPOOL2_WAD_GOBTC",
+      "method": "fetch-and-post",
+      "networkId": "algorand-mainnet",
+      "poolId": "3585829377",
+      "marketId": "3578387558",
+      "assetSymbol": "LP_TMPOOL2_WAD_GOBTC",
+      "enabled": true,
+      "interval": 900000,
+      "timeout": 10000,
+      "retries": 3,
+      "priority": 10,
+      "source": {
+        "type": "lp-standard-unit",
+        "url": "https://mainnet-idx.algonode.cloud",
+        "params": {
+          "lpAssetId": "3355755995",
+          "protocol": "tinyman-v2",
+          "poolAppId": "1002541853",
+          "underlyingPrices": [
+            {
+              "assetId": "3334160924",
+              "decimals": 6,
+              "type": "api",
+              "url": "https://mainnet.api.perawallet.app/v1/assets/",
+              "params": {
+                "asset_ids": "3334160924"
+              }
+            },
+            {
+              "assetId": "386192725",
+              "decimals": 8,
+              "type": "api",
+              "url": "https://mainnet.api.perawallet.app/v1/assets/",
+              "params": {
+                "asset_ids": "386192725"
+              }
+            }
+          ]
+        }
+      },
+      "destination": {
+        "type": "price-oracle",
+        "contractAddress": "3333688500",
+        "marketId": "3578387558",
+        "functionName": "post_price",
+        "abi": [
+          {
+            "name": "post_price",
+            "type": "function",
+            "inputs": [
+              {
+                "name": "tokenId",
+                "type": "uint64"
+              },
+              {
+                "name": "price",
+                "type": "uint256"
+              }
+            ]
+          }
+        ]
+      },
+      "validation": {
+        "minPrice": 0.01,
+        "maxPrice": 100,
+        "maxPriceChange": 0.5,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {

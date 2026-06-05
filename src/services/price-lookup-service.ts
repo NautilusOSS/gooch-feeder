@@ -4,6 +4,10 @@ import {
   defaultFolksMainnetOracle0AppId,
   fetchFolksOracleUsdPrice,
 } from '../utils/folks-oracle-price-fetch';
+import {
+  fetchLpStandardUnitUsdPrice,
+  LpStandardUnitProtocol,
+} from '../utils/lp-standard-unit-price-fetch';
 import { PriceFeederConfig, PriceData, PriceFeedResult } from '../types';
 
 export class PriceLookupService {
@@ -41,6 +45,9 @@ export class PriceLookupService {
           break;
         case 'folks-sdk':
           priceData = await this.fetchFromFolksSdk(config);
+          break;
+        case 'lp-standard-unit':
+          priceData = await this.fetchFromLpStandardUnit(config);
           break;
         default:
           throw new Error(`Unsupported source type: ${config.source.type}`);
@@ -259,6 +266,64 @@ export class PriceLookupService {
    * Optional: `source.params.assetDecimals` — ASA decimals for oracle USD scaling (default 6).
    * Optional (documentation / tooling; ignored by fetch): `folksPoolAppId`, `folksUnderlyingAssetId`, `folksFAssetId`, `folksFrAssetId`.
    */
+  /**
+   * LP USD price per 1 standard LP unit from on-chain pool reserves and
+   * configured underlying asset USD prices.
+   *
+   * Required: `source.url` — indexer base URL.
+   * Required: `source.params.lpAssetId` — LP ASA id.
+   * Required: `source.params.protocol` — pool protocol (e.g. `tinyman-v2`).
+   * Required: `source.params.poolAppId` — app id holding pool reserve/supply local state.
+   * Required: `source.params.underlyingPrices` — array of underlying asset price sources.
+   */
+  private async fetchFromLpStandardUnit(config: PriceFeederConfig): Promise<PriceData> {
+    if (!config.source.url) {
+      throw new Error('Indexer base URL (source.url) is required for lp-standard-unit source type');
+    }
+
+    const lpAssetId = Number(config.source.params?.lpAssetId);
+    if (!Number.isFinite(lpAssetId) || lpAssetId <= 0) {
+      throw new Error('source.params.lpAssetId (number) is required for lp-standard-unit source type');
+    }
+
+    const protocol = String(config.source.params?.protocol ?? '').trim() as LpStandardUnitProtocol;
+    if (!protocol) {
+      throw new Error('source.params.protocol is required for lp-standard-unit source type');
+    }
+
+    const underlyingPrices = config.source.params?.underlyingPrices;
+    if (!Array.isArray(underlyingPrices) || underlyingPrices.length === 0) {
+      throw new Error(
+        'source.params.underlyingPrices (non-empty array) is required for lp-standard-unit source type'
+      );
+    }
+
+    const poolAppId = Number(config.source.params?.poolAppId);
+    if (!Number.isFinite(poolAppId) || poolAppId <= 0) {
+      throw new Error('source.params.poolAppId (number) is required for lp-standard-unit source type');
+    }
+
+    const { usd, sourceLabel } = await fetchLpStandardUnitUsdPrice({
+      indexerBaseUrl: config.source.url,
+      lpAssetId,
+      timeoutMs: config.timeout,
+      protocol,
+      poolAppId,
+      underlyingPrices,
+    });
+
+    return {
+      symbol: config.assetSymbol,
+      price: usd,
+      timestamp: new Date(),
+      source: sourceLabel,
+      networkId: config.networkId,
+      poolId: config.poolId,
+      marketId: config.marketId,
+      confidence: 0.9,
+    };
+  }
+
   private async fetchFromFolksSdk(config: PriceFeederConfig): Promise<PriceData> {
     if (!config.source.url) {
       throw new Error('Indexer base URL (source.url) is required for folks-sdk source type');
