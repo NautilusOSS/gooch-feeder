@@ -1806,7 +1806,7 @@
       },
       "validation": {
         "minPrice": 0.00001,
-        "maxPrice": 0.0003,
+        "maxPrice": 0.0005,
         "maxPriceChange": 0.0001,
         "requiredFields": ["price", "timestamp"]
       },
