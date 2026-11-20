@@ -43,17 +43,27 @@ async function testAllFeeders(): Promise<void> {
       process.exit(0);
     }
     
-    console.log(`\n=== Testing ${feedersArray.length} Feeder(s) ===\n`);
+    const skipped = feedersArray.filter(([, config]) => config.skip);
+    const toTest = feedersArray.filter(([, config]) => !config.skip);
+
+    if (skipped.length > 0) {
+      console.log(`\n=== Skipping ${skipped.length} Feeder(s) (skip: true) ===\n`);
+      skipped.forEach(([feederId]) => {
+        console.log(`  ↷ ${feederId}`);
+      });
+    }
+
+    console.log(`\n=== Testing ${toTest.length} Feeder(s) ===\n`);
     
     const results: FeederTestResult[] = [];
     let successCount = 0;
     let failureCount = 0;
     
     // Run each feeder sequentially to avoid rate limits
-    for (let i = 0; i < feedersArray.length; i++) {
-      const [feederId, config] = feedersArray[i];
+    for (let i = 0; i < toTest.length; i++) {
+      const [feederId, config] = toTest[i];
       
-      console.log(`[${i + 1}/${feedersArray.length}] Testing: ${feederId}`);
+      console.log(`[${i + 1}/${toTest.length}] Testing: ${feederId}`);
       console.log(`  Method: ${config.method} | Asset: ${config.assetSymbol} | Network: ${config.networkId}`);
       
       try {
@@ -91,7 +101,7 @@ async function testAllFeeders(): Promise<void> {
       }
       
       // Add a small delay between feeders to avoid rate limits
-      if (i < feedersArray.length - 1) {
+      if (i < toTest.length - 1) {
         await new Promise(resolve => setTimeout(resolve, 1000));
       }
       
@@ -100,9 +110,13 @@ async function testAllFeeders(): Promise<void> {
     
     // Display summary
     console.log('\n=== Test Summary ===\n');
+    const testedCount = toTest.length;
+    const successPct = testedCount === 0 ? 0 : (successCount / testedCount) * 100;
+    const failurePct = testedCount === 0 ? 0 : (failureCount / testedCount) * 100;
     console.log(`Total Feeders: ${feedersArray.length}`);
-    console.log(`Successful: ${successCount} (${((successCount / feedersArray.length) * 100).toFixed(1)}%)`);
-    console.log(`Failed: ${failureCount} (${((failureCount / feedersArray.length) * 100).toFixed(1)}%)`);
+    console.log(`Skipped: ${skipped.length}`);
+    console.log(`Successful: ${successCount} (${successPct.toFixed(1)}%)`);
+    console.log(`Failed: ${failureCount} (${failurePct.toFixed(1)}%)`);
     
     // Group results by network
     const resultsByNetwork = new Map<string, FeederTestResult[]>();

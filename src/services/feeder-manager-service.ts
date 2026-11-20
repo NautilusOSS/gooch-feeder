@@ -123,12 +123,17 @@ export class FeederManagerService implements Service {
       await this.loadFeederConfigurations();
       
       // Log diagnostic information
-      const enabledFeeders = Array.from(this.feederConfigs.values()).filter(f => f.enabled);
-      const disabledFeeders = Array.from(this.feederConfigs.values()).filter(f => !f.enabled);
+      const enabledFeeders = Array.from(this.feederConfigs.values()).filter(f => this.shouldRunFeeder(f));
+      const skippedFeeders = Array.from(this.feederConfigs.values()).filter(f => f.skip);
+      const disabledFeeders = Array.from(this.feederConfigs.values()).filter(f => !f.enabled && !f.skip);
       
       this.logger.info(`Total feeders loaded: ${this.feederConfigs.size}`);
       this.logger.info(`Enabled feeders: ${enabledFeeders.length}`);
+      this.logger.info(`Skipped feeders: ${skippedFeeders.length}`);
       this.logger.info(`Disabled feeders: ${disabledFeeders.length}`);
+      skippedFeeders.forEach(feeder => {
+        this.logger.info(`  - skipping ${feeder.id} (skip: true)`);
+      });
       
       if (enabledFeeders.length === 0) {
         this.logger.warn('WARNING: No enabled feeders found! Price updates will not occur.');
@@ -162,7 +167,7 @@ export class FeederManagerService implements Service {
       this.logger.info(`Feeder Manager Service initialized with ${this.feederConfigs.size} feeders`);
 
       if (!skipStartFeeders) {
-        const enabledCount = Array.from(this.feederConfigs.values()).filter(f => f.enabled).length;
+        const enabledCount = Array.from(this.feederConfigs.values()).filter(f => this.shouldRunFeeder(f)).length;
         const discordStartup =
           this.discordWebhook.isEnabled() && DiscordWebhookService.shouldNotifyOnStartup();
         let balances: DiscordStartupBalanceRow[] | undefined;
@@ -249,8 +254,11 @@ export class FeederManagerService implements Service {
 
   public async isHealthy(): Promise<boolean> {
     try {
-      const enabledFeeders = Array.from(this.feederConfigs.values()).filter(f => f.enabled);
-      const healthyFeeders = Array.from(this.feederMetrics.values()).filter(m => m.uptime > 50);
+      const enabledFeeders = Array.from(this.feederConfigs.values()).filter(f => this.shouldRunFeeder(f));
+      const enabledIds = new Set(enabledFeeders.map(f => f.id));
+      const healthyFeeders = Array.from(this.feederMetrics.values()).filter(
+        m => enabledIds.has(m.feederId) && m.uptime > 50
+      );
       
       // Service is healthy if at least 50% of enabled feeders are healthy
       return enabledFeeders.length === 0 || healthyFeeders.length >= enabledFeeders.length * 0.5;
@@ -324,7 +332,7 @@ export class FeederManagerService implements Service {
   }
 
   private startEnabledFeeders(): void {
-    const enabledFeeders = Array.from(this.feederConfigs.values()).filter(f => f.enabled);
+    const enabledFeeders = Array.from(this.feederConfigs.values()).filter(f => this.shouldRunFeeder(f));
     
     if (enabledFeeders.length === 0) {
       this.logger.warn('No enabled feeders to start. Price updates will not occur.');
@@ -395,7 +403,7 @@ export class FeederManagerService implements Service {
    */
   private startBatchProcessing(): void {
     // Initialize last run times for all enabled feeders
-    const enabledFeeders = Array.from(this.feederConfigs.values()).filter(f => f.enabled);
+    const enabledFeeders = Array.from(this.feederConfigs.values()).filter(f => this.shouldRunFeeder(f));
     const now = new Date();
     
     this.logger.info(`Initializing batch processing for ${enabledFeeders.length} enabled feeders`);
@@ -458,8 +466,10 @@ export class FeederManagerService implements Service {
 
     // Collect feeders that need to run
     for (const [feederId, config] of this.feederConfigs) {
-      if (!config.enabled) {
-        this.logger.debug(`Skipping disabled feeder: ${feederId}`);
+      if (!this.shouldRunFeeder(config)) {
+        this.logger.debug(
+          `Skipping feeder ${feederId}: ${config.skip ? 'skip is true' : 'disabled'}`
+        );
         continue;
       }
 
@@ -713,6 +723,11 @@ export class FeederManagerService implements Service {
   }
 
   private async runFeeder(config: PriceFeederConfig): Promise<void> {
+    if (config.skip) {
+      this.logger.info(`Skipping feeder ${config.id} (skip: true)`);
+      return;
+    }
+
     const startTime = Date.now();
     const metrics = this.feederMetrics.get(config.id);
     
@@ -952,6 +967,16 @@ export class FeederManagerService implements Service {
       throw new Error(`Feeder configuration not found: ${feederId}`);
     }
 
+    if (config.skip) {
+      this.logger.info(`Skipping feeder ${feederId} (skip: true)`);
+      return {
+        success: true,
+        timestamp: new Date(),
+        duration: 0,
+        retryCount: 0,
+      };
+    }
+
     this.logger.info(`Running feeder once: ${feederId}`);
     
     // Initialize metrics if not already initialized
@@ -1083,6 +1108,13 @@ export class FeederManagerService implements Service {
     } else {
       this.logger.warn(`Feeder ${feederId} is not running`);
     }
+  }
+
+  /**
+   * A feeder runs only when it is enabled and not marked skip.
+   */
+  private shouldRunFeeder(config: PriceFeederConfig): boolean {
+    return config.enabled && config.skip !== true;
   }
 
   /**
@@ -1408,7 +1440,7 @@ export class FeederManagerService implements Service {
     
     // Calculate transaction rates based on actual feeder configuration
     // This gives more accurate projections than dividing by short uptime
-    const allEnabledFeeders = Array.from(this.feederConfigs.values()).filter(f => f.enabled);
+    const allEnabledFeeders = Array.from(this.feederConfigs.values()).filter(f => this.shouldRunFeeder(f));
     
     // Calculate expected transactions per hour based on feeder intervals
     // With batching (batch3), we can fit up to 3 feeds per transaction
@@ -1493,7 +1525,7 @@ export class FeederManagerService implements Service {
       
       // Get enabled feeders for this network (using original network ID in dev mode)
       const enabledFeedersForNetwork = Array.from(this.feederConfigs.values())
-        .filter(f => f.enabled && (this.isDevMode() 
+        .filter(f => this.shouldRunFeeder(f) && (this.isDevMode() 
           ? (this.originalNetworkIds.get(f.id) === networkId)
           : f.networkId === networkId));
       
@@ -1548,7 +1580,7 @@ export class FeederManagerService implements Service {
     reportLines.push('');
 
     // Enabled feeders summary
-    const enabledFeeders = Array.from(this.feederConfigs.values()).filter(f => f.enabled);
+    const enabledFeeders = Array.from(this.feederConfigs.values()).filter(f => this.shouldRunFeeder(f));
     const feedersByNetwork = new Map<string, number>();
     enabledFeeders.forEach(f => {
       feedersByNetwork.set(f.networkId, (feedersByNetwork.get(f.networkId) || 0) + 1);
@@ -1673,7 +1705,7 @@ export class FeederManagerService implements Service {
     
     // Get all TWAP-enabled feeders
     const twapEnabledFeeders = Array.from(this.feederConfigs.values())
-      .filter(f => f.enabled && f.twap?.enabled);
+      .filter(f => this.shouldRunFeeder(f) && f.twap?.enabled);
 
     if (twapEnabledFeeders.length === 0) {
       // Still generate a report to show that TWAP is available but not enabled
@@ -1693,7 +1725,7 @@ export class FeederManagerService implements Service {
       reportLines.push('    "window": 60000     // Optional: TWAP calculation window (default: interval)');
       reportLines.push('  }');
       reportLines.push('');
-      reportLines.push(`Total Enabled Feeders: ${Array.from(this.feederConfigs.values()).filter(f => f.enabled).length}`);
+      reportLines.push(`Total Enabled Feeders: ${Array.from(this.feederConfigs.values()).filter(f => this.shouldRunFeeder(f)).length}`);
       reportLines.push(`Total Feeders: ${this.feederConfigs.size}`);
       reportLines.push('='.repeat(80) + '\n');
 

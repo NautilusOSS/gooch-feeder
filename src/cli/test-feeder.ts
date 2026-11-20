@@ -44,7 +44,15 @@ async function testFeeder(feederId: string): Promise<void> {
         console.log(`Timeout: ${feederConfig.timeout}ms`);
         console.log(`Retries: ${feederConfig.retries}`);
         console.log(`Interval: ${feederConfig.interval}ms`);
+        if (feederConfig.skip) {
+          console.log(`Skip: true`);
+        }
       }
+    }
+
+    if (feederConfig?.skip) {
+      console.log(`\nSkipping ${feederId} (skip: true)`);
+      process.exit(0);
     }
     
     // Load network configurations

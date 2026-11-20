@@ -36,6 +36,8 @@ export interface PriceFeederConfig {
   marketId: string;
   assetSymbol: string;
   enabled: boolean;
+  /** When true, the feeder stays in config but is not fetched or posted. */
+  skip?: boolean;
   interval: number; // milliseconds
   timeout: number;
   retries: number;

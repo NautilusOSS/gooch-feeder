@@ -930,7 +930,8 @@
       },
       "twap": {
         "enabled": true
-      }
+      },
+      "skip": true
     },
     "algorand-mainnet-3333688282-aVOI": {
       "id": "algorand-mainnet-3333688282-aVOI",
@@ -1143,9 +1144,9 @@
         ]
       },
       "validation": {
-        "minPrice": 0.0002,
-        "maxPrice": 0.001,
-        "maxPriceChange": 0.0002,
+        "minPrice": 0.00005,
+        "maxPrice": 0.0002,
+        "maxPriceChange": 0.0001,
         "requiredFields": ["price", "timestamp"]
       },
       "twap": {
@@ -1205,7 +1206,8 @@
       },
       "twap": {
         "enabled": true
-      }
+      },
+      "skip": true
     },
     "algorand-mainnet-3345940978-GOLD$": {
       "id": "algorand-mainnet-3345940978-GOLD$",
@@ -1253,7 +1255,7 @@
         ]
       },
       "validation": {
-        "minPrice": 100,
+        "minPrice": 25,
         "maxPrice": 200,
         "maxPriceChange": 25,
         "requiredFields": ["price", "timestamp"]
@@ -1308,7 +1310,7 @@
         ]
       },
       "validation": {
-        "minPrice": 0.0005,
+        "minPrice": 0.0003,
         "maxPrice": 0.005,
         "maxPriceChange": 0.001,
         "requiredFields": ["price", "timestamp"]
@@ -1364,7 +1366,7 @@
         ]
       },
       "validation": {
-        "minPrice": 0.0005,
+        "minPrice": 0.0003,
         "maxPrice": 0.006,
         "maxPriceChange": 0.001,
         "requiredFields": ["price", "timestamp"]
@@ -1971,7 +1973,8 @@
       },
       "twap": {
         "enabled": true
-      }
+      },
+      "skip": true
     },
     "voi-mainnet-47139781-F": {
       "id": "voi-mainnet-47139781-F",
@@ -2024,7 +2027,8 @@
       },
       "twap": {
         "enabled": true
-      }
+      },
+      "skip": true
     },
     "voi-mainnet-47139781-NODE": {
       "id": "voi-mainnet-47139781-NODE",

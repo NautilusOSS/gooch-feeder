@@ -52,7 +52,11 @@ async function listFeeders(): Promise<void> {
         console.log('─'.repeat(60));
         
         feeders.forEach(([id, config]) => {
-          const status = config.enabled ? '✓ Enabled' : '✗ Disabled';
+          const status = config.skip
+            ? '↷ Skipped'
+            : config.enabled
+              ? '✓ Enabled'
+              : '✗ Disabled';
           console.log(`  ${id}`);
           console.log(`    Method: ${config.method}`);
           console.log(`    Asset: ${config.assetSymbol}`);
