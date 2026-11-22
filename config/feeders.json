@@ -208,8 +208,8 @@
         ]
       },
       "validation": {
-        "minPrice": 0.075,
-        "maxPrice": 0.25,
+        "minPrice": 0.050,
+        "maxPrice": 0.15,
         "maxPriceChange": 0.01,
         "requiredFields": ["price", "timestamp"]
       },
@@ -373,8 +373,8 @@
         ]
       },
       "validation": {
-        "minPrice": 0.4,
-        "maxPrice": 1.2,
+        "minPrice": 0.3,
+        "maxPrice": 1.1,
         "maxPriceChange": 0.1,
         "requiredFields": ["price", "timestamp"]
       },
@@ -986,7 +986,8 @@
       },
       "twap": {
         "enabled": true
-      }
+      },
+      "skip": true
     },
     "algorand-mainnet-3345940978-ALPHA": {
       "id": "algorand-mainnet-3345940978-ALPHA",
@@ -1262,7 +1263,8 @@
       },
       "twap": {
         "enabled": true
-      }
+      },
+      "skip": true
     },
     "algorand-mainnet-3345940978-TINY": {
       "id": "algorand-mainnet-3345940978-TINY",
@@ -2081,7 +2083,8 @@
       },
       "twap": {
         "enabled": true
-      }
+      },
+      "skip": true
     },
     "voi-mainnet-47139781-AMMO": {
       "id": "voi-mainnet-47139781-AMMO",
