@@ -14,14 +14,12 @@
       "priority": 10,
       "source": {
         "type": "api",
-        "url": "https://voirewards.com/api/markets",
+        "url": "https://humble-api.voi.nautilus.sh/pools/395553/stats",
         "method": "GET",
         "headers": {
           "Content-Type": "application/json"
         },
-        "params": {
-          "token": "VOI"
-        }
+        "params": {}
       },
       "destination": {
         "type": "price-oracle",
@@ -46,7 +44,7 @@
         ]
       },
       "validation": {
-        "minPrice": 0.00001,
+        "minPrice": 0.00005,
         "maxPrice": 0.01,
         "maxPriceChange": 0.1,
         "requiredFields": ["price", "timestamp"]

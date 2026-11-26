@@ -398,6 +398,10 @@ export class PriceLookupService {
 
   private extractPriceFromHumbleAPI(data: any, config: PriceFeederConfig): number {
     try {
+      if (data?.prices && data?.tokens) {
+        return this.extractPriceFromHumblePool(data, config);
+      }
+
       if (!data || !data.price) {
         throw new Error('Invalid Humble API response format: missing price object');
       }
@@ -421,6 +425,55 @@ export class PriceLookupService {
       this.logger.error('Failed to extract price from Humble API:', error instanceof Error ? error : String(error));
       throw error;
     }
+  }
+
+  private extractPriceFromHumblePool(data: any, config: PriceFeederConfig): number {
+    const sides = ['tokenA', 'tokenB'] as const;
+    const isStable = (unitName: string) => /^(a?usdc|usdt|xusd)$/i.test(unitName);
+    const symbol = config.assetSymbol.toUpperCase();
+    const assetId = config.source.params?.assetId
+      ? String(config.source.params.assetId)
+      : null;
+
+    let side: (typeof sides)[number] | undefined;
+    if (assetId) {
+      side = sides.find((name) => String(data.tokens[name]?.assetId) === assetId);
+    }
+    if (!side) {
+      side = sides.find((name) => {
+        const unit = String(data.tokens[name]?.unitName || '').toUpperCase();
+        return unit === symbol || unit === `W${symbol}`;
+      });
+    }
+    if (!side) {
+      const nonStable = sides.filter(
+        (name) => !isStable(String(data.tokens[name]?.unitName || ''))
+      );
+      if (nonStable.length === 1) {
+        side = nonStable[0];
+      }
+    }
+    if (!side) {
+      throw new Error(`Unable to choose a token side in Humble pool for ${config.assetSymbol}`);
+    }
+
+    const quote = data.prices[side];
+    const usd = Number(quote?.usd);
+    if (Number.isFinite(usd) && usd > 0) {
+      this.logger.debug(`Extracted USD price from Humble pool: $${usd}`);
+      return usd;
+    }
+
+    const other = side === 'tokenA' ? 'tokenB' : 'tokenA';
+    const crossKey = side === 'tokenA' ? 'inTokenB' : 'inTokenA';
+    const otherUnit = String(data.tokens[other]?.unitName || '');
+    const cross = Number(quote?.[crossKey]);
+    if (isStable(otherUnit) && Number.isFinite(cross) && cross > 0) {
+      this.logger.debug(`Extracted USD price from Humble pool cross rate: $${cross}`);
+      return cross;
+    }
+
+    throw new Error(`No USD price found in Humble pool for ${config.assetSymbol}`);
   }
 
   private extractPriceFromPeraAPI(data: any, config: PriceFeederConfig): number {
